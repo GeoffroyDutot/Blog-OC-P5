@@ -1,8 +1,9 @@
 <?php
 
-$config = [
+return [
     'hostname' => '',
     'username' => '',
     'password' => '',
     'database' => ''
 ];
+
