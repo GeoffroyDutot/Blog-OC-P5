@@ -10,11 +10,12 @@ class PostDTO extends DTO {
     protected int $id;
     protected string $title;
     protected string $slug;
+    protected ?string $subtitle = null;
     protected DateTime $created_at;
-    protected DateTime $updated_at;
+    protected ?DateTime $updated_at;
     protected string $content;
-    protected string $resume;
-    protected string $picture;
+    protected ?string $resume;
+    protected ?string $picture = null;
 
     public function __construct($data)
     {
@@ -50,6 +51,15 @@ class PostDTO extends DTO {
         return $this;
     }
 
+    public function getSubtitle(): ?string {
+        return $this->subtitle;
+    }
+
+    public function setSubtitle(?string $subtitle): PostDTO {
+        $this->subtitle = $subtitle;
+        return $this;
+    }
+
     public function getCreatedAt(): DateTime
     {
         if (!$this->created_at instanceof DateTime) {
@@ -69,16 +79,11 @@ class PostDTO extends DTO {
         return $this;
     }
 
-    public function __set($key, $value)
-    {
-        return $this->$key($value);
-    }
-
-    public function getUpdatedAt(): DateTime {
+    public function getUpdatedAt(): ?DateTime {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(string $updated_at): PostDTO {
+    public function setUpdatedAt(?string $updated_at): PostDTO {
         if (!$updated_at instanceof DateTime) {
             $updated_at = new DateTime($updated_at);
         }
@@ -97,20 +102,20 @@ class PostDTO extends DTO {
         return $this;
     }
 
-    public function getResume(): string {
+    public function getResume(): ?string {
         return $this->resume;
     }
 
-    public function setResume(string $resume): PostDTO {
+    public function setResume(?string $resume): PostDTO {
         $this->resume = $resume;
         return $this;
     }
 
-    public function getPicture(): string {
+    public function getPicture(): ?string {
         return $this->picture;
     }
 
-    public function setPicture(string $picture): PostDTO {
+    public function setPicture(?string $picture): PostDTO {
         $this->picture = $picture;
         return $this;
     }
