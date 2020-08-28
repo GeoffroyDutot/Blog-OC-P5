@@ -26,9 +26,9 @@
     {% endblock %}
 </head>
 <body>
+{% include 'include/header.html.twig' %}
     {% block body %}{% endblock %}
-<footer id="footer">
-    {% block footer %}{% endblock %}
-</footer>
+{% include 'include/footer.html.twig' %}
+    {% block script %}{% endblock %}
 </body>
 </html>
