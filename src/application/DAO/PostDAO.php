@@ -27,4 +27,15 @@ class PostDAO extends DAO {
 
         return  $posts;
     }
+
+    public function getPostBySlug(string $slug) : PostDTO {
+        $db = $this->connectDb();
+
+        $req = $db->prepare('SELECT * FROM `post` WHERE `slug` = :slug LIMIT 1');
+        $req->execute(['slug' => $slug]);
+        $post = $req->fetch(\PDO::FETCH_ASSOC);
+        $postDTO = new PostDTO($post);
+
+        return $postDTO;
+    }
 }
