@@ -25,6 +25,7 @@ class Twig {
     public function __construct() {
         $this->loader = new FilesystemLoader(__DIR__ . '/../templates');
         $this->view = new Environment($this->loader);
+        $this->view->addGlobal('session', $_SESSION);
     }
 
     public function render(string $path, array $data) {

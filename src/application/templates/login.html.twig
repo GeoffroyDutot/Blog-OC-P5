@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil | Blog{% endblock %}
+
+{% block body %}
+    <!-- Page Header -->
+    <header class="masthead" style="background-image: url('../../assets/img/{{ aboutMe.picture }}')">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="site-heading">
+                        <h1>{{ aboutMe.firstname }} {{ aboutMe.lastname|upper }}</h1>
+                        <span class="subheading">{{ aboutMe.slogan }}</span>
+                        <img src="../../assets/img/{{ aboutMe.profilPicture }}" class="profil-picture">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <h2 class="text-center">Connexion</h2>
+                <form name="sentMessage" id="contactForm" novalidate method="POST" action="/verification-connexion">
+                    <div class="control-group">
+                        <div class="form-group floating-label-form-group controls">
+                            <label for="email">Adresse Email</label>
+                            <input name="email" type="email" class="form-control" placeholder="Email" id="email" required data-validation-required-message="Veuillez renseigner une adresse email valide.">
+                            <p class="help-block text-danger"></p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label for="password">Mot de passe</label>
+                            <input name="password" type="password" class="form-control" placeholder="MotdePasse" id="password" required data-validation-required-message="Veuillez renseigner un mot de passe valide.">
+                            <p class="help-block text-danger"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="success"></div>
+                    <button type="submit" class="btn btn-primary" id="sendMessageButton">Se connecter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <hr>
+{% endblock %}
+
+{% block script %}
+    <!-- Contact Form JavaScript -->
+    <script src="../../assets/js/jqBootstrapValidation.js"></script>
+    <!-- <script src="../../assets/js/contact_me.js"></script> -->
+{% endblock %}
