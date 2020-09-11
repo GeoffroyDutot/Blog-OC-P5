@@ -9,6 +9,7 @@ class Controller {
     private Twig $twig;
 
      public function __construct() {
+         session_start();
          $this->twig = Twig::getInstance();
      }
 
