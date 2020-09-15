@@ -24,7 +24,7 @@ class DAO
             $this->db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             return $this->db;
         } catch (Exception $e) {
-            die('Erreur : ' . $e->getMessage());
+            exit();
         }
     }
 }

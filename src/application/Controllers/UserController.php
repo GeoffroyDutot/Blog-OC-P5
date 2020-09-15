@@ -20,19 +20,16 @@ class UserController extends Controller {
     }
 
     public function addUser() {
-        if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['pseudo'] && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))) {
+        if (!empty($this->post['email']) && !empty($this->post['password']) && !empty($this->post['pseudo'] && filter_var($this->post['email'], FILTER_VALIDATE_EMAIL))) {
             $userDTO = new UserDTO();
-            $userDTO->setEmail($_POST['email']);
-            $userDTO->setPseudo($_POST['pseudo']);
-            $userDTO->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT));
+            $userDTO->setEmail($this->post['email']);
+            $userDTO->setPseudo($this->post['pseudo']);
+            $userDTO->setPassword(password_hash($this->post['password'], PASSWORD_BCRYPT));
             //@TODO Check if email and pseudo doesn't already exists
-            //$user = new UserDAO();
-            //var_dump($user->getUserByEmail($_POST['email']));die();
             $user = (new UserDAO())->save($userDTO);
             if ($user) {
                 $_SESSION['email'] = $userDTO->getEmail();
                 $_SESSION['pseudo'] = $userDTO->getPseudo();
-                var_dump($_SESSION);
                 echo 'Utilisateur ajouté !';
             }  else {
                 echo 'Erreur, l\'utilisateut n\'as pas pu être ajouté';
@@ -57,19 +54,19 @@ class UserController extends Controller {
     }
 
     public function authenticate() {
-        if (empty($_POST['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL) && empty($_POST['password'])) {
+        if (empty($this->post['email']) && !filter_var($this->post['email'], FILTER_VALIDATE_EMAIL) && empty($this->post['password'])) {
             echo 'Erreur de connexion';
             return;
         }
 
         $user = new UserDAO();
-        $user = $user->getUserByEmail($_POST['email']);
-        if (!$user && $_POST['email'] !== $user->getEmail()) {
+        $user = $user->getUserByEmail($this->post['email']);
+        if (!$user && $this->post['email'] !== $user->getEmail()) {
             echo 'Aucun utilisateur correspondant à cette adresse email à été trouvé';
             return;
         }
 
-        if (!password_verify($_POST['password'], $user->getPassword())) {
+        if (!password_verify($this->post['password'], $user->getPassword())) {
              echo 'Error incorrect password';
              return;
         }
