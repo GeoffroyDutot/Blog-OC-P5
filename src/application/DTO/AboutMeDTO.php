@@ -11,7 +11,7 @@ class AboutMeDTO {
     protected ?string $slogan;
     protected ?string $bio;
     protected ?string $profil_picture;
-    protected ?string $cv;
+    protected ?string $cv_pdf;
     protected ?string $picture;
     protected ?string $twitter_link;
     protected ?string $linkedin_link;
@@ -71,12 +71,12 @@ class AboutMeDTO {
         return $this;
     }
 
-    public function getCv(): ?string {
-        return $this->cv;
+    public function getCvPdf(): ?string {
+        return $this->cv_pdf;
     }
 
-    public function setCv(?string $cv): AboutMeDTO {
-        $this->cv = $cv;
+    public function setCv(?string $cv_pdf): AboutMeDTO {
+        $this->cv_pdf = $cv_pdf;
         return $this;
     }
 
