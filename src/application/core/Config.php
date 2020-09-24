@@ -17,7 +17,7 @@ class Config {
     }
 
     public function __construct() {
-            $this->settings = include_once(dirname(__DIR__) . '/../../config/config.php');
+            $this->settings = include_once dirname(__DIR__) . '/../../config/config.php';
     }
 
     public function getParam(string $key): string {
