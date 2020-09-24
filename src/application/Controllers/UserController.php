@@ -8,7 +8,10 @@ use App\DAO\AboutMeDAO;
 use App\DAO\UserDAO;
 use App\DTO\UserDTO;
 
+
 class UserController extends Controller {
+
+
     public function register() {
         $data = [];
 
@@ -28,8 +31,8 @@ class UserController extends Controller {
             //@TODO Check if email and pseudo doesn't already exists
             $user = (new UserDAO())->save($userDTO);
             if ($user) {
-                $_SESSION['email'] = $userDTO->getEmail();
-                $_SESSION['pseudo'] = $userDTO->getPseudo();
+                $this->session['email'] = $userDTO->getEmail();
+                $this->session['pseudo'] = $userDTO->getPseudo();
                 echo 'Utilisateur ajouté !';
             }  else {
                 echo 'Erreur, l\'utilisateut n\'as pas pu être ajouté';
@@ -42,8 +45,8 @@ class UserController extends Controller {
     public function login() {
         $data = [];
 
-        if (isset($_SESSION['email']) && isset($_SESSION['role']) && isset($_SESSION['pseudo'])) {
-            header('Location: /');
+        if (isset($this->session['email']) && isset($this->session['role']) && isset($this->session['pseudo'])) {
+            $this->redirect('/');
         }
 
         $aboutMe = new AboutMeDAO();
@@ -71,17 +74,17 @@ class UserController extends Controller {
              return;
         }
 
-        $_SESSION['email'] = $user->getEmail();
-        $_SESSION['pseudo'] = $user->getPseudo();
-        $_SESSION['role'] = $user->getRole();
+        $this->session['email'] = $user->getEmail();
+        $this->session['pseudo'] = $user->getPseudo();
+        $this->session['role'] = $user->getRole();
+        $this->session['profilPicture'] = $user->getProfilPicture();
 
-        ($_SESSION['role'] === 'ROLE_ADMIN') ? header('Location: /admin/tableau-de-bord') : header('Location: /');
+        ($this->session['role'] === 'ROLE_ADMIN') ? $this->redirect('/admin/tableau-de-bord') : $this->redirect('/');
     }
 
     public function logout() {
-    $_SESSION = [];
-    session_destroy();
-    echo 'vous êtes déconnecté';
-    header('Location: /');
+        session_destroy();
+        echo 'vous êtes déconnecté';
+        $this->redirect('/');
     }
 }
