@@ -28,6 +28,11 @@
                     <a class="nav-link" href="/deconnexion">Déconnexion</a>
                 </li>
                 {% endif %}
+                {% if session.role == "ROLE_ADMIN" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/tableau-de-bord">Admin</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

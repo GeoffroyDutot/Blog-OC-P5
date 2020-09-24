@@ -10,6 +10,13 @@ class UserDTO extends DTO {
     protected string $password;
     protected string $pseudo;
     protected string $role;
+    protected ?string $profil_picture = null;
+
+    public function __construct($data) {
+        if ($data) {
+            $this->hydrate($data);
+        }
+    }
 
     public function getId(): int {
         return $this->id;
@@ -53,6 +60,15 @@ class UserDTO extends DTO {
 
     public function setRole(string $role): UserDTO {
         $this->role = $role;
+        return $this;
+    }
+
+    public function getProfilPicture(): ?string {
+        return $this->profil_picture;
+    }
+
+    public function setProfilPicture(?string $profil_picture): UserDTO {
+        $this->profil_picture = $profil_picture;
         return $this;
     }
 }

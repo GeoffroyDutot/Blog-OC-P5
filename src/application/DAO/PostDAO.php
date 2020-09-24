@@ -8,18 +8,23 @@ use App\DTO\PostDTO;
 
 class PostDAO extends DAO {
 
-    public function getAll() : array {
+    public function getAll($limit = null) : array {
         $db = $this->connectDb();
         $posts = [];
 
-        $req = $db->query('SELECT * FROM `post`');
+        $query = 'SELECT * FROM `post`';
+
+        if ($limit) {
+            $limit = 'LIMIT ' . $limit;
+        }
+
+        $req = $db->query($query . $limit);
 
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!$data) {
             return $posts;
         }
-
 
         foreach ($data as $post) {
             $posts[] = new PostDTO($post);
