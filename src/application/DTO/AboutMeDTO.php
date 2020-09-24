@@ -75,7 +75,7 @@ class AboutMeDTO {
         return $this->cv_pdf;
     }
 
-    public function setCv(?string $cv_pdf): AboutMeDTO {
+    public function setCvPdf(?string $cv_pdf): AboutMeDTO {
         $this->cv_pdf = $cv_pdf;
         return $this;
     }
