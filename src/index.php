@@ -32,4 +32,6 @@ $router->get('/admin/utilisateurs', "Admin#listUsers");
 
 $router->get('/admin/articles', "Admin#listPosts");
 
+$router->get('/admin/commentaires', "Admin#listComments");
+
 $router->run();
