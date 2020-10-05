@@ -65,4 +65,12 @@ class CommentDAO extends DAO {
 
         return  $comments;
     }
+
+    public function submitComment(CommentDTO $commentDTO) {
+        $db = $this->connectDb();
+
+        $req = $db->prepare('INSERT INTO `comment`(`content`, `id_post`, `id_user`, `status`, `created_at`) VALUES(:content, :id_post, :id_user, :status, :createdAt)');
+        $comment = $req->execute(['content' => $commentDTO->getContent(), 'id_post' => $commentDTO->getIdPost(), 'id_user' => $commentDTO->getIdUser(), 'status' => $commentDTO->getStatus(), 'createdAt' => date('Y-m-d H:i:s')]);
+        return $comment;
+    }
 }

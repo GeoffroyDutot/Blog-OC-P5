@@ -12,7 +12,7 @@ $router->get('/articles', "Post#index");
 
 $router->get('/article/:slug', "Post#show")->with('slug', '([a-z\-0-9]+)');
 
-$router->get('articles/:id', "Articles#show");
+$router->post('/article/:id/commentaire', "Post#submitComment")->with('id', '([0-9]+)');
 
 $router->get('/inscription',"User#register");
 
