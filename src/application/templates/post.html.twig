@@ -27,7 +27,7 @@
                     <p>{{ post.content|nl2br }}</p>
                     {% if session is not empty %}
                         <h5>Quel est ton avis ?</h5>
-                        <form name="sentMessage" id="contactForm" novalidate method="POST" action="/post/{{ post.id }}/comment">
+                        <form name="sentMessage" id="contactForm" novalidate method="POST" action="/article/{{ post.id }}/commentaire">
                             <div class="control-group">
                                 <div class="form-group floating-label-form-group controls">
                                     <label for="comment">Message</label>
