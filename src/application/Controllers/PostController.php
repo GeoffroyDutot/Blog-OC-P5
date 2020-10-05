@@ -5,7 +5,9 @@ namespace App\Controllers;
 
 
 use App\DAO\AboutMeDAO;
+use App\DAO\CommentDAO;
 use App\DAO\PostDAO;
+use App\DTO\CommentDTO;
 use App\DTO\PostDTO;
 
 class PostController extends Controller {
@@ -36,8 +38,13 @@ class PostController extends Controller {
         $post = new PostDAO();
         $post = $post->getPostBySlug($slug);
 
-        if ($post) {
+        if (!empty($post)) {
             $data['post'] = $post;
+            $comments = new CommentDAO();
+            $comments = $comments->getCommentsByPost($post->getId());
+            if (!empty($comments)) {
+                $data['comments'] = $comments;
+            }
         }
 
         $this->render('post.html.twig', $data);

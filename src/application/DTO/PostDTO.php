@@ -24,16 +24,19 @@ class PostDTO extends DTO {
         }
     }
 
-    public function getId(): int {
+    public function getId(): int
+    {
         return $this->id;
     }
 
-    public function setId(int $id): PostDTO {
+    public function setId(int $id): PostDTO
+    {
         $this->id = $id;
         return $this;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return $this->title;
     }
 
@@ -42,11 +45,13 @@ class PostDTO extends DTO {
         return $this;
     }
 
-    public function getSlug(): string {
+    public function getSlug(): string
+    {
         return $this->slug;
     }
 
-    public function setSlug(string $slug): PostDTO {
+    public function setSlug(string $slug): PostDTO
+    {
         $this->slug = $slug;
         return $this;
     }
@@ -85,7 +90,11 @@ class PostDTO extends DTO {
 
     public function setUpdatedAt(?string $updated_at): PostDTO {
         if (!$updated_at instanceof DateTime) {
-            $updated_at = new DateTime($updated_at);
+            if (!empty($updated_at)) {
+                $updated_at = new DateTime($updated_at);
+            } else {
+                $updated_at = null;
+            }
         }
 
         $this->updated_at = $updated_at;

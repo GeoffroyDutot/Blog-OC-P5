@@ -12,7 +12,7 @@ class PostDAO extends DAO {
         $db = $this->connectDb();
         $posts = [];
 
-        $query = 'SELECT * FROM `post`';
+        $query = 'SELECT * FROM `post` ORDER BY `created_at` DESC ';
 
         if ($limit) {
             $limit = 'LIMIT ' . $limit;

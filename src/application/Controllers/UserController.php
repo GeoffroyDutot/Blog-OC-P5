@@ -28,12 +28,23 @@ class UserController extends Controller {
             $userDTO->setEmail($this->post['email']);
             $userDTO->setPseudo($this->post['pseudo']);
             $userDTO->setPassword(password_hash($this->post['password'], PASSWORD_BCRYPT));
-            //@TODO Check if email and pseudo doesn't already exists
-            $user = (new UserDAO())->save($userDTO);
+            $user = new UserDAO();
+
+            if (!empty($user->getUserByEmail($userDTO->getEmail()))) {
+                echo 'User with this email already exists';
+                return;
+            }
+
+            if ($user->getUserByPseudo($userDTO->getPseudo())) {
+                echo 'User with this pseudo already exists';
+                return;
+            }
+
+            $user->save($userDTO);
             if ($user) {
                 $this->session['email'] = $userDTO->getEmail();
                 $this->session['pseudo'] = $userDTO->getPseudo();
-                echo 'Utilisateur ajouté !';
+                $this->redirect('/');
             }  else {
                 echo 'Erreur, l\'utilisateut n\'as pas pu être ajouté';
             }

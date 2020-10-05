@@ -12,7 +12,7 @@ class UserDAO extends DAO {
         $db = $this->connectDb();
         $users = [];
 
-        $query = "SELECT * FROM `user` WHERE role = 'ROLE_USER' ";
+        $query = "SELECT * FROM `user` WHERE role = 'ROLE_USER' ORDER BY date_registered DESC ";
 
         if ($limit) {
             $limit = 'LIMIT ' . $limit;
@@ -36,8 +36,8 @@ class UserDAO extends DAO {
     public function save(UserDTO $user) {
         $db = $this->connectDb();
 
-        $req = $db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`) VALUES(:email, :password, :pseudo, :role)');
-        $user = $req->execute(['email' => $user->getEmail(), 'password' => $user->getPassword(), 'pseudo' => $user->getPseudo(), 'role' => 'ROLE_USER']);
+        $req = $db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`, `date_registered`) VALUES(:email, :password, :pseudo, :role, :dateRegistered)');
+        $user = $req->execute(['email' => $user->getEmail(), 'password' => $user->getPassword(), 'pseudo' => $user->getPseudo(), 'role' => 'ROLE_USER', 'dateRegistered' => date('Y-m-d H:i:s')]);
         return $user;
     }
 
@@ -45,8 +45,45 @@ class UserDAO extends DAO {
         $db = $this->connectDb();
 
         $req = $db->query('SELECT * FROM user WHERE email = \''.$email.'\'');
-        $user = $req->fetchObject('App\DTO\UserDTO');
+        $user = $req->fetch(\PDO::FETCH_ASSOC);
 
-        return $user;
+        if (!empty($user)) {
+            $userDTO = new UserDTO($user);
+            if ($userDTO) {
+                return $userDTO;
+            }
+        }
+
+        return false;
+    }
+
+    public function getUserByPseudo(string $pseudo) {
+        $db = $this->connectDb();
+
+        $req = $db->query('SELECT * FROM user WHERE pseudo = \''.$pseudo.'\'');
+        $user = $req->fetch(\PDO::FETCH_ASSOC);
+        if (!empty($user)) {
+            $userDTO = new UserDTO($user);
+            if ($userDTO) {
+                return $userDTO;
+            }
+        }
+
+        return false;
+    }
+
+    public function getUserById(int $id) {
+        $db = $this->connectDb();
+
+        $req = $db->query('SELECT * FROM user WHERE id = \''.$id.'\'');
+        $user = $req->fetch(\PDO::FETCH_ASSOC);
+        if (!empty($user)) {
+            $userDTO = new UserDTO($user);
+            if ($userDTO) {
+                return $userDTO;
+            }
+        }
+
+        return false;
     }
 }

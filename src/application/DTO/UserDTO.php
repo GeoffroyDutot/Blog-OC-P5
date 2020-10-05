@@ -4,6 +4,8 @@
 namespace App\DTO;
 
 
+use DateTime;
+
 class UserDTO extends DTO {
     protected int $id;
     protected string $email;
@@ -11,8 +13,9 @@ class UserDTO extends DTO {
     protected string $pseudo;
     protected string $role;
     protected ?string $profil_picture = null;
+    protected DateTime $date_registered;
 
-    public function __construct($data) {
+    public function __construct($data = null) {
         if ($data) {
             $this->hydrate($data);
         }
@@ -69,6 +72,25 @@ class UserDTO extends DTO {
 
     public function setProfilPicture(?string $profil_picture): UserDTO {
         $this->profil_picture = $profil_picture;
+        return $this;
+    }
+
+    public function getDateRegistered(): DateTime
+    {
+        if (!$this->date_registered instanceof DateTime) {
+            $this->date_registered = new DateTime($this->date_registered);
+        }
+
+        return $this->date_registered;
+    }
+
+    public function setDateRegistered(string $date_registered): UserDTO {
+        if (!$date_registered instanceof DateTime) {
+            $date_registered = new DateTime($date_registered);
+        }
+
+        $this->date_registered = $date_registered;
+
         return $this;
     }
 }
