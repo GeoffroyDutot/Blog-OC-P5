@@ -46,15 +46,16 @@
                     <br>
                     <ul class="list-unstyled">
                         {% for comment in comments %}
-                        <li class="media">
+                        <li class="media comment-container">
                             {% if comment.user.profilPicture is not empty %}
-                            <img class="mr-3" src="../../assets/img/user/profil_picture/{{ comment.user.profilPicture }}" alt="User profil picture">
+                            <img class="mr-3 comment-user-picture" src="../../assets/img/user/profil_picture/{{ comment.user.profilPicture }}" alt="User profil picture">
                                 {% else %}
-                                    <i class="fas fa-user fa-2x"></i>
+                                    <img class="mr-3 comment-user-picture" src="../../assets/img/user/profil_picture/user-unknown.png" alt="User profil picture">
                             {% endif %}
                             <div class="media-body">
-                                <h5>{{ comment.user.pseudo }} - {{ comment.createdA|date("d/m/Y") }}</h5>
-                                <p>{{ comment.content }}</p>
+                                <h5>{{ comment.user.pseudo }}</h5>
+                                <h6 class="comment-date">{{ comment.createdA|date("d/m/Y") }}</h6>
+                                <p class="comment-content">{{ comment.content }}</p>
                             </div>
                         </li>
                         {% endfor %}
