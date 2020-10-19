@@ -70,7 +70,13 @@ class CommentDAO extends DAO {
         $db = $this->connectDb();
 
         $req = $db->prepare('INSERT INTO `comment`(`content`, `id_post`, `id_user`, `status`, `created_at`) VALUES(:content, :id_post, :id_user, :status, :createdAt)');
-        $comment = $req->execute(['content' => $commentDTO->getContent(), 'id_post' => $commentDTO->getIdPost(), 'id_user' => $commentDTO->getIdUser(), 'status' => $commentDTO->getStatus(), 'createdAt' => date('Y-m-d H:i:s')]);
-        return $comment;
+        return $req->execute(['content' => $commentDTO->getContent(), 'id_post' => $commentDTO->getIdPost(), 'id_user' => $commentDTO->getIdUser(), 'status' => $commentDTO->getStatus(), 'createdAt' => date('Y-m-d H:i:s')]);
+    }
+
+    public function editCommentStatus(int $id, string $status) {
+        $db = $this->connectDb();
+
+        $req = $db->prepare('UPDATE comment SET status=:status WHERE id = \''.$id.'\'');
+        return $req->execute(['status' => $status]);
     }
 }
