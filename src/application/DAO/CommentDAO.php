@@ -12,7 +12,7 @@ class CommentDAO extends DAO {
         $db = $this->connectDb();
         $comments = [];
 
-        $query = 'SELECT * FROM `comment` WHERE `status` = "unvalidated" ORDER BY `created_at` DESC ';
+        $query = 'SELECT * FROM `comment` WHERE `status` IS NULL ORDER BY `created_at` DESC ';
 
         if ($limit) {
             $limit = 'LIMIT ' . $limit;
