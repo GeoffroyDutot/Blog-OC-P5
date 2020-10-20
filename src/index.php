@@ -42,4 +42,6 @@ $router->post('/admin/modifier-a-propos', 'Admin#editAboutMe');
 
 $router->post('/admin/commentaires/valider', 'Api#validateComment');
 
+$router->post('/admin/commentaires/refuser', 'Api#unvalidateComment');
+
 $router->run();
