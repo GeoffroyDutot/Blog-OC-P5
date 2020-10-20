@@ -56,7 +56,7 @@
                                             <td>{{ comment.content }}</td>
                                             <td>{{ comment.createdAt|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-check grow validate-comment" data-id-comment="{{ comment.id }}"></i></td>
-                                            <td><i class="nav-icon fas fa-comment-slash text-danger grow"></i></td>
+                                            <td><i class="nav-icon fas fa-comment-slash text-danger grow unvalidate-comment" data-id-comment="{{ comment.id }}"></i></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -90,12 +90,11 @@
             $("#example1").DataTable({
                 "responsive": true,
                 "columns": [
+                    { responsivePriority: 1 },
                     { responsivePriority: 3 },
-                    { responsivePriority: 4 },
                     { responsivePriority: 5 },
-                    { responsivePriority: 6 },
-                    { responsivePriority: 2 },
-                    { responsivePriority: 1 }
+                    { responsivePriority: 4 },
+                    { responsivePriority: 2 }
                 ],
                 "autoWidth": false,
                 "language": {
