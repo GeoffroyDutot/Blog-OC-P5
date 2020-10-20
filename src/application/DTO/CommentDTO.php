@@ -12,7 +12,7 @@ class CommentDTO extends DTO {
     protected int $id_post;
     protected int $id_user;
     private UserDTO $user;
-    protected string $status;
+    protected ?string $status = null;
     protected DateTime $created_at;
 
     public function __construct($data = null)
@@ -81,12 +81,12 @@ class CommentDTO extends DTO {
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): CommentDTO
+    public function setStatus(?string $status): CommentDTO
     {
         $this->status = $status;
 

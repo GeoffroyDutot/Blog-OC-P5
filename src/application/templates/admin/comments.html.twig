@@ -2,81 +2,78 @@
 
 {% block style %}
     <!-- DataTables -->
-    <link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../../assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../../assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 {% endblock %}
 
 {% block title %}Liste des commentaires non approuvés | Administration{% endblock %}
 
 {% block body %}
-    <div class="wrapper">
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1>Commentaires à approuver</h1>
-                        </div>
-                        <div class="col-sm-6">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a href="/admin/tableau-de-bord">Accueil</a></li>
-                                <li class="breadcrumb-item active">Commentaires</li>
-                            </ol>
-                        </div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Commentaires à approuver</h1>
                     </div>
-                </div><!-- /.container-fluid -->
-            </section>
-
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Liste des commentaires à approuver</h3>
-                                </div>
-                                <!-- /.card-header -->
-                                <div class="card-body">
-                                    <table id="example1" class="table table-bordered table-striped text-center">
-                                        <thead>
-                                        <tr>
-                                            <th>Utilisateur</th>
-                                            <th>Contenu</th>
-                                            <th>Date</th>
-                                            <th> </th>
-                                            <th> </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for comment in comments %}
-                                            <tr>
-                                                <td>{{ comment.user.pseudo }}</td>
-                                                <td>{{ comment.content }}</td>
-                                                <td>{{ comment.createdAt|date("d/m/Y") }}</td>
-                                                <td><i class="nav-icon fas fa-user-edit"></i></td>
-                                                <td><i class="nav-icon fas fa-user-slash text-danger"></i></td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                        <!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin/tableau-de-bord">Accueil</a></li>
+                            <li class="breadcrumb-item active">Commentaires</li>
+                        </ol>
                     </div>
-                    <!-- /.row -->
                 </div>
-                <!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
-        </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Liste des commentaires à approuver</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="example1" class="table table-bordered table-striped text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Utilisateur</th>
+                                        <th>Contenu</th>
+                                        <th>Date</th>
+                                        <th> </th>
+                                        <th> </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for comment in comments %}
+                                        <tr>
+                                            <td>{{ comment.user.pseudo }}</td>
+                                            <td>{{ comment.content }}</td>
+                                            <td>{{ comment.createdAt|date("d/m/Y") }}</td>
+                                            <td><i class="nav-icon fas fa-check grow validate-comment" data-id-comment="{{ comment.id }}"></i></td>
+                                            <td><i class="nav-icon fas fa-comment-slash text-danger grow"></i></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
     </div>
-    <!-- ./wrapper -->
 {% endblock %}
 
 {% block script %}

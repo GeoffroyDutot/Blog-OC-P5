@@ -77,7 +77,7 @@ class PostController extends Controller {
         if ($user->getRole() === 'ROLE_ADMIN') {
             $commentDTO->setStatus('validated');
         } else {
-            $commentDTO->setStatus('unvalidated');
+            $commentDTO->setStatus(null);
         }
 
         $commentDAO = new CommentDAO();

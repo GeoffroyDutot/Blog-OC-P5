@@ -34,4 +34,14 @@ $router->get('/admin/articles', "Admin#listPosts");
 
 $router->get('/admin/commentaires', "Admin#listComments");
 
+$router->get('/admin/a-propos', 'Admin#aboutMe');
+
+$router->post('/admin/modifier-a-propos', 'Admin#editAboutMe');
+
+/// API
+
+$router->post('/admin/commentaires/valider', 'Api#validateComment');
+
+$router->post('/admin/commentaires/refuser', 'Api#unvalidateComment');
+
 $router->run();

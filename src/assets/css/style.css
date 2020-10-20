@@ -2,3 +2,32 @@
   width: 180px;
   margin-top: 20px;
 }
+
+.comment-container {
+  margin: 25px;
+}
+
+.comment-user-picture {
+  width: 80px;
+}
+
+.comment-content {
+  margin: 0;
+}
+
+.comment-date {
+  color: #b3b3b3;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.fa-check {
+  color: green;
+}
+
+.grow{
+  transition: all .1s ease-in-out;
+}
+
+.grow:hover {
+  transform: scale(2);
+}
