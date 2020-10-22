@@ -39,21 +39,28 @@ class AboutMeDTO {
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): AboutMeDTO {
+    public function setLastname(string $lastname): AboutMeDTO
+    {
         $this->lastname = $lastname;
+
         return $this;
     }
 
-    public function getSlogan(): ?string {
+    public function getSlogan(): ?string
+    {
         return $this->slogan;
     }
 
-    public function setSlogan(?string $slogan): AboutMeDTO {
+    public function setSlogan(?string $slogan): AboutMeDTO
+    {
         $this->slogan = $slogan;
+
         return $this;
     }
 
-    public function getBio(): ?string {
+    public function getBio(): ?string
+    {
+
         return $this->bio;
     }
 

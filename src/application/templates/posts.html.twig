@@ -4,7 +4,7 @@
 
 {% block body %}
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('../../assets/img/{{ aboutMe.picture }}')">
+    <header class="masthead" style="background-image: url('../../assets/aboutme/{{ aboutMe.picture }}')">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
@@ -12,7 +12,7 @@
                     <div class="site-heading">
                         <h1>{{ aboutMe.firstname }} {{ aboutMe.lastname|upper }}</h1>
                         <span class="subheading">{{ aboutMe.slogan }}</span>
-                        <img src="../../assets/img/{{ aboutMe.profilPicture }}" class="profil-picture">
+                        <img src="../../assets/aboutme/{{ aboutMe.profilPicture }}" class="profil-picture" alt="profil-picture">
                     </div>
                 </div>
             </div>

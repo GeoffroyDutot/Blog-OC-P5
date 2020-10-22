@@ -1,0 +1,138 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block style %}
+{% endblock %}
+
+{% block title %}Informations de l'accueil | Administration{% endblock %}
+
+{% block body %}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>A propos</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin/tableau-de-bord">Accueil</a></li>
+                            <li class="breadcrumb-item active">A propos</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-9">
+                        <!-- general form elements -->
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Modifier les informations</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form role="form" action="/admin/modifier-a-propos" method="POST" enctype="multipart/form-data">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="firstname">Prénom</label>
+                                        <input type="text" class="form-control" id="firstname" placeholder="Prénom" required name="firstname" value="{{ aboutMe.firstname }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastname">Nom</label>
+                                        <input type="text" class="form-control" id="lastname" placeholder="Nom" required name="lastname" value="{{ aboutMe.lastname }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Slogan</label>
+                                        <textarea class="form-control" rows="2" placeholder="Inscris ici le slogan du site.." required name="slogan">{{ aboutMe.slogan }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Bio</label>
+                                        <textarea class="form-control" rows="5" placeholder="Inscris ici la biographie.." required name="bio">{{ aboutMe.bio }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputFile">Photo</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="picture_profile" name="profil_picture" accept="image/png, .jpeg, .jpg">
+                                                <label class="custom-file-label" for="picture_profile" data-browse="Parcourir">Choisis une photo</label>
+                                            </div>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" id="">Télécharge</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputFile">CV</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="cv_pdf" name="cv_pdf" accept="application/pdf">
+                                                <label class="custom-file-label" for="cv_pdf" data-browse="Parcourir">Choisis un document pdf</label>
+                                            </div>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" id="">Télécharge</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputFile">Photo de fond</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="picture" name="picture" accept="image/png, .jpeg, .jpg">
+                                                <label class="custom-file-label" for="picture" data-browse="Parcourir">Choisis une image</label>
+                                            </div>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" id="">Télécharge</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="twitter">Twitter</label>
+                                        <input type="text" class="form-control" id="twitter" placeholder="Lien vers le compte twitter" required name="twitter_link" value="{{ aboutMe.twitterLink }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="linkedin">Linkedin</label>
+                                        <input type="text" class="form-control" id="linkedin" placeholder="Lien vers le compte linkedin" required name="linkedin_link" value="{{ aboutMe.linkedinLink }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="GitHub">GitHub</label>
+                                        <input type="text" class="form-control" id="GitHub" placeholder="Lien vers le compte GitHub" required name="github_link" value="{{ aboutMe.githubLink }}">
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Modifier</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-1"></div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- bs-custom-file-input -->
+    <script src="../../../assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../../assets/dist/js/demo.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
+{% endblock %}

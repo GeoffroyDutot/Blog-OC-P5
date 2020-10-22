@@ -4,7 +4,7 @@
 
 {% block body %}
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('../../assets/img/{{ aboutMe.picture }}')">
+    <header class="masthead" style="background-image: url('../../assets/aboutme/{{ aboutMe.picture }}')">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
@@ -12,7 +12,7 @@
                     <div class="site-heading">
                         <h1>{{ aboutMe.firstname }} {{ aboutMe.lastname|upper }}</h1>
                         <span class="subheading">{{ aboutMe.slogan }}</span>
-                        <img src="../../assets/img/{{ aboutMe.profilPicture }}" class="profil-picture">
+                        <img src="../../assets/aboutme/{{ aboutMe.profilPicture }}" class="profil-picture" alt="profil picture">
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                 <h2>Qui suis-je ?</h2>
                 <p>{{ bio }}</p>
                 <div class="mx-auto" style="width: 200px;">
-                    <a href="../../assets/doc/{{ aboutMe.cvPdf }}" class="btn btn-secondary btn-lg active" download="">Mon CV</a>
+                    <a href="../../assets/aboutme/{{ aboutMe.cvPdf }}" class="btn btn-secondary btn-lg active" download="">Mon CV</a>
                 </div>
 
                 <p>Vous souhaitez me contacter ? Alors cela ce passe juste en dessous ! Remplisser le formulaire vous serez recontacter rapidement.</p>
