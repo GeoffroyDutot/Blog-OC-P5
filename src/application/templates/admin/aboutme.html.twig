@@ -42,19 +42,19 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="firstname">Prénom</label>
-                                        <input type="text" class="form-control" id="firstname" placeholder="Prénom" required name="firstname" value="{{ aboutMe.firstname }}">
+                                        <input type="text" class="form-control" id="firstname" placeholder="Prénom" required minlength="3" maxlength="255" name="firstname" value="{{ aboutMe.firstname }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="lastname">Nom</label>
-                                        <input type="text" class="form-control" id="lastname" placeholder="Nom" required name="lastname" value="{{ aboutMe.lastname }}">
+                                        <input type="text" class="form-control" id="lastname" placeholder="Nom" required minlength="3" maxlength="255" name="lastname" value="{{ aboutMe.lastname }}">
                                     </div>
                                     <div class="form-group">
                                         <label>Slogan</label>
-                                        <textarea class="form-control" rows="2" placeholder="Inscris ici le slogan du site.." required name="slogan">{{ aboutMe.slogan }}</textarea>
+                                        <textarea class="form-control" rows="2" placeholder="Inscris ici le slogan du site.." required minlength="5" maxlength="255" name="slogan">{{ aboutMe.slogan }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label>Bio</label>
-                                        <textarea class="form-control" rows="5" placeholder="Inscris ici la biographie.." required name="bio">{{ aboutMe.bio }}</textarea>
+                                        <textarea class="form-control" rows="5" placeholder="Inscris ici la biographie.." required minlength="5" maxlength="255" name="bio">{{ aboutMe.bio }}</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputFile">Photo</label>
@@ -94,15 +94,15 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="twitter">Twitter</label>
-                                        <input type="text" class="form-control" id="twitter" placeholder="Lien vers le compte twitter" required name="twitter_link" value="{{ aboutMe.twitterLink }}">
+                                        <input type="text" class="form-control" id="twitter" placeholder="Lien vers le compte twitter" required minlength="20" maxlength="255" name="twitter_link" value="{{ aboutMe.twitterLink }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="linkedin">Linkedin</label>
-                                        <input type="text" class="form-control" id="linkedin" placeholder="Lien vers le compte linkedin" required name="linkedin_link" value="{{ aboutMe.linkedinLink }}">
+                                        <input type="text" class="form-control" id="linkedin" placeholder="Lien vers le compte linkedin" required minlength="20" maxlength="255" name="linkedin_link" value="{{ aboutMe.linkedinLink }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="GitHub">GitHub</label>
-                                        <input type="text" class="form-control" id="GitHub" placeholder="Lien vers le compte GitHub" required name="github_link" value="{{ aboutMe.githubLink }}">
+                                        <input type="text" class="form-control" id="GitHub" placeholder="Lien vers le compte GitHub" required minlength="20" maxlength="255" name="github_link" value="{{ aboutMe.githubLink }}">
                                     </div>
                                 </div>
                                 <!-- /.card-body -->

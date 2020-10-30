@@ -38,38 +38,35 @@ class UserDAO extends DAO {
 
         $req = $db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`, `date_registered`) VALUES(:email, :password, :pseudo, :role, :dateRegistered)');
         $user = $req->execute(['email' => $user->getEmail(), 'password' => $user->getPassword(), 'pseudo' => $user->getPseudo(), 'role' => 'ROLE_USER', 'dateRegistered' => date('Y-m-d H:i:s')]);
+
         return $user;
     }
 
-    public function getUserByEmail(string $email) {
+    public function getUserByEmail(string $email): ?UserDTO
+    {
         $db = $this->connectDb();
 
         $req = $db->query('SELECT * FROM user WHERE email = \''.$email.'\'');
         $user = $req->fetch(\PDO::FETCH_ASSOC);
 
-        if (!empty($user)) {
-            $userDTO = new UserDTO($user);
-            if ($userDTO) {
-                return $userDTO;
-            }
+        if (empty($user)) {
+            return null;
         }
 
-        return false;
+        return new UserDTO($user);
     }
 
-    public function getUserByPseudo(string $pseudo) {
+    public function getUserByPseudo(string $pseudo): ?UserDTO {
         $db = $this->connectDb();
 
         $req = $db->query('SELECT * FROM user WHERE pseudo = \''.$pseudo.'\'');
         $user = $req->fetch(\PDO::FETCH_ASSOC);
-        if (!empty($user)) {
-            $userDTO = new UserDTO($user);
-            if ($userDTO) {
-                return $userDTO;
-            }
+
+        if (empty($user)) {
+            return null;
         }
 
-        return false;
+        return new UserDTO($user);
     }
 
     public function getUserById(int $id) {

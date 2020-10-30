@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\DAO\AboutMeDAO;
 use App\DAO\UserDAO;
 use App\DTO\UserDTO;
+use App\Form\FormValidator;
 
 
 class UserController extends Controller {
@@ -23,33 +24,65 @@ class UserController extends Controller {
     }
 
     public function addUser() {
-        if (!empty($this->post['email']) && !empty($this->post['password']) && !empty($this->post['pseudo'] && filter_var($this->post['email'], FILTER_VALIDATE_EMAIL))) {
-            $userDTO = new UserDTO();
-            $userDTO->setEmail($this->post['email']);
-            $userDTO->setPseudo($this->post['pseudo']);
-            $userDTO->setPassword(password_hash($this->post['password'], PASSWORD_BCRYPT));
-            $user = new UserDAO();
+        if (empty($this->post)) {
+            echo 'Aucunes données.';
+            return;
+        }
 
-            if (!empty($user->getUserByEmail($userDTO->getEmail()))) {
-                echo 'User with this email already exists';
-                return;
-            }
+        $form = new FormValidator();
+        $rules = [
+            [
+                'fieldName' => 'email',
+                'type' => 'email',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'password',
+                'type' => 'string',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'pseudo',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'required' => true,
+            ]
+        ];
 
-            if ($user->getUserByPseudo($userDTO->getPseudo())) {
-                echo 'User with this pseudo already exists';
-                return;
-            }
+        if (!empty($form->validate($rules, $_POST))) {
+            echo 'Formulaire non valide, vérifiez les informations';
+            return;
+        }
 
-            $user->save($userDTO);
-            if ($user) {
-                $this->session['email'] = $userDTO->getEmail();
-                $this->session['pseudo'] = $userDTO->getPseudo();
-                $this->redirect('/');
-            }  else {
-                echo 'Erreur, l\'utilisateut n\'as pas pu être ajouté';
-            }
-        } else {
-            echo 'Erreur données invalides';
+        $userDTO = new UserDTO();
+        $userDTO->setEmail($this->post['email']);
+        $userDTO->setPseudo($this->post['pseudo']);
+        $userDTO->setPassword(password_hash($this->post['password'], PASSWORD_BCRYPT));
+        $user = new UserDAO();
+
+        if (!empty($user->getUserByEmail($userDTO->getEmail()))) {
+            echo 'User with this email already exists';
+            return;
+        }
+
+        if (!empty($user->getUserByPseudo($userDTO->getPseudo()))) {
+            echo 'User with this pseudo already exists';
+            return;
+        }
+
+        $user = $user->save($userDTO);
+        if ($user) {
+            $this->session['email'] = $userDTO->getEmail();
+            $this->session['pseudo'] = $userDTO->getPseudo();
+            $this->redirect('/');
+        }  else {
+            echo 'Erreur, l\'utilisateut n\'as pas pu être ajouté';
+            return;
         }
     }
 
@@ -68,14 +101,37 @@ class UserController extends Controller {
     }
 
     public function authenticate() {
-        if (empty($this->post['email']) && !filter_var($this->post['email'], FILTER_VALIDATE_EMAIL) && empty($this->post['password'])) {
-            echo 'Erreur de connexion';
+        if (empty($this->post)) {
+            echo 'Aucunes données.';
+            return;
+        }
+
+        $form = new FormValidator();
+        $rules = [
+            [
+                'fieldName' => 'email',
+                'type' => 'email',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'password',
+                'type' => 'string',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => true,
+            ]
+        ];
+
+        if (!empty($form->validate($rules, $_POST))) {
+            echo 'Formulaire non valide, vérifiez les informations';
             return;
         }
 
         $user = new UserDAO();
         $user = $user->getUserByEmail($this->post['email']);
-        if (!$user && $this->post['email'] !== $user->getEmail()) {
+        if (empty($user)) {
             echo 'Aucun utilisateur correspondant à cette adresse email à été trouvé';
             return;
         }

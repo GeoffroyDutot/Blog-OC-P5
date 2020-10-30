@@ -9,6 +9,7 @@ use App\DAO\CommentDAO;
 use App\DAO\PostDAO;
 use App\DAO\UserDAO;
 use App\DTO\AboutMeDTO;
+use App\Form\FormValidator;
 
 class AdminController extends Controller {
 
@@ -115,9 +116,62 @@ class AdminController extends Controller {
             //@TODO Display an error - empty data
         }
 
-        if (empty($this->post['firstname']) || empty($this->post['lastname']) || empty($this->post['slogan']) || empty($this->post['bio']) || empty($this->post['twitter_link']) || empty($this->post['linkedin_link']) || empty($this->post['github_link'])) {
+        $form = new FormValidator();
+        $rules = [
+            [
+                'fieldName' => 'firstname',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'lastname',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'slogan',
+                'type' => 'string',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'bio',
+                'type' => 'string',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'twitter_link',
+                'type' => 'string',
+                'minLength' => 20,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'linkedin_link',
+                'type' => 'string',
+                'minLength' => 20,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'github_link',
+                'type' => 'string',
+                'minLength' => 20,
+                'maxLength' => 255,
+                'required' => true,
+            ]
+        ];
+
+        if (!empty($form->validate($rules, $this->post))) {
             $this->redirect('/admin/a-propos');
-            //@TODO Display an error - empty data required
+            //@TODO Display an error - invalid or missing data required
         }
 
         $aboutMeDAO = new AboutMeDAO();

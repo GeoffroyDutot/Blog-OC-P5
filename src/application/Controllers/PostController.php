@@ -10,6 +10,7 @@ use App\DAO\PostDAO;
 use App\DAO\UserDAO;
 use App\DTO\CommentDTO;
 use App\DTO\PostDTO;
+use App\Form\FormValidator;
 
 class PostController extends Controller {
     public function index() {
@@ -51,14 +52,33 @@ class PostController extends Controller {
         $this->render('post.html.twig', $data);
     }
 
-    public function submitComment(int $id) {
-        if (empty($_POST)) {
+    public function submitComment(int $postId) {
+        if (empty($this->session)) {
+            //@TODO Display error
+            echo 'Utilisateur non connecté';
+            return;
+        }
+
+        if (empty($this->post)) {
+            //@TODO Display error
             echo 'Aucune données';
             return;
         }
 
-        if (empty($this->session)) {
-            echo 'Utilisateur non connecté';
+        $form = new FormValidator();
+        $rules = [
+            [
+                'fieldName' => 'comment',
+                'type' => 'string',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => true,
+            ]
+        ];
+
+        if (!empty($form->validate($rules, $this->post))) {
+            //@TODO Display error
+            echo 'Formulaire non valide, vérifiez les informations';
             return;
         }
 
@@ -66,12 +86,13 @@ class PostController extends Controller {
         $user = $userDAO->getUserByPseudo($this->session['pseudo']);
 
         if (empty($user)) {
+            //@TODO Display error
             echo 'Utilisateur non connecté';
             return;
         }
         $commentDTO = new CommentDTO();
-        $commentDTO->setContent($_POST['comment']);
-        $commentDTO->setIdPost($id);
+        $commentDTO->setContent($this->post['comment']);
+        $commentDTO->setIdPost($postId);
         $commentDTO->setIdUser($user->getId());
 
         if ($user->getRole() === 'ROLE_ADMIN') {
@@ -82,9 +103,12 @@ class PostController extends Controller {
 
         $commentDAO = new CommentDAO();
         $comment = $commentDAO->submitComment($commentDTO);
-        if (!empty($comment)) {
-            $this->redirect($_SERVER['HTTP_REFERER']);
+        if (empty($comment)) {
+            //@TODO Display error
+            echo 'Erreur interne';
+            return;
         }
-        echo 'Erreur interne';
+
+        $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }

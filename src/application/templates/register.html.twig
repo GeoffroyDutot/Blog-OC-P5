@@ -4,7 +4,7 @@
 
 {% block body %}
     <!-- Page Header -->
-    <header class="masthead" style="background-image: url('../../assets/img/{{ aboutMe.picture }}')">
+    <header class="masthead" style="background-image: url('../../assets/aboutme/{{ aboutMe.picture }}')">
         <div class="overlay"></div>
         <div class="container">
             <div class="row">
@@ -12,7 +12,7 @@
                     <div class="site-heading">
                         <h1>{{ aboutMe.firstname }} {{ aboutMe.lastname|upper }}</h1>
                         <span class="subheading">{{ aboutMe.slogan }}</span>
-                        <img src="../../assets/img/{{ aboutMe.profilPicture }}" class="profil-picture">
+                        <img src="../../assets/aboutme/{{ aboutMe.profilPicture }}" class="profil-picture" alt="profil picture">
                     </div>
                 </div>
             </div>
@@ -28,21 +28,21 @@
                     <div class="control-group">
                         <div class="form-group floating-label-form-group controls">
                             <label for="email">Adresse Email</label>
-                            <input name="email" type="email" class="form-control" placeholder="Email" id="email" required data-validation-required-message="Veuillez renseigner une adresse email valide.">
+                            <input name="email" type="email" class="form-control" placeholder="Email" id="email" required minlength="5" maxlength="255" data-validation-required-message="Veuillez renseigner une adresse email valide.">
                             <p class="help-block text-danger"></p>
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label for="password">Mot de passe</label>
-                            <input name="password" type="password" class="form-control" placeholder="MotdePasse" id="password" required data-validation-required-message="Veuillez renseigner un mot de passe valide.">
+                            <input name="password" type="password" class="form-control" placeholder="MotdePasse" id="password" required minlength="5" maxlength="255" data-validation-required-message="Veuillez renseigner un mot de passe valide.">
                             <p class="help-block text-danger"></p>
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="form-group floating-label-form-group controls">
                             <label for="pseudo">Pseudo</label>
-                            <input name="pseudo" class="form-control" placeholder="Pseudo" id="pseudo" required data-validation-required-message="Veuillez renseigner un pseudo valide.">
+                            <input name="pseudo" class="form-control" placeholder="Pseudo" id="pseudo" required minlength="3" maxlength="255" data-validation-required-message="Veuillez renseigner un pseudo valide.">
                             <p class="help-block text-danger"></p>
                         </div>
                     </div>
