@@ -116,6 +116,12 @@ class AdminController extends Controller {
             //@TODO Display an error - empty data
         }
 
+        if(!empty($_FILES)) {
+            foreach ($_FILES as $inputName => $file) {
+                $this->post[$inputName] = $file;
+            }
+        }
+
         $form = new FormValidator();
         $rules = [
             [
@@ -147,6 +153,24 @@ class AdminController extends Controller {
                 'required' => true,
             ],
             [
+                'fieldName' => 'profil_picture',
+                'type' => 'file',
+                'extension' => ['image/png', 'image/jpg', 'image/jpeg'],
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'cv_pdf',
+                'type' => 'file',
+                'extension' => ['application/pdf'],
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'picture',
+                'type' => 'file',
+                'extension' => ['image/png', 'image/jpg', 'image/jpeg'],
+                'required' => false,
+            ],
+            [
                 'fieldName' => 'twitter_link',
                 'type' => 'string',
                 'minLength' => 20,
@@ -170,7 +194,9 @@ class AdminController extends Controller {
         ];
 
         if (!empty($form->validate($rules, $this->post))) {
-            $this->redirect('/admin/a-propos');
+            var_dump($form->getErrors());
+            echo "Formulaire invalide";
+            return;
             //@TODO Display an error - invalid or missing data required
         }
 
@@ -204,81 +230,26 @@ class AdminController extends Controller {
             $aboutMe->setBio($aboutMeDTO->getBio());
         }
 
-        //@TODO Delete old files
-        if (!empty($_FILES['profil_picture']['name'])) {
-            if ($_FILES['profil_picture']['error'] === 0) {
-                if ($_FILES['profil_picture']['size'] <= 1000000) {
-                    $fileData = pathinfo($_FILES['profil_picture']['name']);
-                    $fileExtension = $fileData['extension'];
-                    $allowedExtensions = ['jpg', 'jpeg', 'png'];
-                    if (in_array($fileExtension, $allowedExtensions)) {
-                        move_uploaded_file($_FILES['profil_picture']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($_FILES['profil_picture']['name']));
-                        $aboutMe->setProfilPicture($_FILES['profil_picture']['name']);
-                        unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getProfilPicture());
-                    } else {
-                        $this->redirect('/admin/a-propos');
-                        //@TODO Display Error wrong extension file
-                    }
-                } else {
-                    $this->redirect('/admin/a-propos');
-                    //@TODO Display Error File too big
-                }
-            } elseif($_FILES['profil_picture']['error'] !== 4) {
-                $this->redirect('/admin/a-propos');
-                //@TODO Display an Internal Error
-            }
+        if (!empty($this->post['profil_picture']['name'])) {
+            move_uploaded_file($this->post['profil_picture']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($this->post['profil_picture']['name']));
+            $aboutMe->setProfilPicture($this->post['profil_picture']['name']);
+            unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getProfilPicture());
         } else {
             $aboutMe->setProfilPicture($aboutMeDTO->getProfilPicture());
         }
 
-        if (!empty($_FILES['cv_pdf']['name'])) {
-            if ($_FILES['cv_pdf']['error'] === 0) {
-                if ($_FILES['cv_pdf']['size'] <= 1000000) {
-                    $fileData = pathinfo($_FILES['cv_pdf']['name']);
-                    $fileExtension = $fileData['extension'];
-                    $allowedExtensions = ['pdf'];
-                    if (in_array($fileExtension, $allowedExtensions)) {
-                        move_uploaded_file($_FILES['cv_pdf']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($_FILES['cv_pdf']['name']));
-                        $aboutMe->setCvPdf($_FILES['cv_pdf']['name']);
-                        unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getCvPdf());
-                    } else {
-                        $this->redirect('/admin/a-propos');
-                        //@TODO Display Error wrong extension file
-                    }
-                } else {
-                    $this->redirect('/admin/a-propos');
-                    //@TODO Display Error File too big
-                }
-            } elseif($_FILES['profil_picture']['error'] !== 4) {
-                $this->redirect('/admin/a-propos');
-                //@TODO Display an Internal Error
-            }
+        if (!empty($this->post['cv_pdf']['name'])) {
+            move_uploaded_file($this->post['cv_pdf']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($this->post['cv_pdf']['name']));
+            $aboutMe->setCvPdf($this->post['cv_pdf']['name']);
+            unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getCvPdf());
         } else {
             $aboutMe->setCvPdf($aboutMeDTO->getCvPdf());
         }
 
-        if (!empty($_FILES['picture']['name'])) {
-            if ($_FILES['picture']['error'] === 0) {
-                if ($_FILES['picture']['size'] <= 1000000) {
-                    $fileData = pathinfo($_FILES['picture']['name']);
-                    $fileExtension = $fileData['extension'];
-                    $allowedExtensions = ['jpg', 'jpeg', 'png'];
-                    if (in_array($fileExtension, $allowedExtensions)) {
-                        move_uploaded_file($_FILES['picture']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($_FILES['picture']['name']));
-                        $aboutMe->setCvPdf($_FILES['picture']['name']);
-                        unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getPicture());
-                    } else {
-                        $this->redirect('/admin/a-propos');
-                        //@TODO Display Error wrong extension file
-                    }
-                } else {
-                    $this->redirect('/admin/a-propos');
-                    //@TODO Display Error File too big
-                }
-            } elseif($_FILES['profil_picture']['error'] !== 4) {
-                $this->redirect('/admin/a-propos');
-                //@TODO Display an Internal Error
-            }
+        if (!empty($this->post['picture']['name'])) {
+            move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($this->post['picture']['name']));
+            $aboutMe->setPicture($this->post['picture']['name']);
+            unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getPicture());
         } else {
             $aboutMe->setPicture($aboutMeDTO->getPicture());
         }
