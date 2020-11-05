@@ -16,6 +16,8 @@ class PostDTO extends DTO {
     protected string $content;
     protected ?string $resume;
     protected ?string $picture = null;
+    protected ?DateTime $archived_at;
+    protected bool $is_archived;
 
     public function __construct($data)
     {
@@ -126,6 +128,36 @@ class PostDTO extends DTO {
 
     public function setPicture(?string $picture): PostDTO {
         $this->picture = $picture;
+        return $this;
+    }
+
+    public function getArchivedAt(): ?DateTime {
+        return $this->archived_at;
+    }
+
+    public function setArchivedAt(?string $archived_at): PostDTO {
+        if (!$archived_at instanceof DateTime) {
+            if (!empty($archived_at)) {
+                $archived_at = new DateTime($archived_at);
+            } else {
+                $archived_at = null;
+            }
+        }
+
+        $this->archived_at = $archived_at;
+
+        return $this;
+    }
+
+    public function getIsArchived(): bool
+    {
+        return $this->is_archived;
+    }
+
+    public function setIsArchived(bool $is_archived): PostDTO
+    {
+        $this->is_archived = $is_archived;
+
         return $this;
     }
 }

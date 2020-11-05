@@ -39,7 +39,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped text-center">
+                                <table id="posts" class="table table-bordered table-striped text-center">
                                     <thead>
                                     <tr>
                                         <th>Titre</th>
@@ -57,6 +57,40 @@
                                             <td>{{ post.resume }}</td>
                                             <td>{{ post.createdAt|date("d/m/Y") }}</td>
                                             <td>{{ post.updatedAt|date("d/m/Y") }}</td>
+                                            <td><i class="nav-icon fas fa-pen"></i></td>
+                                            <td><i class="nav-icon fas fa-archive text-blue"></i></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Liste d'articles archivés</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="posts-archived" class="table table-bordered table-striped text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Titre</th>
+                                        <th>Résumé</th>
+                                        <th>Créée le</th>
+                                        <th>Archivé le</th>
+                                        <th> </th>
+                                        <th> </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for post in postsArchived %}
+                                        <tr>
+                                            <td>{{ post.title }}</td>
+                                            <td>{{ post.resume }}</td>
+                                            <td>{{ post.createdAt|date("d/m/Y") }}</td>
+                                            <td>{{ post.archivedAt|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-pen"></i></td>
                                             <td><i class="nav-icon fas fa-trash text-danger"></i></td>
                                         </tr>
@@ -89,7 +123,32 @@
     <!-- page script -->
     <script>
         $(function () {
-            $("#example1").DataTable({
+            $("#posts").DataTable({
+                "responsive": true,
+                "columns": [
+                    { responsivePriority: 1 },
+                    { responsivePriority: 2 },
+                    { responsivePriority: 5 },
+                    { responsivePriority: 6 },
+                    { responsivePriority: 3 },
+                    { responsivePriority: 4 }
+                ],
+                "autoWidth": false,
+                "language": {
+                    "emptyTable":     "Aucun article trouvé",
+                    "lengthMenu": "Afficher : _MENU_ articles",
+                    "infoEmpty":      "Affiche de 0 à 0 sur 0 articles",
+                    "info": "Affiche _START_ à _END_ sur _TOTAL_ articles",
+                    "search": "Recherche:",
+                    "paginate": {
+                        "previous": "Précédent",
+                        "next": "Suivant"
+                    }
+                }
+            });
+        });
+        $(function () {
+            $("#posts-archived").DataTable({
                 "responsive": true,
                 "columns": [
                     { responsivePriority: 1 },
