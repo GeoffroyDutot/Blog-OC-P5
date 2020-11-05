@@ -12,7 +12,7 @@ class PostDAO extends DAO {
         $db = $this->connectDb();
         $posts = [];
 
-        $query = 'SELECT * FROM `post` ORDER BY `created_at` DESC ';
+        $query = 'SELECT * FROM `post` WHERE `is_archived` = 0 ORDER BY `created_at` DESC ';
 
         if ($limit) {
             $limit = 'LIMIT ' . $limit;
@@ -32,6 +32,32 @@ class PostDAO extends DAO {
 
         return  $posts;
     }
+
+    public function getAllArchived($limit = null) : array {
+        $db = $this->connectDb();
+        $posts = [];
+
+        $query = 'SELECT * FROM `post` WHERE `is_archived` = 1 ORDER BY `created_at` DESC ';
+
+        if ($limit) {
+            $limit = 'LIMIT ' . $limit;
+        }
+
+        $req = $db->query($query . $limit);
+
+        $data = $req->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (!$data) {
+            return $posts;
+        }
+
+        foreach ($data as $post) {
+            $posts[] = new PostDTO($post);
+        }
+
+        return  $posts;
+    }
+
 
     public function getPostBySlug(string $slug) : PostDTO {
         $db = $this->connectDb();

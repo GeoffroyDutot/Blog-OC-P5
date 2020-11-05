@@ -51,6 +51,13 @@ class AdminController extends Controller {
             $data['posts'] = $posts;
         }
 
+        $postsArchived = new PostDAO();
+        $postsArchived = $postsArchived->getAllArchived();
+
+        if ($postsArchived) {
+            $data['postsArchived'] = $postsArchived;
+        }
+
         $this->render('admin/posts.html.twig', $data);
     }
 
