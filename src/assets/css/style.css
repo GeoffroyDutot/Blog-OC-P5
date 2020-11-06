@@ -26,6 +26,7 @@
 
 .grow{
   transition: all .1s ease-in-out;
+  cursor: pointer;
 }
 
 .grow:hover {
