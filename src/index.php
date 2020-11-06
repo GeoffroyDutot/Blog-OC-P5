@@ -49,6 +49,7 @@ $router->post('/admin/modifier-a-propos', 'Admin#editAboutMe');
 
 // POST
 $router->post('/admin/articles/archiver', 'Api#archivePost');
+$router->post('/admin/articles/desarchiver', 'Api#unarchivePost');
 
 // COMMENT
 $router->post('/admin/commentaires/valider', 'Api#validateComment');

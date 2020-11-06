@@ -82,6 +82,7 @@
                                         <th>Archivé le</th>
                                         <th> </th>
                                         <th> </th>
+                                        <th> </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -92,6 +93,7 @@
                                             <td>{{ post.createdAt|date("d/m/Y") }}</td>
                                             <td>{{ post.archivedAt|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-pen"></i></td>
+                                            <td><i class="nav-icon fas fa-box-open text-blue grow unarchive-post" data-id-post="{{ post.id }}"></i></td>
                                             <td><i class="nav-icon fas fa-trash text-danger"></i></td>
                                         </tr>
                                     {% endfor %}
