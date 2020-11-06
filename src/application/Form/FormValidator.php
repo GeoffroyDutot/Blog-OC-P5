@@ -29,16 +29,7 @@ class FormValidator {
     {
         foreach ($rules as $rule) {
             if ($rule['type'] === "file") {
-                if ($rule['required'] === false && empty($payload[$rule['fieldName']]['name'])) {
-                    continue;
-                }
-                if (!$this->validateRequiredFile($rule, $payload)) {
-                    continue;
-                }
-                $this->validateFileName($rule, $payload);
-                $this->validateFileError($rule, $payload);
-                $this->validateFileSize($rule, $payload);
-                $this->validateFileExtension($rule, $payload);
+                $this->validateFile($rule, $payload);
                 continue;
             }
             if ($rule['required'] === false && empty($payload[$rule['fieldName']])) {
@@ -63,6 +54,20 @@ class FormValidator {
         }
 
         return $this->errors;
+    }
+
+    public function validateFile(array $rule, array $payload)
+    {
+        if ($rule['required'] === false && empty($payload[$rule['fieldName']]['name'])) {
+            return;
+        }
+        if (!$this->validateRequiredFile($rule, $payload)) {
+            return;
+        }
+        $this->validateFileName($rule, $payload);
+        $this->validateFileError($rule, $payload);
+        $this->validateFileSize($rule, $payload);
+        $this->validateFileExtension($rule, $payload);
     }
 
     public function validateRequired(array $rule, array $payload)
@@ -136,7 +141,7 @@ class FormValidator {
 
     public function validateFileSize(array $rule, array $payload)
     {
-        if ($payload[$rule['fieldName']]['size'] > 1000000) {
+        if ($rule['size'] < $payload[$rule['fieldName']]['size']) {
             $this->errors[$rule['fieldName']][] = 'This file is too big';
         }
     }

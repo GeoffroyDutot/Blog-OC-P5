@@ -163,18 +163,21 @@ class AdminController extends Controller {
                 'fieldName' => 'profil_picture',
                 'type' => 'file',
                 'extension' => ['image/png', 'image/jpg', 'image/jpeg'],
+                'size' => 2097152,
                 'required' => false,
             ],
             [
                 'fieldName' => 'cv_pdf',
                 'type' => 'file',
                 'extension' => ['application/pdf'],
+                'size' => 2097152,
                 'required' => false,
             ],
             [
                 'fieldName' => 'picture',
                 'type' => 'file',
                 'extension' => ['image/png', 'image/jpg', 'image/jpeg'],
+                'size' => 2097152,
                 'required' => false,
             ],
             [
