@@ -149,12 +149,12 @@ class PostDTO extends DTO {
         return $this;
     }
 
-    public function getIsArchived(): bool
+    public function getIsArchived(): int
     {
         return $this->is_archived;
     }
 
-    public function setIsArchived(bool $is_archived): PostDTO
+    public function setIsArchived(int $is_archived): PostDTO
     {
         $this->is_archived = $is_archived;
 

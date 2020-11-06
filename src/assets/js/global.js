@@ -26,12 +26,26 @@ $('.unvalidate-comment').click(function (e) {
     })
 });
 
-    $('.archive-post').click(function (e) {
+$('.archive-post').click(function (e) {
     e.preventDefault();
     var id = $(this).attr('data-id-post');
     $.ajax({
         type: 'POST',
         url: "/admin/articles/archiver",
+        data: { 'id' : id }
+    }).done(function (data) {
+        if (data.success) {
+            location.reload();
+        }
+    })
+});
+
+$('.unarchive-post').click(function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-id-post');
+    $.ajax({
+        type: 'POST',
+        url: "/admin/articles/desarchiver",
         data: { 'id' : id }
     }).done(function (data) {
         if (data.success) {
