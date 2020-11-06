@@ -5,6 +5,8 @@ namespace App\Controllers;
 
 
 use App\DAO\CommentDAO;
+use App\DAO\PostDAO;
+use App\DTO\PostDTO;
 
 class ApiController extends Controller {
 
@@ -14,7 +16,7 @@ class ApiController extends Controller {
     }
 
     public function validateComment() {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+        if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
             //@TODO Display an error - User doesn't have the right access to admin
@@ -39,7 +41,7 @@ class ApiController extends Controller {
     }
 
     public function unvalidateComment() {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+        if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
             //@TODO Display an error - User doesn't have the right access to admin
@@ -62,5 +64,42 @@ class ApiController extends Controller {
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
             //@TODO Display an error - Internal Error
         }
+    }
+
+    public function archivePost() {
+        if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - User doesn't have the right access to admin
+        }
+
+        if (empty($this->post['id'])) {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Missing required data']));
+            //@TODO Display an error - Missing required data
+        }
+
+        $postDAO = new PostDAO();
+        $postDTO = $postDAO->getPostById($this->post['id']);
+
+        if (empty($postDTO)) {
+            http_response_code(404);
+            die(json_encode(['success' => false, 'msg' => 'Post didn\'t find']));
+            //@TODO Display an error - Post didn't find
+        }
+
+        $postDTO->setIsArchived(true);
+        $postDTO->setArchivedAt(date('Y-m-d H:i:s'));
+        $postDTO = $postDAO->save($postDTO);
+
+        if ($postDTO !== true) {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - Internal Error
+        }
+
+        http_response_code(200);
+        die(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
+        //@TODO Display a success msg
     }
 }

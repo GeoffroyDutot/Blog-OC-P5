@@ -58,7 +58,7 @@
                                             <td>{{ post.createdAt|date("d/m/Y") }}</td>
                                             <td>{{ post.updatedAt|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-pen"></i></td>
-                                            <td><i class="nav-icon fas fa-archive text-blue"></i></td>
+                                            <td><i class="nav-icon fas fa-archive text-blue grow archive-post" data-id-post="{{ post.id }}"></i></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
