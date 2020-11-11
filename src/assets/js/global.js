@@ -53,3 +53,17 @@ $('.unarchive-post').click(function (e) {
         }
     })
 });
+
+$('.delete-post').click(function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-id-post');
+    $.ajax({
+        type: 'DELETE',
+        url: "/admin/articles/supprimer/"+id,
+        data: { 'id' : id }
+    }).done(function (data) {
+        if (data.success) {
+            location.reload();
+        }
+    })
+});

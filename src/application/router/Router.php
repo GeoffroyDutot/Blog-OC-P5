@@ -21,6 +21,10 @@ class Router {
         return $this->add($path, $callable, $name, 'POST');
     }
 
+    public function delete($path, $callable, $name = null) {
+        return $this->add($path, $callable, $name, 'DELETE');
+    }
+
     private function add($path, $callable, $name, $method) {
         $route = new Route($path, $callable);
         $this->routes[$method][] = $route;
@@ -34,7 +38,6 @@ class Router {
     }
 
     public function run() {
-
         if (!isset($this->routes[$_SERVER['REQUEST_METHOD']])){
             throw new RouterException('REQUEST_METHOD doesn\'t exists');
         }

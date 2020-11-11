@@ -45,7 +45,7 @@
                     <h4>Commentaires</h4>
                     <br>
                     <ul class="list-unstyled">
-                        {% for comment in comments %}
+                        {% for comment in post.comments %}
                         <li class="media comment-container">
                             {% if comment.user.profilPicture is not empty %}
                             <img class="mr-3 comment-user-picture" src="../../assets/img/user/profil_picture/{{ comment.user.profilPicture }}" alt="User profil picture">
