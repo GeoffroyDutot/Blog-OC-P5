@@ -40,11 +40,23 @@ class CommentDAO extends DAO {
         return  $comments;
     }
 
-    public function getCommentsByPost(int $id_post) : array {
+    public function getByPostId(array $filters) : array {
         $db = $this->connectDb();
         $comments = [];
 
-        $req = $db->query('SELECT * FROM `comment` WHERE (`id_post` = '.$id_post.' AND `status` = "validated")');
+        $query = "SELECT * FROM `comment`";
+
+        if (empty($filters['postId'])) {
+            return null;
+        }
+
+        $query .= " WHERE `id_post` = ".$filters['postId'];
+
+        if (!empty($filters['status'])) {
+            $query .= " AND `status` = " .'"'.$filters['status'].'"';
+        }
+
+        $req = $db->query($query);
 
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -78,5 +90,16 @@ class CommentDAO extends DAO {
 
         $req = $db->prepare('UPDATE comment SET status=:status WHERE id = \''.$id.'\'');
         return $req->execute(['status' => $status]);
+    }
+
+    public function delete(CommentDTO $commentDTO)
+    {
+        $db = $this->connectDb();
+
+        if (empty($commentDTO->getId())) {
+            return null;
+        }
+
+        return $db->exec('DELETE FROM comment WHERE id = '.$commentDTO->getId());
     }
 }

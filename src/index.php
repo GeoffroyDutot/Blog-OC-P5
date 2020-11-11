@@ -50,6 +50,7 @@ $router->post('/admin/modifier-a-propos', 'Admin#editAboutMe');
 // POST
 $router->post('/admin/articles/archiver', 'Api#archivePost');
 $router->post('/admin/articles/desarchiver', 'Api#unarchivePost');
+$router->delete('/admin/articles/supprimer/:id', "Api#deletePost")->with('id', '([0-9]+)');
 
 // COMMENT
 $router->post('/admin/commentaires/valider', 'Api#validateComment');

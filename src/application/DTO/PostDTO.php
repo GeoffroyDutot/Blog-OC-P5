@@ -18,6 +18,8 @@ class PostDTO extends DTO {
     protected ?string $picture = null;
     protected ?DateTime $archived_at;
     protected bool $is_archived;
+    //var : CommentDTO[]
+    private $comments = [];
 
     public function __construct($data)
     {
@@ -158,6 +160,16 @@ class PostDTO extends DTO {
     {
         $this->is_archived = $is_archived;
 
+        return $this;
+    }
+
+    public function getComments(): array
+    {
+        return $this->comments;
+    }
+
+    public function setComments(array $comments): PostDTO {
+        $this->comments = $comments;
         return $this;
     }
 }

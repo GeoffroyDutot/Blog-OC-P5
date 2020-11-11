@@ -39,14 +39,10 @@ class PostController extends Controller {
 
         $post = new PostDAO();
         $post = $post->getPostBySlug($slug);
+        //@TODO if is_archived and not admin redirect + error
 
         if (!empty($post)) {
             $data['post'] = $post;
-            $comments = new CommentDAO();
-            $comments = $comments->getCommentsByPost($post->getId());
-            if (!empty($comments)) {
-                $data['comments'] = $comments;
-            }
         }
 
         $this->render('post.html.twig', $data);

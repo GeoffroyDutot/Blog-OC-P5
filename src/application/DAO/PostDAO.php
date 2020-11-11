@@ -4,11 +4,14 @@
 namespace App\DAO;
 
 
+use App\DTO\CommentDTO;
 use App\DTO\PostDTO;
 
 class PostDAO extends DAO {
 
     public function getAll($limit = null) : array {
+        //@TODO add filters and fusion getAllArchived
+
         $db = $this->connectDb();
         $posts = [];
 
@@ -58,34 +61,58 @@ class PostDAO extends DAO {
         return  $posts;
     }
 
-    public function getPostById(int $postId) : PostDTO
+    public function getPostById(int $postId, bool $details = false) : ?PostDTO
     {
         $db = $this->connectDb();
 
-        $req = $db->query('SELECT * FROM post WHERE id = \''.$postId.'\'');
+        $req = $db->query('SELECT * FROM post WHERE id = \''.$postId.'\' LIMIT 1');
         $post = $req->fetch(\PDO::FETCH_ASSOC);
 
         if (empty($post)) {
             return null;
         }
 
-        return new PostDTO($post);
+        $postDTO = new PostDTO($post);
+
+        if ($details) {
+            // Retrieves post comments
+            $commentDAO = new CommentDAO();
+            $filters = ['postId' => $postId];
+            $comments = $commentDAO->getByPostId($filters);
+            if (!empty($comments)) {
+                $postDTO->setComments($comments);
+            }
+        }
+
+        return $postDTO;
     }
 
-    public function getPostBySlug(string $slug) : PostDTO {
+    public function getPostBySlug(string $slug) : ?PostDTO {
         $db = $this->connectDb();
 
-        $req = $db->prepare('SELECT * FROM `post` WHERE `slug` = :slug LIMIT 1');
-        $req->execute(['slug' => $slug]);
+        $req = $db->query("SELECT * FROM `post` WHERE slug = '$slug' LIMIT 1");
         $post = $req->fetch(\PDO::FETCH_ASSOC);
+
+        if (empty($post)) {
+            return null;
+        }
+
         $postDTO = new PostDTO($post);
+
+        //Retrieves post comments
+        $commentDAO = new CommentDAO();
+        $filters = ['postId' => $postDTO->getId(), 'status' => 'validated'];
+        $comments = $commentDAO->getByPostId($filters);
+        if (!empty($comments)) {
+            $postDTO->setComments($comments);
+        }
 
         return $postDTO;
     }
 
     public function save(PostDTO $postDTO)
     {
-        $db =$this->connectDb();
+        $db = $this->connectDb();
 
         $postId = $postDTO->getId();
         if (!empty($postId)) {
@@ -102,5 +129,23 @@ class PostDAO extends DAO {
         }
 
         return $result;
+    }
+
+    public function delete(PostDTO $postDTO)
+    {
+        $db = $this->connectDb();
+
+        if (empty($postDTO->getId())) {
+            return null;
+        }
+
+        if ($postDTO->getComments()) {
+            foreach ($postDTO->getComments() as $commentDTO) {
+                $commentDAO = new CommentDAO();
+                $commentDAO->delete($commentDTO);
+            }
+        }
+
+        return $db->exec('DELETE FROM post WHERE id = '.$postDTO->getId());
     }
 }

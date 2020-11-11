@@ -139,4 +139,27 @@ class ApiController extends Controller {
         die(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
         //@TODO Display a success msg
     }
+
+    public function deletePost(int $postId) {
+        $postDAO = new PostDAO();
+        $postDTO = $postDAO->getPostById($postId, true);
+
+        if (empty($postDTO)) {
+            http_response_code(404);
+            die(json_encode(['success' => false, 'msg' => 'Post not find']));
+            //@TODO Display an error - Post not found
+        }
+
+        $deletePost = $postDAO->delete($postDTO);
+
+        if (empty($deletePost)) {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - Internal Error
+        }
+
+        http_response_code(200);
+        die(json_encode(['success' => true, 'msg' => 'Post Deleted successfuly']));
+        //@TODO Display a success msg
+    }
 }
