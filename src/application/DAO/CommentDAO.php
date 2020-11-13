@@ -8,17 +8,23 @@ use App\DTO\CommentDTO;
 
 class CommentDAO extends DAO {
 
-    public function getAllCommentsUnvalidated($limit = null) : array {
+    public function getAll(array $filters, $limit = null) : array {
         $db = $this->connectDb();
         $comments = [];
 
-        $query = 'SELECT * FROM `comment` WHERE `status` IS NULL ORDER BY `created_at` DESC ';
+        $query = 'SELECT comment.* FROM `comment` JOIN user ON id_user = user.id JOIN post ON id_post = post.id WHERE user.is_deactivated = 0 AND post.is_archived = 0';
 
-        if ($limit) {
-            $limit = 'LIMIT ' . $limit;
+        if (!empty($filters['status'])) {
+            $query .= ' AND status ' . ($filters['status'] === 'NULL' ? 'IS NULL' : '= "' . $filters['status']. '"');
         }
 
-        $req = $db->query($query . $limit);
+        $query .= ' ORDER BY comment.created_at DESC';
+
+        if (!empty($limit)) {
+            $query .= ' LIMIT ' . $limit;
+        }
+
+        $req = $db->query($query);
 
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -44,13 +50,15 @@ class CommentDAO extends DAO {
         $db = $this->connectDb();
         $comments = [];
 
-        $query = "SELECT * FROM `comment`";
-
         if (empty($filters['postId'])) {
             return null;
         }
 
-        $query .= " WHERE `id_post` = ".$filters['postId'];
+        $query = "SELECT comment.* FROM `comment` JOIN user ON id_user = user.id  WHERE `id_post` = ".$filters['postId'];
+
+        if (isset($filters['userDeactivated'])) {
+            $query .= ' AND user.is_deactivated = '.$filters['userDeactivated'];
+        }
 
         if (!empty($filters['status'])) {
             $query .= " AND `status` = " .'"'.$filters['status'].'"';

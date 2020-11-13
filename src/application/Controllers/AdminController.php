@@ -20,14 +20,16 @@ class AdminController extends Controller {
             //@TODO Display an error - User doesn't have the right access to admin
         }
 
-        $posts = new PostDAO();
-        $posts = $posts->getAll(5);
+        $postDAO = new PostDAO();
+        $posts = $postDAO->getAll(5);
 
-        $users = new UserDAO();
-        $users = $users->getAll(5);
+        $userDAO = new UserDAO();
+        $filtersUser = ['is_deactivated' => 0];
+        $users = $userDAO->getAll($filtersUser, 5);
 
-        $comments = new CommentDAO();
-        $comments = $comments->getAllCommentsUnvalidated(5);
+        $commentDAO = new CommentDAO();
+        $filtersComment = ['status' => 'NULL'];
+        $comments = $commentDAO->getAll($filtersComment, 5);
 
         $data['posts'] = $posts;
         $data['users'] = $users;
@@ -44,15 +46,14 @@ class AdminController extends Controller {
 
         $data = [];
 
-        $posts = new PostDAO();
-        $posts = $posts->getAll();
+        $postDAO = new PostDAO();
+        $posts = $postDAO->getAll();
 
         if ($posts) {
             $data['posts'] = $posts;
         }
 
-        $postsArchived = new PostDAO();
-        $postsArchived = $postsArchived->getAllArchived();
+        $postsArchived = $postDAO->getAllArchived();
 
         if ($postsArchived) {
             $data['postsArchived'] = $postsArchived;
@@ -69,11 +70,19 @@ class AdminController extends Controller {
 
         $data = [];
 
-        $users = new UserDAO();
-        $users = $users->getAll();
+        $userDAO = new UserDAO();
+        $filters = ['is_deactivated' => 0];
+        $users = $userDAO->getAll($filters);
 
-        if ($users) {
+        if (!empty($users)) {
             $data['users'] = $users;
+        }
+
+        $filters = ['is_deactivated' => 1];
+        $usersDeactivated = $userDAO->getAll($filters);
+
+        if (!empty($usersDeactivated)) {
+            $data['usersDeactivated'] = $usersDeactivated;
         }
 
         $this->render('admin/users.html.twig', $data);
@@ -88,7 +97,8 @@ class AdminController extends Controller {
         $data = [];
 
         $comments = new CommentDAO();
-        $comments = $comments->getAllCommentsUnvalidated();
+        $filters = ['status' => 'NULL', ''];
+        $comments = $comments->getAll($filters);
 
         if ($comments) {
             $data['comments'] = $comments;

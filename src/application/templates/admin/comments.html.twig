@@ -55,7 +55,7 @@
                                             <td>{{ comment.user.pseudo }}</td>
                                             <td>{{ comment.content }}</td>
                                             <td>{{ comment.createdAt|date("d/m/Y") }}</td>
-                                            <td><i class="nav-icon fas fa-check grow validate-comment" data-id-comment="{{ comment.id }}"></i></td>
+                                            <td><i class="nav-icon fas fa-check green grow validate-comment" data-id-comment="{{ comment.id }}"></i></td>
                                             <td><i class="nav-icon fas fa-comment-slash text-danger grow unvalidate-comment" data-id-comment="{{ comment.id }}"></i></td>
                                         </tr>
                                     {% endfor %}

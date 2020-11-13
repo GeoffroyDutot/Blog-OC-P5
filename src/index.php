@@ -56,4 +56,7 @@ $router->delete('/admin/articles/supprimer/:id', "Api#deletePost")->with('id', '
 $router->post('/admin/commentaires/valider', 'Api#validateComment');
 $router->post('/admin/commentaires/refuser', 'Api#unvalidateComment');
 
+// USER
+$router->put('/admin/utilisateurs/:id/desactiver', 'Api#deactivateUser')->with('id', '([0-9]+)');
+
 $router->run();
