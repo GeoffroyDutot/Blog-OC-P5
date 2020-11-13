@@ -88,7 +88,7 @@
                                             <td>{{ user.reasonDeactivation }}</td>
                                             <td>{{ user.deactivatedAt|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-user-edit"></i></td>
-                                            <td><i class="nav-icon fas fa-user-check grow green"></i></td>
+                                            <td><i class="nav-icon fas fa-user-check grow green reactivate-user" data-id-user="{{ user.id }}"></i></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
