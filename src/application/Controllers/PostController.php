@@ -38,11 +38,16 @@ class PostController extends Controller {
         $data['aboutMe'] = $aboutMe;
 
         $post = new PostDAO();
-        $post = $post->getPostBySlug($slug);
+        $postDTO = $post->getPostBySlug($slug);
+
+        if (!empty($postDTO) && $postDTO->getIsArchived() && $this->session['role'] !== 'ROLE_ADMIN') {
+            //@TODO Display Error
+            $this->redirect('/articles');
+        }
         //@TODO if is_archived and not admin redirect + error
 
-        if (!empty($post)) {
-            $data['post'] = $post;
+        if (!empty($postDTO)) {
+            $data['post'] = $postDTO;
         }
 
         $this->render('post.html.twig', $data);

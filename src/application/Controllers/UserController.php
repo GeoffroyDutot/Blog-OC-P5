@@ -146,6 +146,11 @@ class UserController extends Controller {
              return;
         }
 
+        if ($user->getIsDeactivated()) {
+            echo 'Error your account has been deactivated';
+            return;
+        }
+
         $this->session['email'] = $user->getEmail();
         $this->session['pseudo'] = $user->getPseudo();
         $this->session['role'] = $user->getRole();
