@@ -39,7 +39,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table id="example1" class="table table-bordered table-striped text-center">
+                                <table id="users" class="table table-bordered table-striped text-center">
                                     <thead>
                                     <tr>
                                         <th>Pseudo</th>
@@ -56,7 +56,39 @@
                                             <td>{{ user.email }}</td>
                                             <td>{{ user.createdAt|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-user-edit"></i></td>
-                                            <td><i class="nav-icon fas fa-user-slash text-danger"></i></td>
+                                            <td><i class="nav-icon fas fa-user-slash text-danger grow deactivate-user" data-id-user="{{ user.id }}"></i></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Liste d'utilisateurs</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="users-deactivated" class="table table-bordered table-striped text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>Pseudo</th>
+                                        <th>Raison</th>
+                                        <th>Désactivé le</th>
+                                        <th> </th>
+                                        <th> </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for user in usersDeactivated %}
+                                        <tr>
+                                            <td>{{ user.pseudo }}</td>
+                                            <td>{{ user.reasonDeactivation }}</td>
+                                            <td>{{ user.deactivatedAt|date("d/m/Y") }}</td>
+                                            <td><i class="nav-icon fas fa-user-edit"></i></td>
+                                            <td><i class="nav-icon fas fa-user-check grow green"></i></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -87,7 +119,7 @@
     <!-- page script -->
     <script>
         $(function () {
-            $("#example1").DataTable({
+            $("#users").DataTable({
                 "responsive": true,
                 "columns": [
                     { responsivePriority: 3 },
@@ -99,9 +131,33 @@
                 "autoWidth": false,
                 "language": {
                     "emptyTable":     "Aucun utilisateur trouvé",
-                    "lengthMenu": "Afficher : _MENU_ articles",
+                    "lengthMenu": "Afficher : _MENU_ utilisateurs",
                     "infoEmpty": "Affiche de 0 à 0 sur 0 utilisateurs",
-                    "info": "Affiche _START_ à _END_ sur _TOTAL_ articles",
+                    "info": "Affiche _START_ à _END_ sur _TOTAL_ utilisateurs",
+                    "search": "Recherche:",
+                    "paginate": {
+                        "previous": "Précédent",
+                        "next": "Suivant"
+                    }
+                }
+            });
+        });
+        $(function () {
+            $("#users-deactivated").DataTable({
+                "responsive": true,
+                "columns": [
+                    { responsivePriority: 3 },
+                    { responsivePriority: 4 },
+                    { responsivePriority: 5 },
+                    { responsivePriority: 2 },
+                    { responsivePriority: 1 }
+                ],
+                "autoWidth": false,
+                "language": {
+                    "emptyTable":     "Aucun utilisateur trouvé",
+                    "lengthMenu": "Afficher : _MENU_ utilisateurs",
+                    "infoEmpty": "Affiche de 0 à 0 sur 0 utilisateurs",
+                    "info": "Affiche _START_ à _END_ sur _TOTAL_ utilisateurs",
                     "search": "Recherche:",
                     "paginate": {
                         "previous": "Précédent",

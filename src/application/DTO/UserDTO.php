@@ -14,6 +14,9 @@ class UserDTO extends DTO {
     protected string $role;
     protected ?string $profil_picture = null;
     protected DateTime $date_registered;
+    protected int $is_deactivated;
+    protected ?string $reason_deactivation = null;
+    protected ?DateTime $deactivated_at;
 
     public function __construct($data = null) {
         if ($data) {
@@ -84,12 +87,55 @@ class UserDTO extends DTO {
         return $this->date_registered;
     }
 
-    public function setDateRegistered(string $date_registered): UserDTO {
+    public function setDateRegistered(string $date_registered): UserDTO
+    {
         if (!$date_registered instanceof DateTime) {
             $date_registered = new DateTime($date_registered);
         }
 
         $this->date_registered = $date_registered;
+
+        return $this;
+    }
+
+    public function getIsDeactivated(): int
+    {
+        return $this->is_deactivated;
+    }
+
+    public function setIsDeactivated(int $is_deactivated): UserDTO
+    {
+        $this->is_deactivated = $is_deactivated;
+
+        return $this;
+    }
+
+    public function getReasonDeactivation(): ?string
+    {
+        return $this->reason_deactivation;
+    }
+
+    public function setReasonDeactivation(?string $reason_deactivation): UserDTO
+    {
+        $this->reason_deactivation = $reason_deactivation;
+        return $this;
+    }
+
+    public function getDeactivatedAt(): ?DateTime {
+        return $this->deactivated_at;
+    }
+
+    public function setDeactivatedAt(?string $deactivated_at): UserDTO
+    {
+        if (!$deactivated_at instanceof DateTime) {
+            if (!empty($deactivated_at)) {
+                $deactivated_at = new DateTime($deactivated_at);
+            } else {
+                $deactivated_at = null;
+            }
+        }
+
+        $this->deactivated_at = $deactivated_at;
 
         return $this;
     }

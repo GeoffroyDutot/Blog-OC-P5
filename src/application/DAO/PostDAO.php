@@ -101,7 +101,7 @@ class PostDAO extends DAO {
 
         //Retrieves post comments
         $commentDAO = new CommentDAO();
-        $filters = ['postId' => $postDTO->getId(), 'status' => 'validated'];
+        $filters = ['postId' => $postDTO->getId(), 'userDeactivated' => 0, 'status' => 'validated'];
         $comments = $commentDAO->getByPostId($filters);
         if (!empty($comments)) {
             $postDTO->setComments($comments);

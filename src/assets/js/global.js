@@ -59,8 +59,21 @@ $('.delete-post').click(function (e) {
     var id = $(this).attr('data-id-post');
     $.ajax({
         type: 'DELETE',
-        url: "/admin/articles/supprimer/"+id,
-        data: { 'id' : id }
+        url: "/admin/articles/supprimer/"+id
+    }).done(function (data) {
+        if (data.success) {
+            location.reload();
+        }
+    })
+});
+
+$('.deactivate-user').click(function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-id-user');
+    console.log(id);
+    $.ajax({
+        type: 'PUT',
+        url: "/admin/utilisateurs/"+id+"/desactiver"
     }).done(function (data) {
         if (data.success) {
             location.reload();

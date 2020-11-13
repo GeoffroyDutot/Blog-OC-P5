@@ -63,6 +63,11 @@ class UserController extends Controller {
         $userDTO->setEmail($this->post['email']);
         $userDTO->setPseudo($this->post['pseudo']);
         $userDTO->setPassword(password_hash($this->post['password'], PASSWORD_BCRYPT));
+        $userDTO->setRole('ROLE_USER');
+        $userDTO->setDateRegistered(date('Y-m-d H:i:s'));
+        $userDTO->setIsDeactivated(false);
+        $userDTO->setReasonDeactivation(null);
+        $userDTO->setDeactivatedAt(null);
         $user = new UserDAO();
 
         if (!empty($user->getUserByEmail($userDTO->getEmail()))) {

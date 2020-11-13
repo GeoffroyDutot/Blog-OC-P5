@@ -17,7 +17,7 @@ class PostDTO extends DTO {
     protected ?string $resume;
     protected ?string $picture = null;
     protected ?DateTime $archived_at;
-    protected bool $is_archived;
+    protected int $is_archived;
     //var : CommentDTO[]
     private $comments = [];
 

@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\DAO\CommentDAO;
 use App\DAO\PostDAO;
+use App\DAO\UserDAO;
 use App\DTO\PostDTO;
 
 class ApiController extends Controller {
@@ -141,6 +142,12 @@ class ApiController extends Controller {
     }
 
     public function deletePost(int $postId) {
+        if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - User doesn't have the right access to admin
+        }
+
         $postDAO = new PostDAO();
         $postDTO = $postDAO->getPostById($postId, true);
 
@@ -161,5 +168,36 @@ class ApiController extends Controller {
         http_response_code(200);
         die(json_encode(['success' => true, 'msg' => 'Post Deleted successfuly']));
         //@TODO Display a success msg
+    }
+
+    public function deactivateUser(int $idUser) {
+        if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - User doesn't have the right access to admin
+        }
+
+        $userDAO = new UserDAO();
+        $userDTO = $userDAO->getUserById($idUser);
+
+        if (empty($userDTO)) {
+            http_response_code(404);
+            die(json_encode(['success' => false, 'msg' => 'User not find']));
+            //@TODO Display an error - Post not found
+        }
+
+        $userDTO->setIsDeactivated(1);
+        $userDTO->setDeactivatedAt(date('Y-m-d H:i:s'));
+        $userDTO = $userDAO->save($userDTO);
+
+        if ($userDTO !== true) {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - Internal Error
+        }
+
+        http_response_code(200);
+        die(json_encode(['success' => true, 'msg' => 'User Deactivated successfuly']));
+        //@TODO Display a success
     }
 }
