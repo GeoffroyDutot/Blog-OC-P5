@@ -58,5 +58,6 @@ $router->post('/admin/commentaires/refuser', 'Api#unvalidateComment');
 
 // USER
 $router->put('/admin/utilisateurs/:id/desactiver', 'Api#deactivateUser')->with('id', '([0-9]+)');
+$router->put('/admin/utilisateurs/:id/reactiver', 'Api#reactivateUser')->with('id', '([0-9]+)');
 
 $router->run();

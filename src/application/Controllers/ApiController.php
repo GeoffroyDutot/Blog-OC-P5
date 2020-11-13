@@ -200,4 +200,35 @@ class ApiController extends Controller {
         die(json_encode(['success' => true, 'msg' => 'User Deactivated successfuly']));
         //@TODO Display a success
     }
+
+    public function reactivateUser(int $idUser) {
+        if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - User doesn't have the right access to admin
+        }
+
+        $userDAO = new UserDAO();
+        $userDTO = $userDAO->getUserById($idUser);
+
+        if (empty($userDTO)) {
+            http_response_code(404);
+            die(json_encode(['success' => false, 'msg' => 'User not find']));
+            //@TODO Display an error - Post not found
+        }
+
+        $userDTO->setIsDeactivated(0);
+        $userDTO->setDeactivatedAt(null);
+        $userDTO = $userDAO->save($userDTO);
+
+        if ($userDTO !== true) {
+            http_response_code(500);
+            die(json_encode(['success' => false, 'msg' => 'Internal Error']));
+            //@TODO Display an error - Internal Error
+        }
+
+        http_response_code(200);
+        die(json_encode(['success' => true, 'msg' => 'User Reactivated successfuly']));
+        //@TODO Display a success
+    }
 }

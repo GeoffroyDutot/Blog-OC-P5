@@ -70,10 +70,22 @@ $('.delete-post').click(function (e) {
 $('.deactivate-user').click(function (e) {
     e.preventDefault();
     var id = $(this).attr('data-id-user');
-    console.log(id);
     $.ajax({
         type: 'PUT',
         url: "/admin/utilisateurs/"+id+"/desactiver"
+    }).done(function (data) {
+        if (data.success) {
+            location.reload();
+        }
+    })
+});
+
+$('.reactivate-user').click(function (e) {
+    e.preventDefault();
+    var id = $(this).attr('data-id-user');
+    $.ajax({
+        type: 'PUT',
+        url: "/admin/utilisateurs/"+id+"/reactiver"
     }).done(function (data) {
         if (data.success) {
             location.reload();
