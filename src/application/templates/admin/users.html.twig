@@ -54,7 +54,7 @@
                                         <tr>
                                             <td>{{ user.pseudo }}</td>
                                             <td>{{ user.email }}</td>
-                                            <td>{{ user.createdAt|date("d/m/Y") }}</td>
+                                            <td>{{ user.dateRegistered|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-user-edit"></i></td>
                                             <td><i class="nav-icon fas fa-user-slash text-danger grow deactivate-user" data-id-user="{{ user.id }}"></i></td>
                                         </tr>

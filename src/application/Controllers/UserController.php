@@ -14,11 +14,9 @@ class UserController extends Controller {
 
 
     public function register() {
-        $data = [];
-
         $aboutMe = new AboutMeDAO();
         $aboutMe = $aboutMe->getAboutMe();
-        $data['aboutMe'] = $aboutMe;
+        $data = ['aboutMe' => $aboutMe];
 
         $this->render('register.html.twig', $data);
     }
