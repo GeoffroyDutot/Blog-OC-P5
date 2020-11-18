@@ -49,3 +49,8 @@
     opacity: 1;
   }
 }
+
+.form-error {
+  color: red;
+  font-style: italic;
+}

@@ -23,8 +23,8 @@ class UserController extends Controller {
 
     public function addUser() {
         if (empty($this->post)) {
-            echo 'Aucunes données.';
-            return;
+            $this->session['flash-error'] = "Aucune donnée reçue !";
+            $this->redirect('/inscription');
         }
 
         $form = new FormValidator();
@@ -69,44 +69,44 @@ class UserController extends Controller {
         $user = new UserDAO();
 
         if (!empty($user->getUserByEmail($userDTO->getEmail()))) {
-            echo 'User with this email already exists';
-            return;
+            $this->session['flash-error'] = "Un compte avec cette adresse email existe déjà !";
+            $this->redirect('/inscription');
         }
 
         if (!empty($user->getUserByPseudo($userDTO->getPseudo()))) {
-            echo 'User with this pseudo already exists';
-            return;
+            $this->session['flash-error'] = "Un compte avec ce pseudo existe déjà !";
+            $this->redirect('/inscription');
         }
 
         $user = $user->save($userDTO);
         if ($user) {
             $this->session['email'] = $userDTO->getEmail();
             $this->session['pseudo'] = $userDTO->getPseudo();
+            $this->session['flash-success'] = "Vous êtes désormais inscrit. Bienvenue !";
             $this->redirect('/');
         }  else {
-            echo 'Erreur, l\'utilisateut n\'as pas pu être ajouté';
-            return;
+            $this->session['flash-error'] = "Erreur interne, votre compte n'a pu être créée";
+            $this->redirect('/inscription');
         }
     }
 
     public function login() {
-        $data = [];
-
         if (isset($this->session['email']) && isset($this->session['role']) && isset($this->session['pseudo'])) {
-            $this->redirect('/');
+            $this->session['flash-error'] = "Vous êtes déjà connecté !";
+            $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
         $aboutMe = new AboutMeDAO();
         $aboutMe = $aboutMe->getAboutMe();
-        $data['aboutMe'] = $aboutMe;
+        $data = ['aboutMe' => $aboutMe];
 
         $this->render('login.html.twig', $data);
     }
 
     public function authenticate() {
         if (empty($this->post)) {
-            echo 'Aucunes données.';
-            return;
+            $this->session['flash-error'] = "Aucune donnée reçu !";
+            $this->redirect('/connexion');
         }
 
         $form = new FormValidator();
@@ -135,18 +135,18 @@ class UserController extends Controller {
         $user = new UserDAO();
         $user = $user->getUserByEmail($this->post['email']);
         if (empty($user)) {
-            echo 'Aucun utilisateur correspondant à cette adresse email à été trouvé';
-            return;
+            $this->session['flash-error'] = "Aucun compte ne correspond à cette adresse email.";
+            $this->redirect('/connexion');
         }
 
         if (!password_verify($this->post['password'], $user->getPassword())) {
-             echo 'Error incorrect password';
-             return;
+             $this->session['flash-error'] = "Mot de passe incorrect !";
+             $this->redirect('/connexion');
         }
 
         if ($user->getIsDeactivated()) {
-            echo 'Error your account has been deactivated';
-            return;
+            $this->session['flash-error'] = "Ce compte à été désactivé.";
+            $this->redirect('/connexion');
         }
 
         $this->session['email'] = $user->getEmail();
@@ -158,8 +158,11 @@ class UserController extends Controller {
     }
 
     public function logout() {
-        session_destroy();
-        echo 'vous êtes déconnecté';
+        $this->session['flash-success'] = "Vous êtes déconnecté.";
+        unset($this->session['email']);
+        unset($this->session['pseudo']);
+        unset($this->session['role']);
+        unset($this->session['profilPicture']);
         $this->redirect('/');
     }
 }

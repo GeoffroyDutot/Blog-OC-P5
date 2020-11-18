@@ -19,8 +19,8 @@ class HomeController extends Controller {
 
     public function contact() {
         if (empty($this->post)) {
+            $this->session['flash-error'] = "Erreur, aucune donnée reçue !";
             $this->redirect('/');
-            //@TODO Display an error - empty data
         }
 
         $form = new FormValidator();
@@ -71,10 +71,12 @@ class HomeController extends Controller {
         $headers = "MIME-Version: 1.0" . "\n";
         $headers .= "Content-type:text/html;charset=iso-8859-1" . "\n";
         $headers .= "From: ".$emailDTO->getSender();
-        if (mail($emailDTO->getReceiver(), $subject, $formcontent, $headers)) {
-            return true;
-        } else {
-            echo 'erreur';
+        if (!mail($emailDTO->getReceiver(), $subject, $formcontent, $headers)) {
+            $this->session['flash-error'] = "Erreur interne, votre message n'a pas pu être envoyé !";
+            $this->redirect('/');
         }
+
+        $this->session['flash-success'] = "Votre message à bien été envoyé !";
+        $this->redirect('/');
     }
 }
