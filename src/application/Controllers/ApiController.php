@@ -19,65 +19,65 @@ class ApiController extends Controller {
     public function validateComment() {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         if (empty($_POST) || empty($_POST['id'])) {
             http_response_code(500);
+            $this->session['flash-error'] = "Des données requises sont manquantes.";
             die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-            //@TODO Display an error - Missing required data
         }
 
         $commentDAO = new CommentDAO();
         if ($commentDAO->editCommentStatus($_POST['id'], 'validated')) {
             http_response_code(200);
-            //@TODO Display a success message
+            $this->session['flash-success'] = "Commentaire validé !";
             die(json_encode(['success' => true, 'msg' => 'Comment validated successfuly']));
         } else {
             http_response_code(500);
+            $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas pu être validé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - Internal Error
         }
     }
 
     public function unvalidateComment() {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         if (empty($_POST) || empty($_POST['id'])) {
             http_response_code(500);
+            $this->session['flash-error'] = "Des données requises sont manquantes.";
             die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-            //@TODO Display an error - Missing required data
         }
 
         $commentDAO = new CommentDAO();
         if ($commentDAO->editCommentStatus($_POST['id'], 'unvalidated')) {
             http_response_code(200);
-            //@TODO Display a success message
+            $this->session['flash-success'] = "Commentaire invalidé.";
             //@TODO Send an email to the user
             die(json_encode(['success' => true, 'msg' => 'Comment unvalidated successfuly']));
         } else {
             http_response_code(500);
+            $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas pu être invalidé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - Internal Error
         }
     }
 
     public function archivePost() {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         if (empty($this->post['id'])) {
             http_response_code(500);
+            $this->session['flash-error'] = "Des données requises sont manquantes.";
             die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-            //@TODO Display an error - Missing required data
         }
 
         $postDAO = new PostDAO();
@@ -85,8 +85,8 @@ class ApiController extends Controller {
 
         if (empty($postDTO)) {
             http_response_code(404);
+            $this->session['flash-error'] = "Erreur interne. Article non trouvé.";
             die(json_encode(['success' => false, 'msg' => 'Post didn\'t find']));
-            //@TODO Display an error - Post didn't find
         }
 
         $postDTO->setIsArchived(true);
@@ -95,26 +95,26 @@ class ApiController extends Controller {
 
         if ($postDTO !== true) {
             http_response_code(500);
+            $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être archivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - Internal Error
         }
 
         http_response_code(200);
+        $this->session['flash-success'] = "Article archivé.";
         die(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
-        //@TODO Display a success msg
     }
 
     public function unarchivePost() {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         if (empty($this->post['id'])) {
             http_response_code(500);
+            $this->session['flash-error'] = "Des données requises sont manquantes.";
             die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-            //@TODO Display an error - Missing required data
         }
 
         $postDAO = new PostDAO();
@@ -122,8 +122,8 @@ class ApiController extends Controller {
 
         if (empty($postDTO)) {
             http_response_code(404);
+            $this->session['flash-error'] = "Erreur interne. Article non trouvé.";
             die(json_encode(['success' => false, 'msg' => 'Post didn\'t find']));
-            //@TODO Display an error - Post didn't find
         }
 
         $postDTO->setIsArchived(false);
@@ -132,20 +132,20 @@ class ApiController extends Controller {
 
         if ($postDTO !== true) {
             http_response_code(500);
+            $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être désarchivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - Internal Error
         }
 
         http_response_code(200);
+        $this->session['flash-success'] = "Article désarchivé.";
         die(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
-        //@TODO Display a success msg
     }
 
     public function deletePost(int $postId) {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $postDAO = new PostDAO();
@@ -153,28 +153,28 @@ class ApiController extends Controller {
 
         if (empty($postDTO)) {
             http_response_code(404);
+            $this->session['flash-error'] = "Erreur interne. Article non trouvé.";
             die(json_encode(['success' => false, 'msg' => 'Post not find']));
-            //@TODO Display an error - Post not found
         }
 
         $deletePost = $postDAO->delete($postDTO);
 
         if (empty($deletePost)) {
             http_response_code(500);
+            $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être supprimé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - Internal Error
         }
 
         http_response_code(200);
+        $this->session['flash-success'] = "Article supprimé.";
         die(json_encode(['success' => true, 'msg' => 'Post Deleted successfuly']));
-        //@TODO Display a success msg
     }
 
     public function deactivateUser(int $idUser) {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $userDAO = new UserDAO();
@@ -182,8 +182,8 @@ class ApiController extends Controller {
 
         if (empty($userDTO)) {
             http_response_code(404);
+            $this->session['flash-error'] = "Erreur interne. Utilisateur non trouvé.";
             die(json_encode(['success' => false, 'msg' => 'User not find']));
-            //@TODO Display an error - Post not found
         }
 
         $userDTO->setIsDeactivated(1);
@@ -192,20 +192,20 @@ class ApiController extends Controller {
 
         if ($userDTO !== true) {
             http_response_code(500);
+            $this->session['flash-error'] = "Erreur Interne ! L'utilisateur n'a pas pu être désactivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - Internal Error
         }
 
         http_response_code(200);
+        $this->session['flash-success'] = "Utilisateur désactivé.";
         die(json_encode(['success' => true, 'msg' => 'User Deactivated successfuly']));
-        //@TODO Display a success
     }
 
     public function reactivateUser(int $idUser) {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $userDAO = new UserDAO();
@@ -213,8 +213,8 @@ class ApiController extends Controller {
 
         if (empty($userDTO)) {
             http_response_code(404);
+            $this->session['flash-error'] = "Erreur interne. Utilisateur non trouvé.";
             die(json_encode(['success' => false, 'msg' => 'User not find']));
-            //@TODO Display an error - Post not found
         }
 
         $userDTO->setIsDeactivated(0);
@@ -223,12 +223,12 @@ class ApiController extends Controller {
 
         if ($userDTO !== true) {
             http_response_code(500);
+            $this->session['flash-error'] = "Erreur Interne ! L'utilisateur n'a pas pu être réactivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
-            //@TODO Display an error - Internal Error
         }
 
         http_response_code(200);
+        $this->session['flash-success'] = "Utilisateur réactivé.";
         die(json_encode(['success' => true, 'msg' => 'User Reactivated successfuly']));
-        //@TODO Display a success
     }
 }

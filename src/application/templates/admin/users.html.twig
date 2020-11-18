@@ -16,6 +16,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
+                        {% include 'include/flashmessages.html.twig' %}
                         <h1>Utilisateurs</h1>
                     </div>
                     <div class="col-sm-6">
@@ -54,7 +55,7 @@
                                         <tr>
                                             <td>{{ user.pseudo }}</td>
                                             <td>{{ user.email }}</td>
-                                            <td>{{ user.createdAt|date("d/m/Y") }}</td>
+                                            <td>{{ user.dateRegistered|date("d/m/Y") }}</td>
                                             <td><i class="nav-icon fas fa-user-edit"></i></td>
                                             <td><i class="nav-icon fas fa-user-slash text-danger grow deactivate-user" data-id-user="{{ user.id }}"></i></td>
                                         </tr>

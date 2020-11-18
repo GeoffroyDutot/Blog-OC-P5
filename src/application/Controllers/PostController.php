@@ -23,7 +23,7 @@ class PostController extends Controller {
        $posts = new PostDAO();
        $posts = $posts->getAll();
 
-       if ($posts) {
+       if (!empty($posts)) {
            $data['posts'] = $posts;
        }
 
@@ -38,11 +38,16 @@ class PostController extends Controller {
         $data['aboutMe'] = $aboutMe;
 
         $post = new PostDAO();
-        $post = $post->getPostBySlug($slug);
+        $postDTO = $post->getPostBySlug($slug);
+
+        if (!empty($postDTO) && $postDTO->getIsArchived() && $this->session['role'] !== 'ROLE_ADMIN') {
+            //@TODO Display Error
+            $this->redirect('/articles');
+        }
         //@TODO if is_archived and not admin redirect + error
 
-        if (!empty($post)) {
-            $data['post'] = $post;
+        if (!empty($postDTO)) {
+            $data['post'] = $postDTO;
         }
 
         $this->render('post.html.twig', $data);
@@ -50,15 +55,13 @@ class PostController extends Controller {
 
     public function submitComment(int $postId) {
         if (empty($this->session)) {
-            //@TODO Display error
-            echo 'Utilisateur non connecté';
-            return;
+            $this->session['flash-error'] = "Utilisateur non connecté !";
+            $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
         if (empty($this->post)) {
-            //@TODO Display error
-            echo 'Aucune données';
-            return;
+            $this->session['flash-error'] = "Aucune données reçues !";
+            $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
         $form = new FormValidator();
@@ -82,10 +85,10 @@ class PostController extends Controller {
         $user = $userDAO->getUserByPseudo($this->session['pseudo']);
 
         if (empty($user)) {
-            //@TODO Display error
-            echo 'Utilisateur non connecté';
-            return;
+            $this->session['flash-error'] = "Utilisateur non reconnu";
+            $this->redirect($_SERVER['HTTP_REFERER']);
         }
+
         $commentDTO = new CommentDTO();
         $commentDTO->setContent($this->post['comment']);
         $commentDTO->setIdPost($postId);
@@ -100,11 +103,11 @@ class PostController extends Controller {
         $commentDAO = new CommentDAO();
         $comment = $commentDAO->submitComment($commentDTO);
         if (empty($comment)) {
-            //@TODO Display error
-            echo 'Erreur interne';
-            return;
+            $this->session['flash-error'] = "Erreur interne, le commentaire n'a pas pu être envoyé.";
+            $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
+        $this->session['flash-success'] = "Commentaire correctement soumis.";
         $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }

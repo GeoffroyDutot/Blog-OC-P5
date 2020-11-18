@@ -13,20 +13,20 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/articles">Articles</a>
                 </li>
-                {% if session is empty %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/connexion">Connexion</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/inscription">Inscription</a>
-                </li>
+                {% if session.pseudo is defined %}
+                    <li class="nav-item">
+                        <a class="nav-link">{{ session.pseudo }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/deconnexion">Déconnexion</a>
+                    </li>
                 {% else %}
-                <li class="nav-item">
-                    <a class="nav-link">{{ session.pseudo }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/deconnexion">Déconnexion</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/connexion">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inscription">Inscription</a>
+                    </li>
                 {% endif %}
                 {% if session.role == "ROLE_ADMIN" %}
                     <li class="nav-item">

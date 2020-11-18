@@ -15,9 +15,9 @@ class AdminController extends Controller {
 
     public function index()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+        if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $postDAO = new PostDAO();
@@ -40,8 +40,8 @@ class AdminController extends Controller {
 
     public function listPosts() {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $data = [];
@@ -64,8 +64,8 @@ class AdminController extends Controller {
 
     public function listUsers() {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $data = [];
@@ -90,8 +90,8 @@ class AdminController extends Controller {
 
     public function listComments() {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $data = [];
@@ -109,8 +109,8 @@ class AdminController extends Controller {
 
     public function aboutMe() {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         $data = [];
@@ -124,13 +124,13 @@ class AdminController extends Controller {
 
     public function editAboutMe() {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
-            //@TODO Display an error - User doesn't have the right access to admin
         }
 
         if (empty($this->post)) {
+            $this->session['flash-error'] = "Aucune donnée reçu !";
             $this->redirect('/admin/a-propos');
-            //@TODO Display an error - empty data
         }
 
         if(!empty($_FILES)) {
@@ -293,7 +293,11 @@ class AdminController extends Controller {
         }
 
         $aboutMe = $aboutMeDAO->save($aboutMe);
-        //@TODO Display success or error
+        if (!$aboutMe) {
+            $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            $this->redirect('/admin/a-propos');
+        }
+        $this->session['flash-success'] = "Modifications enregistrées.";
         $this->redirect('/admin/a-propos');
     }
 }

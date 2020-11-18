@@ -28,7 +28,7 @@ class Twig {
         $this->view->addGlobal('session', $_SESSION);
     }
 
-    public function render(string $path, array $data) {
+    public function render(string $path, array $data = []) {
         return $this->view->render($path, $data);
     }
 }
