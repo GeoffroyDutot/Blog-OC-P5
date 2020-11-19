@@ -10,6 +10,7 @@ $router = new App\Router\Router($_GET['url']);
 // COMMON
 $router->get('/', "Home#index");
 $router->post('/contact', "Home#contact");
+$router->get('/page-introuvable', 'Error#show404');
 
 // POST
 $router->get('/articles', "Post#index");

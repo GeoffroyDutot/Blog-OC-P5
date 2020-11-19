@@ -53,6 +53,7 @@ class UserController extends Controller {
         ];
 
         if (!empty($form->validate($rules, $_POST))) {
+            //@TODO Display error forms
             echo 'Formulaire non valide, vérifiez les informations';
             return;
         }
@@ -128,6 +129,7 @@ class UserController extends Controller {
         ];
 
         if (!empty($form->validate($rules, $_POST))) {
+            //@TODO Display Error Forms
             echo 'Formulaire non valide, vérifiez les informations';
             return;
         }
