@@ -51,6 +51,7 @@ class Router {
                 return $route->call();
             }
         }
+        header('Location: /page-introuvable');
         throw new RouterException('No matching routes');
     }
 

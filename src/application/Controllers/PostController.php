@@ -41,10 +41,8 @@ class PostController extends Controller {
         $postDTO = $post->getPostBySlug($slug);
 
         if (!empty($postDTO) && $postDTO->getIsArchived() && $this->session['role'] !== 'ROLE_ADMIN') {
-            //@TODO Display Error
-            $this->redirect('/articles');
+            $this->redirect('/page-introuvable');
         }
-        //@TODO if is_archived and not admin redirect + error
 
         if (!empty($postDTO)) {
             $data['post'] = $postDTO;
