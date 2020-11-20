@@ -33,6 +33,8 @@ $router->get('/admin/tableau-de-bord', "Admin#index");
 
 // POST
 $router->get('/admin/articles', "Admin#listPosts");
+$router->get('/admin/articles/nouveau', 'Admin#addPost');
+$router->post('admin/article', 'Admin#newPost');
 
 // COMMENT
 $router->get('/admin/commentaires', "Admin#listComments");

@@ -54,3 +54,15 @@
   color: red;
   font-style: italic;
 }
+
+.btn-success {
+  color: #fff!important;
+}
+
+.note-group-select-from-files {
+  display: none;
+}
+
+.new-card {
+  padding-bottom: 15px;
+}

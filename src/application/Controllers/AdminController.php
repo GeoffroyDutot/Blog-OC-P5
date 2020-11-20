@@ -9,6 +9,7 @@ use App\DAO\CommentDAO;
 use App\DAO\PostDAO;
 use App\DAO\UserDAO;
 use App\DTO\AboutMeDTO;
+use App\DTO\PostDTO;
 use App\Form\FormValidator;
 
 class AdminController extends Controller {
@@ -60,6 +61,109 @@ class AdminController extends Controller {
         }
 
         $this->render('admin/posts.html.twig', $data);
+    }
+
+    public function addPost() {
+        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
+            $this->redirect('/');
+        }
+
+        $this->render('admin/newpost.html.twig');
+    }
+
+    public function newPost() {
+        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
+            $this->redirect('/');
+        }
+
+        if (empty($this->post)) {
+            $this->session['flash-error'] = "Aucune donnée reçu !";
+            $this->redirect('/admin/a-propos');
+        }
+
+        if(!empty($_FILES)) {
+            unset($_FILES['files']);
+            foreach ($_FILES as $inputName => $file) {
+                $this->post[$inputName] = $file;
+            }
+        }
+
+        $form = new FormValidator();
+        $rules = [
+            [
+                'fieldName' => 'title',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'subtitle',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'resume',
+                'type' => 'string',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'picture',
+                'type' => 'file',
+                'extension' => ['image/png', 'image/jpg', 'image/jpeg'],
+                'size' => 2097152,
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'content',
+                'type' => 'string',
+                'minLength' => 20,
+                'maxLength' => 4000,
+                'required' => true,
+            ]
+        ];
+
+        if (!empty($form->validate($rules, $this->post))) {
+            var_dump($form->getErrors());
+            echo "Formulaire invalide";
+            return;
+            //@TODO Display an error - invalid or missing data required
+        }
+
+        if (!empty($this->post['picture']['tmp_name'])) {
+            move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($this->post['picture']['name']));
+        }
+        $this->post['picture'] = $this->post['picture']['name'];
+
+        $postDTO = new PostDTO($this->post);
+        $postDTO->setCreatedAt(date('Y-m-d H:i:s'));
+        $postDTO->setSlug($this->slugify($postDTO->getTitle()));
+        $subtitle = $postDTO->getSubtitle() ? $postDTO->getSubtitle() : null;
+        $postDTO->setSubtitle($subtitle);
+        $resume = $postDTO->getResume() ? $postDTO->getResume() : null;
+        $postDTO->setResume($resume);
+        $picture = $postDTO->getPicture() ? $postDTO->getPicture() : null;
+        $postDTO->setPicture($picture);
+
+        $postDAO = new PostDAO();
+        if (!empty($postDAO->getPostBySlug($postDTO->getSlug()))) {
+            $this->session['flash-error'] = "Un article avec ce titre existe déjà.";
+            $this->redirect('/admin/articles/nouveau');
+        }
+
+        $result = $postDAO->save($postDTO);
+        if (!$result) {
+            $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            $this->redirect('admin/articles/nouveau');
+        }
+        $this->session['flash-success'] = "Modifications enregistrées.";
+        $this->redirect('/admin/articles');
     }
 
     public function listUsers() {

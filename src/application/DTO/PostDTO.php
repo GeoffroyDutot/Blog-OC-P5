@@ -7,19 +7,18 @@ namespace App\DTO;
 use DateTime;
 
 class PostDTO extends DTO {
-    protected int $id;
+    protected ?int $id = null;
     protected string $title;
     protected string $slug;
     protected ?string $subtitle = null;
     protected DateTime $created_at;
-    protected ?DateTime $updated_at;
+    protected ?DateTime $updated_at = null;
     protected string $content;
-    protected ?string $resume;
+    protected ?string $resume = null;
     protected ?string $picture = null;
-    protected ?DateTime $archived_at;
-    protected int $is_archived;
-    //var : CommentDTO[]
-    private $comments = [];
+    protected ?DateTime $archived_at = null;
+    protected int $is_archived = 0;
+    private array $comments = [];
 
     public function __construct($data)
     {
@@ -28,12 +27,12 @@ class PostDTO extends DTO {
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): PostDTO
+    public function setId(?int $id): PostDTO
     {
         $this->id = $id;
         return $this;
