@@ -1,0 +1,115 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block style %}
+    <!-- summernote -->
+    <link rel="stylesheet" href="../../../assets/plugins/summernote/summernote-bs4.css">
+{% endblock %}
+
+{% block title %}Créer un article | Administration{% endblock %}
+
+{% block body %}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        {% include 'include/flashmessages.html.twig' %}
+                        <h1>Créer un article</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="/admin/tableau-de-bord">Accueil</a></li>
+                            <li class="breadcrumb-item active">Créer un article</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-9">
+                        <!-- general form elements -->
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Nouvel article</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form role="form" action="/admin/article" method="POST" enctype="multipart/form-data">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="title">Titre</label>
+                                        <input type="text" class="form-control" id="title" placeholder="Titre" required minlength="3" maxlength="255" name="title">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="subtitle">Sous-titre</label>
+                                        <input type="text" class="form-control" id="subtitle" placeholder="Sous-titre" name="subtitle">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="resume">Résumé</label>
+                                        <textarea class="form-control" rows="2" id="resume" placeholder="Résumé de l'article.." minlength="5" maxlength="255" name="resume"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputFile">Image</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="picture" name="picture" accept="image/png, image/jpeg, image/jpg">
+                                                <label class="custom-file-label" for="picture" data-browse="Parcourir">Choisis une image</label>
+                                            </div>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" id="">Télécharge</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content">Contenu</label>
+                                        <textarea class="textarea" id="content" placeholder="Contenu de l'article" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" name="content" minlength="20"></textarea>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-1"></div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- bs-custom-file-input -->
+    <script src="../../../assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../../assets/dist/js/demo.js"></script>
+    <!-- Summernote -->
+    <script src="../../../assets/plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="../../../assets/plugins/summernote/lang/summernote-fr-FR.min.js"></script>
+    <script>
+        $(function () {
+            // Summernote
+            $('#content').summernote({
+                lang: "fr-FR"
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
+{% endblock %}
