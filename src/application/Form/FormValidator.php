@@ -73,7 +73,7 @@ class FormValidator {
     public function validateRequired(array $rule, array $payload)
     {
         if ($rule['required'] === true && empty($payload[$rule['fieldName']])) {
-            $this->errors[$rule['fieldName']][] = 'This field is required';
+            $this->errors[$rule['fieldName']][] = 'Ce champ est requis. Veillez à le remplir à nouveau.';
 
             return false;
         }
@@ -83,7 +83,7 @@ class FormValidator {
     public function validateRequiredFile(array $rule, array $payload)
     {
         if ($rule['required'] === true && empty($payload[$rule['fieldName']]['name'])) {
-            $this->errors[$rule['fieldName']][] = 'This field is required';
+            $this->errors[$rule['fieldName']][] = 'Ce fichier est requis.';
 
             return false;
         }
@@ -93,63 +93,63 @@ class FormValidator {
     public function validateString(array $rule, array $payload)
     {
         if ($rule['type'] === "string" && !is_string($payload[$rule['fieldName']])) {
-            $this->errors[$rule['fieldName']][] = 'This field is not a valid string';
+            $this->errors[$rule['fieldName']][] = 'Ceci n\'est pas un texte valide.';
         }
     }
 
     public function validateEmail(array $rule, array $payload)
     {
         if ($rule['type'] === "email" && !filter_var($payload[$rule['fieldName']], FILTER_VALIDATE_EMAIL)) {
-            $this->errors[$rule['fieldName']][] = 'This is not a valid email';
+            $this->errors[$rule['fieldName']][] = 'Ceci n\'est pas une adresse email valide. Ex: paulrene@gmail.com';
         }
     }
 
     public function validatePhone(array $rule, array $payload)
     {
         if ($rule['type'] === "phone" && !preg_match('^((\+)33|0)[1-9](\d{2}){4}$^', $payload[$rule['fieldName']])) {
-            $this->errors[$rule['fieldName']][] = 'This is not a valid phone number';
+            $this->errors[$rule['fieldName']][] = 'Ceci n\'est pas un numéro de téléphone valide. Ex: 07 56 72 27 28';
         }
     }
 
     public function validateMinLength(array $rule, array $payload)
     {
         if ($rule['minLength'] > strlen($payload[$rule['fieldName']])) {
-            $this->errors[$rule['fieldName']][] = 'This field lenght is too short';
+            $this->errors[$rule['fieldName']][] = 'Il n\'y a pas assez de contenu. Il faut au moins ' .$rule['minLength'] .' caractères.';
         }
     }
 
     public function validateMaxLength(array $rule, array $payload)
     {
         if ($rule['maxLength'] < strlen($payload[$rule['fieldName']])) {
-            $this->errors[$rule['fieldName']][] = 'This field lenght is too long';
+            $this->errors[$rule['fieldName']][] = 'Il y a trop de contenu. Il peut il y avoir au maximum '  .$rule['maxLength'] .' caractères.';
         }
     }
 
     public function validateFileName(array $rule, array $payload)
     {
         if (!preg_match('^[\w,\s-]+\.[A-Za-z]{3,4}$^', $payload[$rule['fieldName']]['name'])) {
-            $this->errors[$rule['fieldName']][] = 'This filename is incorrect';
+            $this->errors[$rule['fieldName']][] = 'Le nom du fichier est incorrect.';
         }
     }
 
     public function validateFileError(array $rule, array $payload)
     {
         if ($payload[$rule['fieldName']]['error'] !== 0) {
-            $this->errors[$rule['fieldName']][] = 'This file return an error';
+            $this->errors[$rule['fieldName']][] = 'Ce fichier produit une erreur.';
         }
     }
 
     public function validateFileSize(array $rule, array $payload)
     {
         if ($rule['size'] < $payload[$rule['fieldName']]['size']) {
-            $this->errors[$rule['fieldName']][] = 'This file is too big';
+            $this->errors[$rule['fieldName']][] = 'Ce fichier est trop lourd. Essayer de le compresser avant de l\'uploader à nouveau.';
         }
     }
 
     public function validateFileExtension(array $rule, array $payload)
     {
         if (!in_array($payload[$rule['fieldName']]['type'], $rule['extension'])) {
-            $this->errors[$rule['fieldName']][] = 'This file extension is not accepted';
+            $this->errors[$rule['fieldName']][] = 'L\'extension du fichier est incorrect.';
         }
     }
 }

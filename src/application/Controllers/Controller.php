@@ -15,6 +15,8 @@ class Controller {
     protected $post;
     protected $session;
     protected array $flashMessage = [];
+    protected array $formErrors = [];
+    protected array $formInputs = [];
 
      public function __construct() {
          session_start();
@@ -22,6 +24,8 @@ class Controller {
          $this->post = $_POST;
          $this->session = &$_SESSION;
          $this->setFlashMessage();
+         $this->setFormErrors();
+         $this->setFormInputs();
      }
 
      protected function render(string $path, array $data = [])
@@ -30,6 +34,8 @@ class Controller {
          $data['success'] = $this->flashMessage['success'] ?? null;
          $data['warning'] = $this->flashMessage['warning'] ?? null;
          $data['info'] = $this->flashMessage['info'] ?? null;
+         $data['formErrors'] = $this->formErrors['form-errors'] ?? null;
+         $data['formInputs'] = $this->formInputs['form-inputs'] ?? null;
 
          print_r($this->twig->render($path, $data));
     }
@@ -51,6 +57,22 @@ class Controller {
         if (!empty($this->session['flash-info'])) {
             $this->flashMessage['info'] = $this->session['flash-info'];
             unset($this->session['flash-info']);
+        }
+    }
+
+    protected function setFormErrors()
+    {
+        if (!empty($this->session['form-errors'])) {
+            $this->formErrors['form-errors'] = $this->session['form-errors'];
+            unset($this->session['form-errors']);
+        }
+    }
+
+    protected function setFormInputs()
+    {
+        if (!empty($this->session['form-inputs'])) {
+            $this->formInputs['form-inputs'] = $this->session['form-inputs'];
+            unset($this->session['form-inputs']);
         }
     }
 }
