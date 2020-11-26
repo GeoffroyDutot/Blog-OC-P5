@@ -69,7 +69,7 @@ class AdminController extends Controller {
             $this->redirect('/');
         }
 
-        $this->render('admin/newpost.html.twig');
+        $this->render('form/admin/add_post.html.twig');
     }
 
     public function newPost() {
@@ -96,7 +96,7 @@ class AdminController extends Controller {
                 'fieldName' => 'title',
                 'type' => 'string',
                 'minLength' => 3,
-                'maxLength' => 255,
+                'maxLength' => 50,
                 'required' => true,
             ],
             [
@@ -130,10 +130,9 @@ class AdminController extends Controller {
         ];
 
         if (!empty($form->validate($rules, $this->post))) {
-            var_dump($form->getErrors());
-            echo "Formulaire invalide";
-            return;
-            //@TODO Display an error - invalid or missing data required
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
+            $this->redirect('/admin/articles/nouveau');
         }
 
         if (!empty($this->post['picture']['tmp_name'])) {
@@ -159,8 +158,113 @@ class AdminController extends Controller {
 
         $result = $postDAO->save($postDTO);
         if (!$result) {
+            $this->session['error'] = "Erreur ! Veuillez vérifier les champs du formulaire.";
             $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
             $this->redirect('admin/articles/nouveau');
+        }
+        $this->session['flash-success'] = "Modifications enregistrées.";
+        $this->redirect('/admin/articles');
+    }
+
+    public function editPost(int $postId) {
+        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
+            $this->redirect('/');
+        }
+
+        $postDAO = new PostDAO();
+        $postDTO = $postDAO->getPostById($postId);
+        $data = ['post' => $postDTO];
+
+        $this->render('form/admin/edit_post.html.twig', $data);
+    }
+
+    public function updatePost(int $postId) {
+        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
+            $this->redirect('/');
+        }
+
+        if (empty($this->post)) {
+            $this->session['flash-error'] = "Aucune donnée reçu !";
+            $this->redirect('/admin/a-propos');
+        }
+
+        if(!empty($_FILES)) {
+            foreach ($_FILES as $inputName => $file) {
+                $this->post[$inputName] = $file;
+            }
+        }
+
+        $form = new FormValidator();
+        $rules = [
+            [
+                'fieldName' => 'title',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 50,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'subtitle',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'resume',
+                'type' => 'string',
+                'minLength' => 5,
+                'maxLength' => 255,
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'picture',
+                'type' => 'file',
+                'extension' => ['image/png', 'image/jpg', 'image/jpeg'],
+                'size' => 2097152,
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'content',
+                'type' => 'string',
+                'minLength' => 20,
+                'maxLength' => 4000,
+                'required' => true,
+            ]
+        ];
+
+        if (!empty($form->validate($rules, $this->post))) {
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
+            $this->redirect('/admin/article/'.$postId);
+        }
+
+        $postDAO = new PostDAO();
+        $postDTO = $postDAO->getPostById($postId);
+
+        $this->post['slug'] = $this->slugify($this->post['title']);
+        if (!empty($this->post['picture']['tmp_name'])) {
+            move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($this->post['picture']['name']));
+            unlink(__DIR__.'/../../assets/img/post/' . $postDTO->getPicture());
+            $this->post['picture'] = $this->post['picture']['name'];
+        } else {
+            unset($this->post['picture']);
+        }
+
+        foreach ($this->post as $input) {
+            if (empty($input)){
+                $input = null;
+            }
+        }
+
+        $postDTO->hydrate($this->post);
+
+        $post = $postDAO->save($postDTO);
+        if (!$post) {
+            $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            $this->redirect('/admin/article/'.$postId);
         }
         $this->session['flash-success'] = "Modifications enregistrées.";
         $this->redirect('/admin/articles');
@@ -223,7 +327,7 @@ class AdminController extends Controller {
         $aboutMe = $aboutMe->getAboutMe();
         $data['aboutMe'] = $aboutMe;
 
-        $this->render('admin/aboutme.html.twig', $data);
+        $this->render('form/admin/aboutme.html.twig', $data);
     }
 
     public function editAboutMe() {
@@ -248,15 +352,15 @@ class AdminController extends Controller {
             [
                 'fieldName' => 'firstname',
                 'type' => 'string',
-                'minLength' => 3,
-                'maxLength' => 255,
+                'minLength' => 2,
+                'maxLength' => 25,
                 'required' => true,
             ],
             [
                 'fieldName' => 'lastname',
                 'type' => 'string',
-                'minLength' => 3,
-                'maxLength' => 255,
+                'minLength' => 2,
+                'maxLength' => 25,
                 'required' => true,
             ],
             [
@@ -318,10 +422,9 @@ class AdminController extends Controller {
         ];
 
         if (!empty($form->validate($rules, $this->post))) {
-            var_dump($form->getErrors());
-            echo "Formulaire invalide";
-            return;
-            //@TODO Display an error - invalid or missing data required
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
+            $this->redirect('/admin/a-propos');
         }
 
         $aboutMeDAO = new AboutMeDAO();

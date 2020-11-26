@@ -63,8 +63,12 @@
                                             <td>{{ post.title }}</td>
                                             <td>{{ post.resume }}</td>
                                             <td>{{ post.createdAt|date("d/m/Y") }}</td>
-                                            <td>{{ post.updatedAt|date("d/m/Y") }}</td>
-                                            <td><i class="nav-icon fas fa-pen"></i></td>
+                                            {% if post.updatedAt is not empty %}
+                                                <td>{{ post.updatedAt|date("d/m/Y") }}</td>
+                                            {% else %}
+                                                <td> </td>
+                                            {% endif %}
+                                            <td><a href="/admin/article/{{ post.id }}" class="nav-icon fas fa-pen grow"></a></td>
                                             <td><i class="nav-icon fas fa-archive text-blue grow archive-post" data-id-post="{{ post.id }}"></i></td>
                                         </tr>
                                     {% endfor %}
@@ -89,7 +93,6 @@
                                         <th>Archivé le</th>
                                         <th> </th>
                                         <th> </th>
-                                        <th> </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -99,7 +102,6 @@
                                             <td>{{ post.resume }}</td>
                                             <td>{{ post.createdAt|date("d/m/Y") }}</td>
                                             <td>{{ post.archivedAt|date("d/m/Y") }}</td>
-                                            <td><i class="nav-icon fas fa-pen"></i></td>
                                             <td><i class="nav-icon fas fa-box-open text-blue grow unarchive-post" data-id-post="{{ post.id }}"></i></td>
                                             <td><i class="nav-icon fas fa-trash text-danger grow delete-post" data-id-post="{{ post.id }}"></i></td>
                                         </tr>
@@ -127,13 +129,17 @@
     <script src="../../../assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="../../../assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="../../../assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="../../../assets/dist/js/demo.js"></script>
     <!-- page script -->
     <script>
         $(function () {
+            $.fn.dataTable.moment( 'DD/MM/YYYY' );
             $("#posts").DataTable({
                 "responsive": true,
+                "order": [],
                 "columns": [
                     { responsivePriority: 1 },
                     { responsivePriority: 2 },
@@ -157,8 +163,10 @@
             });
         });
         $(function () {
+            $.fn.dataTable.moment( 'DD/MM/YYYY' );
             $("#posts-archived").DataTable({
                 "responsive": true,
+                "order": [],
                 "columns": [
                     { responsivePriority: 1 },
                     { responsivePriority: 2 },

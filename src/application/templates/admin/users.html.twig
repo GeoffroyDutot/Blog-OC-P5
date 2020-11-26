@@ -115,13 +115,17 @@
     <script src="../../../assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
     <script src="../../../assets/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
     <script src="../../../assets/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="../../../assets/dist/js/demo.js"></script>
     <!-- page script -->
     <script>
         $(function () {
+            $.fn.dataTable.moment( 'DD/MM/YYYY' );
             $("#users").DataTable({
                 "responsive": true,
+                "order": [],
                 "columns": [
                     { responsivePriority: 3 },
                     { responsivePriority: 4 },
@@ -144,8 +148,10 @@
             });
         });
         $(function () {
+            $.fn.dataTable.moment( 'DD/MM/YYYY' );
             $("#users-deactivated").DataTable({
                 "responsive": true,
+                "order": [],
                 "columns": [
                     { responsivePriority: 3 },
                     { responsivePriority: 4 },

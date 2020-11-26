@@ -34,7 +34,9 @@ $router->get('/admin/tableau-de-bord', "Admin#index");
 // POST
 $router->get('/admin/articles', "Admin#listPosts");
 $router->get('/admin/articles/nouveau', 'Admin#addPost');
-$router->post('admin/article', 'Admin#newPost');
+$router->post('/admin/article', 'Admin#newPost');
+$router->get('/admin/article/:id', 'Admin#editPost')->with('id', '([0-9]+)');
+$router->post('/admin/article/modifier/:id', 'Admin#updatePost')->with('id', '([0-9]+)');
 
 // COMMENT
 $router->get('/admin/commentaires', "Admin#listComments");
