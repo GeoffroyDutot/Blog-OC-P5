@@ -1,0 +1,49 @@
+<div class="card-body">
+    <div class="form-group">
+        <label for="title">Titre</label>
+        {% for error in formErrors.title %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="title" placeholder="Titre" required minlength="3" maxlength="50" name="title" value="{% if formInputs.title is defined %}{{ formInputs.title }}{% else %}{{ post.title }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="subtitle">Sous-titre</label>
+        {% for error in formErrors.subtitle %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="subtitle" placeholder="Sous-titre"  minlength="3" maxlength="255" name="subtitle" value="{% if formInputs.subtitle is defined %}{{ formInputs.subtitle }}{% else %}{{ post.subtitle }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="resume">Résumé</label>
+        {% for error in formErrors.resume %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <textarea class="form-control" rows="2" id="resume" placeholder="Résumé de l'article.." minlength="5" maxlength="255" name="resume">{% if formInputs.resume is defined %}{{ formInputs.resume }}{% else %}{{ post.resume }}{% endif %}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputFile">Image</label>
+        {% for error in formErrors.picture %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        {% if formErrors is not empty  %}
+            <p class="form-error">Si vous aviez mis une nouvelle image, il est nécessaire de la mettre à nouveau.</p>
+        {% endif %}
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="picture" name="picture" accept="image/png, image/jpeg, image/jpg">
+                <label class="custom-file-label" for="picture" data-browse="Parcourir">{% if post.picture is not empty %}{{ post.picture }}{% else %}Choisis une image{% endif %}</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Télécharge</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="content">Contenu</label>
+        {% for error in formErrors.content %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <textarea class="textarea" id="content" placeholder="Contenu de l'article" required minlength="20" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" name="content">{% if formInputs.content is defined %}{{ formInputs.content }}{% else %}{{ post.content }}{% endif %}</textarea>
+    </div>
+</div>
+<!-- /.card-body -->

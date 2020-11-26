@@ -40,6 +40,10 @@ class PostController extends Controller {
         $post = new PostDAO();
         $postDTO = $post->getPostBySlug($slug);
 
+        if (empty($postDTO)) {
+            $this->redirect('/page-introuvable');
+        }
+
         if (!empty($postDTO) && $postDTO->getIsArchived() && $this->session['role'] !== 'ROLE_ADMIN') {
             $this->redirect('/page-introuvable');
         }

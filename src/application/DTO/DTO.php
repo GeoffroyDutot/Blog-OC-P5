@@ -17,7 +17,7 @@ abstract class DTO {
         return $str;
     }
 
-    protected function hydrate(array $data) {
+    public function hydrate(array $data) {
         foreach ($data as $key => $value) {
             // On récupère le nom du setter correspondant à l'attribut.
             $method = 'set' . $this->toCamelCase($key);

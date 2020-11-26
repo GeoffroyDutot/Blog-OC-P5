@@ -120,7 +120,7 @@ class FormValidator {
 
     public function validateMaxLength(array $rule, array $payload)
     {
-        if ($rule['maxLength'] < strlen($payload[$rule['fieldName']])) {
+        if (strlen($payload[$rule['fieldName']]) > $rule['maxLength']) {
             $this->errors[$rule['fieldName']][] = 'Il y a trop de contenu. Il peut il y avoir au maximum '  .$rule['maxLength'] .' caractères.';
         }
     }
