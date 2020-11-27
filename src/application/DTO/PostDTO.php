@@ -6,7 +6,8 @@ namespace App\DTO;
 
 use DateTime;
 
-class PostDTO extends DTO {
+class PostDTO extends DTO
+{
     protected ?int $id = null;
     protected string $title;
     protected string $slug;
@@ -35,6 +36,7 @@ class PostDTO extends DTO {
     public function setId(?int $id): PostDTO
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -43,8 +45,10 @@ class PostDTO extends DTO {
         return $this->title;
     }
 
-    public function setTitle(string $title): PostDTO {
+    public function setTitle(string $title): PostDTO
+    {
         $this->title = $title;
+
         return $this;
     }
 
@@ -56,15 +60,19 @@ class PostDTO extends DTO {
     public function setSlug(string $slug): PostDTO
     {
         $this->slug = $slug;
+
         return $this;
     }
 
-    public function getSubtitle(): ?string {
+    public function getSubtitle(): ?string
+    {
         return $this->subtitle;
     }
 
-    public function setSubtitle(?string $subtitle): PostDTO {
+    public function setSubtitle(?string $subtitle): PostDTO
+    {
         $this->subtitle = $subtitle;
+
         return $this;
     }
 
@@ -77,21 +85,23 @@ class PostDTO extends DTO {
         return $this->created_at;
     }
 
-    public function setCreatedAt(string $created_at): PostDTO {
+    public function setCreatedAt(string $created_at): PostDTO
+    {
         if (!$created_at instanceof DateTime) {
             $created_at = new DateTime($created_at);
         }
-
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?DateTime {
+    public function getUpdatedAt(): ?DateTime
+    {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?string $updated_at): PostDTO {
+    public function setUpdatedAt(?string $updated_at): PostDTO
+    {
         if (!$updated_at instanceof DateTime) {
             if (!empty($updated_at)) {
                 $updated_at = new DateTime($updated_at);
@@ -99,44 +109,54 @@ class PostDTO extends DTO {
                 $updated_at = null;
             }
         }
-
         $this->updated_at = $updated_at;
 
         return $this;
     }
 
-    public function getContent(): string {
+    public function getContent(): string
+    {
         return $this->content;
     }
 
-    public function setContent(string $content): PostDTO {
+    public function setContent(string $content): PostDTO
+    {
         $this->content = $content;
+
         return $this;
     }
 
-    public function getResume(): ?string {
+    public function getResume(): ?string
+    {
         return $this->resume;
     }
 
-    public function setResume(?string $resume): PostDTO {
+    public function setResume(?string $resume): PostDTO
+    {
         $this->resume = $resume;
+
         return $this;
     }
 
-    public function getPicture(): ?string {
+    public function getPicture(): ?string
+    {
         return $this->picture;
     }
 
-    public function setPicture(?string $picture): PostDTO {
+    public function setPicture(?string $picture): PostDTO
+    {
         $this->picture = $picture;
+
         return $this;
     }
 
-    public function getArchivedAt(): ?DateTime {
+    public function getArchivedAt(): ?DateTime
+    {
         return $this->archived_at;
     }
 
-    public function setArchivedAt(?string $archived_at): PostDTO {
+    public function setArchivedAt(?string $archived_at): PostDTO
+    {
         if (!$archived_at instanceof DateTime) {
             if (!empty($archived_at)) {
                 $archived_at = new DateTime($archived_at);
@@ -144,7 +164,6 @@ class PostDTO extends DTO {
                 $archived_at = null;
             }
         }
-
         $this->archived_at = $archived_at;
 
         return $this;
@@ -167,8 +186,10 @@ class PostDTO extends DTO {
         return $this->comments;
     }
 
-    public function setComments(array $comments): PostDTO {
+    public function setComments(array $comments): PostDTO
+    {
         $this->comments = $comments;
+
         return $this;
     }
 }
