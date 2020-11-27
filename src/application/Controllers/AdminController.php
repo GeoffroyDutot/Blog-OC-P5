@@ -268,7 +268,10 @@ class AdminController extends Controller {
 
         $postDTO->hydrate($this->post);
 
-        //@TODO Checks if the post title / slug doesnt already exists
+        if (!empty($postDAO->getPostBySlug($postDTO->getSlug())) && $postDAO->getPostBySlug($postDTO->getSlug())->getId() !== $postDTO->getId()) {
+            $this->session['flash-error'] = "Un article avec ce titre existe déjà !";
+            $this->redirect('/admin/article/'.$postId);
+        }
 
         $post = $postDAO->save($postDTO);
         if (!$post) {
