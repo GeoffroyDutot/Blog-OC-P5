@@ -1,0 +1,43 @@
+<div class="card-body">
+    <div class="form-group">
+        <label for="email">Email</label>
+        {% for error in formErrors.email %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="email" class="form-control" id="email" placeholder="email@gmail.com" required minlength="5" maxlength="70" name="email" value="{% if formInputs.email is defined %}{{ formInputs.email }}{% else %}{{ user.email }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="pseudo">Pseudo</label>
+        {% for error in formErrors.peudo %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="pseudo" placeholder="Pseudo" required  minlength="3" maxlength="255" name="pseudo" value="{% if formInputs.pseudo is defined %}{{ formInputs.pseudo }}{% else %}{{ user.pseudo }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <p>En laissant vide le mot de passe, il ne sera pas modifié.</p>
+        {% for error in formErrors.password %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="password" class="form-control" id="password" placeholder="M0tDeP@sse"  minlength="8" maxlength="255" name="password" value="{% if formInputs.password is defined %}{{ formInputs.password }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputFile">Image de profil</label>
+        {% for error in formErrors.profil_picture %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        {% if formErrors is not empty  %}
+            <p class="form-error">Si vous aviez mis une nouvelle image, il est nécessaire de la mettre à nouveau.</p>
+        {% endif %}
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="profil_picture" name="profil_picture" accept="image/png, image/jpeg, image/jpg">
+                <label class="custom-file-label" for="profil_picture" data-browse="Parcourir">{% if user.profilPicture is not empty %}{{ user.profilPicture }}{% else %}Choisis une image{% endif %}</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Télécharge</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.card-body -->

@@ -33,7 +33,7 @@
                 <h3 class="card-title">Derniers articles</h3>
               </div>
               <div class="card-body table-responsive p-0">
-                <table class="table table-striped table-valign-middle">
+                <table class="table table-striped text-center">
                   <thead>
                   <tr>
                     <th>Titre</th>
@@ -74,7 +74,7 @@
                 <h3 class="card-title">Derniers utilisateurs inscrits</h3>
               </div>
               <div class="card-body table-responsive p-0">
-                <table class="table table-striped table-valign-middle">
+                <table class="table table-striped text-center">
                   <thead>
                   <tr>
                     <th>Pseudo</th>
@@ -88,11 +88,6 @@
                     <td>{{ user.pseudo }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.dateRegistered|date('d/m/Y') }}</td>
-                    <td>
-                      <a href="#" class="text-muted">
-                        <i class="fas fa-search"></i>
-                      </a>
-                    </td>
                   </tr>
                   </tbody>
                   {% endfor %}
@@ -109,7 +104,7 @@
                 <h3 class="card-title">Derniers commentaires soumis</h3>
               </div>
               <div class="card-body table-responsive p-0">
-                <table class="table table-striped table-valign-middle">
+                <table class="table table-striped text-center">
                   <thead>
                   <tr>
                     <th>Utilisateur</th>

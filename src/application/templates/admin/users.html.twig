@@ -56,7 +56,7 @@
                                             <td>{{ user.pseudo }}</td>
                                             <td>{{ user.email }}</td>
                                             <td>{{ user.dateRegistered|date("d/m/Y") }}</td>
-                                            <td><i class="nav-icon fas fa-user-edit"></i></td>
+                                            <td><a href="/admin/utilisateur/{{ user.id }}" class="nav-icon fas fa-user-edit grow"></a></td>
                                             <td><i class="nav-icon fas fa-user-slash text-danger grow deactivate-user" data-id-user="{{ user.id }}"></i></td>
                                         </tr>
                                     {% endfor %}
@@ -76,7 +76,7 @@
                                     <thead>
                                     <tr>
                                         <th>Pseudo</th>
-                                        <th>Raison</th>
+                                        <th>Email</th>
                                         <th>Désactivé le</th>
                                         <th> </th>
                                         <th> </th>
@@ -86,9 +86,9 @@
                                     {% for user in usersDeactivated %}
                                         <tr>
                                             <td>{{ user.pseudo }}</td>
-                                            <td>{{ user.reasonDeactivation }}</td>
+                                            <td>{{ user.email }}</td>
                                             <td>{{ user.deactivatedAt|date("d/m/Y") }}</td>
-                                            <td><i class="nav-icon fas fa-user-edit"></i></td>
+                                            <td><a href="/admin/utilisateur/{{ user.id }}" class="nav-icon fas fa-user-edit grow"></a></td>
                                             <td><i class="nav-icon fas fa-user-check grow green reactivate-user" data-id-user="{{ user.id }}"></i></td>
                                         </tr>
                                     {% endfor %}

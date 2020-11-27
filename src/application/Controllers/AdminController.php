@@ -39,7 +39,8 @@ class AdminController extends Controller {
         $this->render('admin/dashboard.html.twig', $data);
     }
 
-    public function listPosts() {
+    public function listPosts()
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
@@ -63,16 +64,18 @@ class AdminController extends Controller {
         $this->render('admin/posts.html.twig', $data);
     }
 
-    public function addPost() {
+    public function addPost()
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
         }
 
-        $this->render('form/admin/add_post.html.twig');
+        $this->render('admin/add_post.html.twig');
     }
 
-    public function newPost() {
+    public function newPost()
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
@@ -80,7 +83,7 @@ class AdminController extends Controller {
 
         if (empty($this->post)) {
             $this->session['flash-error'] = "Aucune donnée reçu !";
-            $this->redirect('/admin/a-propos');
+            $this->redirect('/admin/articles/nouveau');
         }
 
         if(!empty($_FILES)) {
@@ -166,7 +169,8 @@ class AdminController extends Controller {
         $this->redirect('/admin/articles');
     }
 
-    public function editPost(int $postId) {
+    public function editPost(int $postId)
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
@@ -176,10 +180,11 @@ class AdminController extends Controller {
         $postDTO = $postDAO->getPostById($postId);
         $data = ['post' => $postDTO];
 
-        $this->render('form/admin/edit_post.html.twig', $data);
+        $this->render('admin/edit_post.html.twig', $data);
     }
 
-    public function updatePost(int $postId) {
+    public function updatePost(int $postId)
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
@@ -187,7 +192,7 @@ class AdminController extends Controller {
 
         if (empty($this->post)) {
             $this->session['flash-error'] = "Aucune donnée reçu !";
-            $this->redirect('/admin/a-propos');
+            $this->redirect('/admin/article/'.$postId);
         }
 
         if(!empty($_FILES)) {
@@ -247,7 +252,9 @@ class AdminController extends Controller {
         $this->post['slug'] = $this->slugify($this->post['title']);
         if (!empty($this->post['picture']['tmp_name'])) {
             move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($this->post['picture']['name']));
-            unlink(__DIR__.'/../../assets/img/post/' . $postDTO->getPicture());
+            if (!empty($postDTO->getPicture())) {
+                unlink(__DIR__.'/../../assets/img/post/' . $postDTO->getPicture());
+            }
             $this->post['picture'] = $this->post['picture']['name'];
         } else {
             unset($this->post['picture']);
@@ -261,6 +268,8 @@ class AdminController extends Controller {
 
         $postDTO->hydrate($this->post);
 
+        //@TODO Checks if the post title / slug doesnt already exists
+
         $post = $postDAO->save($postDTO);
         if (!$post) {
             $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
@@ -270,7 +279,8 @@ class AdminController extends Controller {
         $this->redirect('/admin/articles');
     }
 
-    public function listUsers() {
+    public function listUsers()
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
@@ -296,7 +306,123 @@ class AdminController extends Controller {
         $this->render('admin/users.html.twig', $data);
     }
 
-    public function listComments() {
+    public function editUser(int $userId)
+    {
+        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
+            $this->redirect('/');
+        }
+
+        $userDAO = new UserDAO();
+        $userDTO = $userDAO->getUserById($userId);
+        $data = ['user' => $userDTO];
+
+        $this->render('admin/edit_user.html.twig', $data);
+    }
+
+    public function updateUser(int $userId) {
+        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
+            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
+            $this->redirect('/');
+        }
+
+        if (empty($this->post)) {
+            $this->session['flash-error'] = "Aucune donnée reçu !";
+            $this->redirect('/admin/utilisateur/'.$userId);
+        }
+
+        if(!empty($_FILES)) {
+            foreach ($_FILES as $inputName => $file) {
+                $this->post[$inputName] = $file;
+            }
+        }
+
+        $form = new FormValidator();
+        $rules = [
+            [
+                'fieldName' => 'email',
+                'type' => 'email',
+                'minLength' => 5,
+                'maxLength' => 70,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'pseudo',
+                'type' => 'string',
+                'minLength' => 3,
+                'maxLength' => 255,
+                'required' => true,
+            ],
+            [
+                'fieldName' => 'password',
+                'type' => 'string',
+                'minLength' => 8,
+                'maxLength' => 255,
+                'required' => false,
+            ],
+            [
+                'fieldName' => 'profil_picture',
+                'type' => 'file',
+                'extension' => ['image/png', 'image/jpg', 'image/jpeg'],
+                'size' => 2097152,
+                'required' => false,
+            ]
+        ];
+
+        if (!empty($form->validate($rules, $this->post))) {
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
+            $this->redirect('/admin/utilisateur/'.$userId);
+        }
+
+        $userDAO = new UserDAO();
+        $userDTO = $userDAO->getUserById($userId);
+
+        if (!empty($this->post['profil_picture']['tmp_name'])) {
+            move_uploaded_file($this->post['profil_picture']['tmp_name'], __DIR__.'/../../assets/img/user/profil_picture/' . basename($this->post['profil_picture']['name']));
+            if (!empty($userDTO->getProfilPicture())) {
+                unlink(__DIR__.'/../../assets/img/user/profil_picture/' . $userDTO->getProfilPicture());
+            }
+            $this->post['profil_picture'] = $this->post['profil_picture']['name'];
+        } else {
+            unset($this->post['profil_picture']);
+        }
+
+        foreach ($this->post as $input) {
+            if (empty($input)){
+                $input = null;
+            }
+        }
+
+        if (!empty($this->post['password'])) {
+            $this->post['password'] = password_hash($this->post['password'], PASSWORD_BCRYPT);
+        } else {
+            unset($this->post['password']);
+        }
+
+        $userDTO->hydrate($this->post);
+
+        if (!empty($userDAO->getUserByEmail($userDTO->getEmail())) && $userDAO->getUserByEmail($userDTO->getEmail())->getId() !== $userDTO->getId()) {
+            $this->session['flash-error'] = "Un utilisateur avec cette adresse email existe déjà !";
+            $this->redirect('/admin/utilisateur/'.$userId);
+        }
+
+        if (!empty($userDAO->getUserByPseudo($userDTO->getPseudo())) && $userDAO->getUserByPseudo($userDTO->getPseudo())->getId() !== $userDTO->getId()) {
+            $this->session['flash-error'] = "Un utilisateur avec ce pseudo existe déjà !";
+            $this->redirect('/admin/utilisateur/'.$userId);
+        }
+
+        $user = $userDAO->save($userDTO);
+        if (!$user) {
+            $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            $this->redirect('/admin/utilisateur/'.$userId);
+        }
+        $this->session['flash-success'] = "Modifications enregistrées.";
+        $this->redirect('/admin/utilisateurs');
+    }
+
+    public function listComments()
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
@@ -315,7 +441,8 @@ class AdminController extends Controller {
         $this->render('admin/comments.html.twig', $data);
     }
 
-    public function aboutMe() {
+    public function aboutMe()
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
@@ -327,10 +454,11 @@ class AdminController extends Controller {
         $aboutMe = $aboutMe->getAboutMe();
         $data['aboutMe'] = $aboutMe;
 
-        $this->render('form/admin/aboutme.html.twig', $data);
+        $this->render('admin/edit_aboutme.html.twig', $data);
     }
 
-    public function editAboutMe() {
+    public function editAboutMe()
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');
