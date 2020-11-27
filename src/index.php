@@ -43,6 +43,8 @@ $router->get('/admin/commentaires', "Admin#listComments");
 
 // USER
 $router->get('/admin/utilisateurs', "Admin#listUsers");
+$router->get('/admin/utilisateur/:id', 'Admin#editUser')->with('id', '([0-9]+)');
+$router->post('/admin/utilisateur/modifier/:id', 'Admin#updateUser')->with('id', '([0-9]+)');
 
 // ABOUT ME
 $router->get('/admin/a-propos', 'Admin#aboutMe');

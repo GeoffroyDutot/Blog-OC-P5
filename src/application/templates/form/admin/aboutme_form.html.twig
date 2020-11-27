@@ -1,0 +1,106 @@
+<div class="card-body">
+    <div class="form-group">
+        <label for="firstname">Prénom</label>
+        {% for error in formErrors.firstname %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="firstname" placeholder="Prénom" required minlength="2" maxlength="25" name="firstname" value="{% if formInputs.firstname is defined %}{{ formInputs.firstname }}{% else %}{{ aboutMe.firstname }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="lastname">Nom</label>
+        {% for error in formErrors.lastname %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="lastname" placeholder="Nom" required minlength="2" maxlength="25" name="lastname" value="{% if formInputs.lastname is defined %}{{ formInputs.lastname }}{% else %}{{ aboutMe.lastname }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label>Slogan</label>
+        {% for error in formErrors.slogan %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <textarea class="form-control" rows="2" placeholder="Inscris ici le slogan du site.." required minlength="5" maxlength="255" name="slogan">{% if formInputs.slogan is defined %}{{ formInputs.slogan }}{% else %}{{ aboutMe.slogan }}{% endif %}</textarea>
+    </div>
+    <div class="form-group">
+        <label>Bio</label>
+        {% for error in formErrors.bio %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <textarea class="form-control" rows="2" placeholder="Inscris ici la biographie.." required minlength="5" maxlength="255" name="bio">{% if formInputs.bio is defined %}{{ formInputs.bio }}{% else %}{{ aboutMe.bio }}{% endif %}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputFile">Photo</label>
+        {% for error in formErrors.profil_picture %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        {% if formErrors is not empty  %}
+            <p class="form-error">Si vous aviez mis une nouvelle image, il est nécessaire de la mettre à nouveau.</p>
+        {% endif %}
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="picture_profile" name="profil_picture" accept="image/png, image/jpeg, image/jpg">
+                <label class="custom-file-label" for="picture_profile" data-browse="Parcourir">{% if aboutMe.profilPicture is not empty %}{{ aboutMe.profilPicture }}{% else %}Choisis une image{% endif %}</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Télécharge</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputFile">CV</label>
+        {% for error in formErrors.cv_pdf %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        {% if formErrors is not empty  %}
+            <p class="form-error">Si vous aviez mis une nouvelle image, il est nécessaire de la mettre à nouveau.</p>
+        {% endif %}
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="cv_pdf" name="cv_pdf" accept="application/pdf">
+                <label class="custom-file-label" for="cv_pdf" data-browse="Parcourir">{% if aboutMe.cvPdf is not empty %}{{ aboutMe.cvPdf }}{% else %}Choisis un document pdf{% endif %}</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Télécharge</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="exampleInputFile">Photo de fond</label>
+        {% for error in formErrors.picture %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        {% if formErrors is not empty  %}
+            <p class="form-error">Si vous aviez mis une nouvelle image, il est nécessaire de la mettre à nouveau.</p>
+        {% endif %}
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="picture" name="picture" accept="image/png, image/jpeg, image/jpg">
+                <label class="custom-file-label" for="picture" data-browse="Parcourir">{% if aboutMe.picture is not empty %}{{ aboutMe.picture }}{% else %}Choisis une image{% endif %}</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Télécharge</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="twitter">Twitter</label>
+        {% for error in formErrors.twitter_link %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="twitter" placeholder="Lien vers le compte twitter" required minlength="20" maxlength="255" name="twitter_link" value="{% if formInputs.twitter_link is defined %}{{ formInputs.twitter_link }}{% else %}{{ aboutMe.twitterLink }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="linkedin">Linkedin</label>
+        {% for error in formErrors.linkedin_link %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="linkedin" placeholder="Lien vers le compte linkedin" required minlength="20" maxlength="255" name="linkedin_link" value="{% if formInputs.linkedin_link is defined %}{{ formInputs.linkedin_link }}{% else %}{{ aboutMe.linkedinLink }}{% endif %}">
+    </div>
+    <div class="form-group">
+        <label for="GitHub">GitHub</label>
+        {% for error in formErrors.github_link %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input type="text" class="form-control" id="GitHub" placeholder="Lien vers le compte GitHub" required minlength="20" maxlength="255" name="github_link" value="{% if formInputs.github_link is defined %}{{ formInputs.github_link }}{% else %}{{ aboutMe.githubLink }}{% endif %}">
+    </div>
+</div>
+<!-- /.card-body -->
