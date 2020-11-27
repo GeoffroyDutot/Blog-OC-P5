@@ -2,13 +2,15 @@
 
 namespace App\Controllers;
 
+
 use App\DAO\AboutMeDAO;
 use App\DTO\EmailDTO;
 use App\Form\FormValidator;
 
-class HomeController extends Controller {
-
-    public function index() {
+class HomeController extends Controller
+{
+    public function index()
+    {
         $data = [];
         $aboutMe = new AboutMeDAO();
         $aboutMe = $aboutMe->getAboutMe();
@@ -17,7 +19,8 @@ class HomeController extends Controller {
         $this->render('home.html.twig', $data);
     }
 
-    public function contact() {
+    public function contact()
+    {
         if (empty($this->post)) {
             $this->session['flash-error'] = "Erreur, aucune donnée reçue !";
             $this->redirect('/');

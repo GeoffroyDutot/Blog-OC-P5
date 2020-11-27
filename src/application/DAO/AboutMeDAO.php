@@ -3,22 +3,22 @@
 
 namespace App\DAO;
 
-use App\DAO\DAO;
+
 use App\DTO\AboutMeDTO;
 
-
-class AboutMeDAO extends DAO {
-
-    public function getAboutMe(): AboutMeDTO {
+class AboutMeDAO extends DAO
+{
+    public function getAboutMe(): AboutMeDTO
+    {
     $db = $this->connectDB();
 
     $req = $db->query('SELECT * FROM `about_me` LIMIT 1');
-    $aboutMe = $req->fetchObject('App\DTO\AboutMeDTO');
 
-    return $aboutMe;
+    return $req->fetchObject('App\DTO\AboutMeDTO');
     }
 
-    public function save(AboutMeDTO $aboutMe): bool {
+    public function save(AboutMeDTO $aboutMe): bool
+    {
         $db = $this->connectDb();
 
         if (!$aboutMe->getId()) {

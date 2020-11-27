@@ -6,9 +6,10 @@ namespace App\DAO;
 
 use App\DTO\CommentDTO;
 
-class CommentDAO extends DAO {
-
-    public function getAll(array $filters, $limit = null) : array {
+class CommentDAO extends DAO
+{
+    public function getAll(array $filters, $limit = null): array
+    {
         $db = $this->connectDb();
         $comments = [];
 
@@ -25,7 +26,6 @@ class CommentDAO extends DAO {
         }
 
         $req = $db->query($query);
-
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
@@ -43,10 +43,11 @@ class CommentDAO extends DAO {
             }
         }
 
-        return  $comments;
+        return $comments;
     }
 
-    public function getByPostId(array $filters) : array {
+    public function getByPostId(array $filters): ?array
+    {
         $db = $this->connectDb();
         $comments = [];
 
@@ -65,7 +66,6 @@ class CommentDAO extends DAO {
         }
 
         $req = $db->query($query);
-
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
@@ -83,20 +83,24 @@ class CommentDAO extends DAO {
             }
         }
 
-        return  $comments;
+        return $comments;
     }
 
-    public function submitComment(CommentDTO $commentDTO) {
+    public function submitComment(CommentDTO $commentDTO)
+    {
         $db = $this->connectDb();
 
         $req = $db->prepare('INSERT INTO `comment`(`content`, `id_post`, `id_user`, `status`, `created_at`) VALUES(:content, :id_post, :id_user, :status, :createdAt)');
+
         return $req->execute(['content' => $commentDTO->getContent(), 'id_post' => $commentDTO->getIdPost(), 'id_user' => $commentDTO->getIdUser(), 'status' => $commentDTO->getStatus(), 'createdAt' => date('Y-m-d H:i:s')]);
     }
 
-    public function editCommentStatus(int $id, string $status) {
+    public function editCommentStatus(int $id, string $status)
+    {
         $db = $this->connectDb();
 
         $req = $db->prepare('UPDATE comment SET status=:status WHERE id = \''.$id.'\'');
+
         return $req->execute(['status' => $status]);
     }
 

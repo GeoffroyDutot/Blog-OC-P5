@@ -4,12 +4,11 @@
 namespace App\DTO;
 
 
-abstract class DTO {
-
+abstract class DTO
+{
     public function toCamelCase($str)
     {
         $str[0] = strtoupper($str[0]);
-
         $str = preg_replace_callback('/_([a-z])/', function ($match) {
             return strtoupper($match[1]);
         }, $str);
@@ -17,7 +16,8 @@ abstract class DTO {
         return $str;
     }
 
-    public function hydrate(array $data) {
+    public function hydrate(array $data)
+    {
         foreach ($data as $key => $value) {
             // On récupère le nom du setter correspondant à l'attribut.
             $method = 'set' . $this->toCamelCase($key);

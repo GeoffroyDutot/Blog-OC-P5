@@ -5,11 +5,11 @@ namespace App\DAO;
 
 
 use App\DTO\UserDTO;
-use http\Client\Curl\User;
 
-class UserDAO extends DAO {
-
-    public function getAll(array $filters, $limit = null) : array {
+class UserDAO extends DAO
+{
+    public function getAll(array $filters, $limit = null): array
+    {
         $db = $this->connectDb();
         $users = [];
 
@@ -40,7 +40,8 @@ class UserDAO extends DAO {
         return $users;
     }
 
-    public function save(UserDTO $userDTO) {
+    public function save(UserDTO $userDTO)
+    {
         $db = $this->connectDb();
 
         $deactivatedAt = $userDTO->getDeactivatedAt() ? $userDTO->getDeactivatedAt()->format('Y-m-d H:i:s') : null;
@@ -70,7 +71,8 @@ class UserDAO extends DAO {
         return new UserDTO($user);
     }
 
-    public function getUserByPseudo(string $pseudo): ?UserDTO {
+    public function getUserByPseudo(string $pseudo): ?UserDTO
+    {
         $db = $this->connectDb();
 
         $req = $db->query('SELECT * FROM user WHERE pseudo = \''.$pseudo.'\'');
@@ -83,7 +85,8 @@ class UserDAO extends DAO {
         return new UserDTO($user);
     }
 
-    public function getUserById(int $id) {
+    public function getUserById(int $id)
+    {
         $db = $this->connectDb();
 
         $req = $db->query('SELECT * FROM user WHERE id = \''.$id.'\'');

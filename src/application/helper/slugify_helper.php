@@ -4,9 +4,9 @@
 namespace App\Helper;
 
 
-trait slugify_helper {
-
-    public static function slugify(string $text)
+trait slugify_helper
+{
+    public function slugify(string $text)
     {
         // replace non letter or digits by -
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);

@@ -2,12 +2,13 @@
 
 namespace App\Controllers;
 
+
 use App\Core\Twig;
 use App\Helper\slugify_helper;
 use App\Helper\url_helper;
 
-class Controller {
-
+class Controller
+{
     use url_helper;
     use slugify_helper;
 
@@ -18,7 +19,8 @@ class Controller {
     protected array $formErrors = [];
     protected array $formInputs = [];
 
-     public function __construct() {
+     public function __construct()
+     {
          session_start();
          $this->twig = Twig::getInstance();
          $this->post = $_POST;

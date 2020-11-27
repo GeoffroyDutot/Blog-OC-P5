@@ -4,21 +4,9 @@
 namespace App\Form;
 
 
-class FormValidator {
-
-    private bool $isValid = true;
-
+class FormValidator
+{
     private array $errors = [];
-
-    public function isValid(): bool
-    {
-        return $this->isValid;
-    }
-
-    public function getError(string $fieldName): ?string
-    {
-        return $this->errors[$fieldName] ?? null;
-    }
 
     public function getErrors(): array
     {
@@ -77,6 +65,7 @@ class FormValidator {
 
             return false;
         }
+
         return true;
     }
 
@@ -87,6 +76,7 @@ class FormValidator {
 
             return false;
         }
+
         return true;
     }
 

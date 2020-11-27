@@ -7,16 +7,16 @@ namespace App\Controllers;
 use App\DAO\CommentDAO;
 use App\DAO\PostDAO;
 use App\DAO\UserDAO;
-use App\DTO\PostDTO;
 
-class ApiController extends Controller {
-
+class ApiController extends Controller
+{
     public function __construct() {
         parent::__construct();
         header('Content-Type: application/json');
     }
 
-    public function validateComment() {
+    public function validateComment()
+    {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
@@ -41,7 +41,8 @@ class ApiController extends Controller {
         }
     }
 
-    public function unvalidateComment() {
+    public function unvalidateComment()
+    {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
@@ -67,7 +68,8 @@ class ApiController extends Controller {
         }
     }
 
-    public function archivePost() {
+    public function archivePost()
+    {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
@@ -104,7 +106,8 @@ class ApiController extends Controller {
         die(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
     }
 
-    public function unarchivePost() {
+    public function unarchivePost()
+    {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
@@ -141,7 +144,8 @@ class ApiController extends Controller {
         die(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
     }
 
-    public function deletePost(int $postId) {
+    public function deletePost(int $postId)
+    {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
@@ -170,7 +174,8 @@ class ApiController extends Controller {
         die(json_encode(['success' => true, 'msg' => 'Post Deleted successfuly']));
     }
 
-    public function deactivateUser(int $idUser) {
+    public function deactivateUser(int $idUser)
+    {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
@@ -201,7 +206,8 @@ class ApiController extends Controller {
         die(json_encode(['success' => true, 'msg' => 'User Deactivated successfuly']));
     }
 
-    public function reactivateUser(int $idUser) {
+    public function reactivateUser(int $idUser)
+    {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
