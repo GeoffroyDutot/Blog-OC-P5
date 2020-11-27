@@ -4,14 +4,13 @@
 namespace App\DAO;
 
 
-use App\DTO\CommentDTO;
 use App\DTO\PostDTO;
 
-class PostDAO extends DAO {
-
-    public function getAll($limit = null) : array {
+class PostDAO extends DAO
+{
+    public function getAll($limit = null): array
+    {
         //@TODO add filters and fusion getAllArchived
-
         $db = $this->connectDb();
         $posts = [];
 
@@ -22,7 +21,6 @@ class PostDAO extends DAO {
         }
 
         $req = $db->query($query . $limit);
-
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!$data) {
@@ -36,7 +34,8 @@ class PostDAO extends DAO {
         return  $posts;
     }
 
-    public function getAllArchived($limit = null) : array {
+    public function getAllArchived($limit = null): array
+    {
         $db = $this->connectDb();
         $posts = [];
 
@@ -47,7 +46,6 @@ class PostDAO extends DAO {
         }
 
         $req = $db->query($query . $limit);
-
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!$data) {
@@ -61,7 +59,7 @@ class PostDAO extends DAO {
         return  $posts;
     }
 
-    public function getPostById(int $postId, bool $details = false) : ?PostDTO
+    public function getPostById(int $postId, bool $details = false): ?PostDTO
     {
         $db = $this->connectDb();
 
@@ -87,7 +85,8 @@ class PostDAO extends DAO {
         return $postDTO;
     }
 
-    public function getPostBySlug(string $slug) : ?PostDTO {
+    public function getPostBySlug(string $slug): ?PostDTO
+    {
         $db = $this->connectDb();
 
         $req = $db->query("SELECT * FROM `post` WHERE slug = '$slug' LIMIT 1");

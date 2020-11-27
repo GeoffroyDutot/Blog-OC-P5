@@ -9,11 +9,12 @@ use App\DAO\CommentDAO;
 use App\DAO\PostDAO;
 use App\DAO\UserDAO;
 use App\DTO\CommentDTO;
-use App\DTO\PostDTO;
 use App\Form\FormValidator;
 
-class PostController extends Controller {
-    public function index() {
+class PostController extends Controller
+{
+    public function index()
+    {
        $data = [];
 
         $aboutMe = new AboutMeDAO();
@@ -30,7 +31,8 @@ class PostController extends Controller {
         $this->render('posts.html.twig', $data);
     }
 
-    public function show(string $slug) {
+    public function show(string $slug)
+    {
         $data = [];
 
         $aboutMe = new AboutMeDAO();
@@ -55,7 +57,8 @@ class PostController extends Controller {
         $this->render('post.html.twig', $data);
     }
 
-    public function submitComment(int $postId) {
+    public function submitComment(int $postId)
+    {
         if (empty($this->session)) {
             $this->session['flash-error'] = "Utilisateur non connecté !";
             $this->redirect($_SERVER['HTTP_REFERER']);

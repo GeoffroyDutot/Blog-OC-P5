@@ -12,8 +12,8 @@ use App\DTO\AboutMeDTO;
 use App\DTO\PostDTO;
 use App\Form\FormValidator;
 
-class AdminController extends Controller {
-
+class AdminController extends Controller
+{
     public function index()
     {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
@@ -32,9 +32,7 @@ class AdminController extends Controller {
         $filtersComment = ['status' => 'NULL'];
         $comments = $commentDAO->getAll($filtersComment, 5);
 
-        $data['posts'] = $posts;
-        $data['users'] = $users;
-        $data['comments'] = $comments;
+        $data = ['posts' => $posts, 'users' => $users, 'comments' => $comments];
 
         $this->render('admin/dashboard.html.twig', $data);
     }
@@ -325,7 +323,8 @@ class AdminController extends Controller {
         $this->render('admin/edit_user.html.twig', $data);
     }
 
-    public function updateUser(int $userId) {
+    public function updateUser(int $userId)
+    {
         if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             $this->redirect('/');

@@ -10,9 +10,8 @@ use App\DTO\UserDTO;
 use App\Form\FormValidator;
 
 
-class UserController extends Controller {
-
-
+class UserController extends Controller
+{
     public function register()
     {
         $aboutMe = new AboutMeDAO();
@@ -95,7 +94,8 @@ class UserController extends Controller {
         }
     }
 
-    public function login() {
+    public function login()
+    {
         if (isset($this->session['email']) && isset($this->session['role']) && isset($this->session['pseudo'])) {
             $this->session['flash-error'] = "Vous êtes déjà connecté !";
             $this->redirect($_SERVER['HTTP_REFERER']);
@@ -108,7 +108,8 @@ class UserController extends Controller {
         $this->render('login.html.twig', $data);
     }
 
-    public function authenticate() {
+    public function authenticate()
+    {
         if (empty($this->post)) {
             $this->session['flash-error'] = "Aucune donnée reçu !";
             $this->redirect('/connexion');
@@ -165,7 +166,8 @@ class UserController extends Controller {
         ($this->session['role'] === 'ROLE_ADMIN') ? $this->redirect('/admin/tableau-de-bord') : $this->redirect('/');
     }
 
-    public function logout() {
+    public function logout()
+    {
         $this->session['flash-success'] = "Vous êtes déconnecté.";
         unset($this->session['email']);
         unset($this->session['pseudo']);
