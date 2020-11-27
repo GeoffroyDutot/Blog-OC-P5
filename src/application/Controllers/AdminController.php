@@ -155,7 +155,8 @@ class AdminController extends Controller {
 
         $postDAO = new PostDAO();
         if (!empty($postDAO->getPostBySlug($postDTO->getSlug()))) {
-            $this->session['flash-error'] = "Un article avec ce titre existe déjà.";
+            $this->session['form-errors'] = ['title' => ['Un article existe déjà avec ce titre.']];
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/admin/articles/nouveau');
         }
 
@@ -260,16 +261,17 @@ class AdminController extends Controller {
             unset($this->post['picture']);
         }
 
-        foreach ($this->post as $input) {
-            if (empty($input)){
-                $input = null;
+        foreach ($this->post as $key => $value) {
+            if (empty($value)) {
+                $this->post[$key] = null;
             }
         }
 
         $postDTO->hydrate($this->post);
 
         if (!empty($postDAO->getPostBySlug($postDTO->getSlug())) && $postDAO->getPostBySlug($postDTO->getSlug())->getId() !== $postDTO->getId()) {
-            $this->session['flash-error'] = "Un article avec ce titre existe déjà !";
+            $this->session['form-errors'] = ['title' => ['Un article existe déjà avec ce titre.']];
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/admin/article/'.$postId);
         }
 
@@ -391,9 +393,9 @@ class AdminController extends Controller {
             unset($this->post['profil_picture']);
         }
 
-        foreach ($this->post as $input) {
-            if (empty($input)){
-                $input = null;
+        foreach ($this->post as $key => $value) {
+            if (empty($value)) {
+                $this->post[$key] = null;
             }
         }
 
@@ -406,12 +408,14 @@ class AdminController extends Controller {
         $userDTO->hydrate($this->post);
 
         if (!empty($userDAO->getUserByEmail($userDTO->getEmail())) && $userDAO->getUserByEmail($userDTO->getEmail())->getId() !== $userDTO->getId()) {
-            $this->session['flash-error'] = "Un utilisateur avec cette adresse email existe déjà !";
+            $this->session['form-errors'] = ['email' => ['Un utilisateur avec cette adresse email existe déjà !']];
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/admin/utilisateur/'.$userId);
         }
 
         if (!empty($userDAO->getUserByPseudo($userDTO->getPseudo())) && $userDAO->getUserByPseudo($userDTO->getPseudo())->getId() !== $userDTO->getId()) {
-            $this->session['flash-error'] = "Un utilisateur avec ce pseudo existe déjà !";
+            $this->session['form-errors'] = ['pseudo' => ['Un utilisateur avec ce pseudo existe déjà !']];
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/admin/utilisateur/'.$userId);
         }
 

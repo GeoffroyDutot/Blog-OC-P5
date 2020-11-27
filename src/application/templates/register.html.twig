@@ -26,29 +26,7 @@
                 {% include 'include/flashmessages.html.twig' %}
                 <h2 class="text-center">Inscription</h2>
                 <form name="sentMessage" id="contactForm" novalidate method="POST" action="/ajout-utilisateur">
-                    <div class="control-group">
-                        <div class="form-group floating-label-form-group controls">
-                            <label for="email">Adresse Email</label>
-                            <input name="email" type="email" class="form-control" placeholder="Email" id="email" required minlength="5" maxlength="255" data-validation-required-message="Veuillez renseigner une adresse email valide.">
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label for="password">Mot de passe</label>
-                            <input name="password" type="password" class="form-control" placeholder="MotdePasse" id="password" required minlength="5" maxlength="255" data-validation-required-message="Veuillez renseigner un mot de passe valide.">
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="form-group floating-label-form-group controls">
-                            <label for="pseudo">Pseudo</label>
-                            <input name="pseudo" class="form-control" placeholder="Pseudo" id="pseudo" required minlength="3" maxlength="255" data-validation-required-message="Veuillez renseigner un pseudo valide.">
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <br>
-                    <div id="success"></div>
+                    {% include 'form/register_form.html.twig' %}
                     <button type="submit" class="btn btn-primary" id="sendMessageButton">Confirmer</button>
                 </form>
             </div>
@@ -58,7 +36,4 @@
 {% endblock %}
 
 {% block script %}
-    <!-- Contact Form JavaScript -->
-    <script src="../../assets/js/jqBootstrapValidation.js"></script>
-    <!-- <script src="../../assets/js/contact_me.js"></script> -->
 {% endblock %}

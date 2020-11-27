@@ -1,0 +1,28 @@
+<div class="control-group">
+    <div class="form-group floating-label-form-group controls">
+        <label for="email">Adresse Email</label>
+        {% for error in formErrors.email %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input name="email" type="email" class="form-control" placeholder="Email" id="email" required minlength="5" maxlength="255" {% if formInputs.email is defined %}value="{{ formInputs.email }}"{% endif %}>
+    </div>
+</div>
+<div class="control-group">
+    <div class="form-group floating-label-form-group controls">
+        <label for="pseudo">Pseudo</label>
+        {% for error in formErrors.pseudo %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input name="pseudo" class="form-control" placeholder="Pseudo" id="pseudo" required minlength="3" maxlength="255" {% if formInputs.pseudo is defined %}value="{{ formInputs.pseudo }}"{% endif %}>
+    </div>
+</div>
+<div class="control-group">
+    <div class="form-group col-xs-12 floating-label-form-group controls">
+        <label for="password">Mot de passe</label>
+        {% for error in formErrors.password %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input name="password" type="password" class="form-control" placeholder="MotdePasse" id="password" required minlength="5" maxlength="255" {% if formInputs.password is defined %}value="{{ formInputs.password }}"{% endif %}>
+    </div>
+</div>
+<br>
