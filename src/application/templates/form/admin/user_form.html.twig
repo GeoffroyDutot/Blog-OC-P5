@@ -8,7 +8,7 @@
     </div>
     <div class="form-group">
         <label for="pseudo">Pseudo</label>
-        {% for error in formErrors.peudo %}
+        {% for error in formErrors.pseudo %}
             <p class="form-error">{{ error }}</p>
         {% endfor %}
         <input type="text" class="form-control" id="pseudo" placeholder="Pseudo" required  minlength="3" maxlength="255" name="pseudo" value="{% if formInputs.pseudo is defined %}{{ formInputs.pseudo }}{% else %}{{ user.pseudo }}{% endif %}">

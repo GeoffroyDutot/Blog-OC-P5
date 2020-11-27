@@ -49,7 +49,7 @@ class UserDAO extends DAO {
             $req = $db->prepare('UPDATE user SET email=:email, password=:password, pseudo=:pseudo, role=:role, profil_picture=:profilPicture, is_deactivated=:isDeactivated, reason_deactivation=:reasonDeactivation, deactivated_at=:deactivatedAt WHERE id = \''.$userDTO->getId().'\'');
             $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => $userDTO->getRole(), 'profilPicture' => $userDTO->getProfilPicture(), 'isDeactivated' => $userDTO->getIsDeactivated(), 'reasonDeactivation' => $userDTO->getReasonDeactivation(), 'deactivatedAt' => $deactivatedAt]);
         } else {
-            $req = $db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`, `profilPicture`, `date_registered`, `is_deactivated`, `reason_deactivation`, `deactivated_at`) VALUES(:email, :password, :pseudo, :role, :dateRegistered, :isDeactivated, :reasonDeactivation, :deactivatedAt)');
+            $req = $db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`, `profil_picture`, `date_registered`, `is_deactivated`, `reason_deactivation`, `deactivated_at`) VALUES(:email, :password, :pseudo, :role, :profilPicture, :dateRegistered, :isDeactivated, :reasonDeactivation, :deactivatedAt)');
             $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => $userDTO->getRole(), 'profilPicture' => $userDTO->getProfilPicture(), 'dateRegistered' => $userDTO->getDateRegistered()->format('Y-m-d H:i:s'), 'isDeactivated' => $userDTO->getIsDeactivated(), 'reasonDeactivation' => $userDTO->getReasonDeactivation(), 'deactivatedAt' => $deactivatedAt]);
         }
 

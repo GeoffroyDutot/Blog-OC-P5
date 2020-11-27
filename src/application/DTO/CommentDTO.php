@@ -6,7 +6,8 @@ namespace App\DTO;
 
 use DateTime;
 
-class CommentDTO extends DTO {
+class CommentDTO extends DTO
+{
     protected int $id;
     protected string $content;
     protected int $id_post;
@@ -30,6 +31,7 @@ class CommentDTO extends DTO {
     public function setId(int $id): CommentDTO
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -108,7 +110,6 @@ class CommentDTO extends DTO {
         if (!$created_at instanceof DateTime) {
             $created_at = new DateTime($created_at);
         }
-
         $this->created_at = $created_at;
 
         return $this;

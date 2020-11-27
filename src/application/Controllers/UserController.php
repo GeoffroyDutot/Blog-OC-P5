@@ -13,7 +13,8 @@ use App\Form\FormValidator;
 class UserController extends Controller {
 
 
-    public function register() {
+    public function register()
+    {
         $aboutMe = new AboutMeDAO();
         $aboutMe = $aboutMe->getAboutMe();
         $data = ['aboutMe' => $aboutMe];
@@ -21,7 +22,8 @@ class UserController extends Controller {
         $this->render('register.html.twig', $data);
     }
 
-    public function addUser() {
+    public function addUser()
+    {
         if (empty($this->post)) {
             $this->session['flash-error'] = "Aucune donnée reçue !";
             $this->redirect('/inscription');
@@ -53,9 +55,9 @@ class UserController extends Controller {
         ];
 
         if (!empty($form->validate($rules, $_POST))) {
-            //@TODO Display error forms
-            echo 'Formulaire non valide, vérifiez les informations';
-            return;
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
+            $this->redirect('/inscription');
         }
 
         $userDTO = new UserDTO();
@@ -71,11 +73,13 @@ class UserController extends Controller {
 
         if (!empty($user->getUserByEmail($userDTO->getEmail()))) {
             $this->session['flash-error'] = "Un compte avec cette adresse email existe déjà !";
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/inscription');
         }
 
         if (!empty($user->getUserByPseudo($userDTO->getPseudo()))) {
             $this->session['flash-error'] = "Un compte avec ce pseudo existe déjà !";
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/inscription');
         }
 
@@ -129,9 +133,9 @@ class UserController extends Controller {
         ];
 
         if (!empty($form->validate($rules, $_POST))) {
-            //@TODO Display Error Forms
-            echo 'Formulaire non valide, vérifiez les informations';
-            return;
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
+            $this->redirect('/connexion');
         }
 
         $user = new UserDAO();
@@ -143,11 +147,13 @@ class UserController extends Controller {
 
         if (!password_verify($this->post['password'], $user->getPassword())) {
              $this->session['flash-error'] = "Mot de passe incorrect !";
+             $this->session['form-inputs'] = $this->post;
              $this->redirect('/connexion');
         }
 
         if ($user->getIsDeactivated()) {
             $this->session['flash-error'] = "Ce compte à été désactivé.";
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/connexion');
         }
 
