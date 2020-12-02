@@ -61,12 +61,12 @@ class PostController extends Controller
     {
         if (empty($this->session)) {
             $this->session['flash-error'] = "Utilisateur non connecté !";
-            $this->redirect($_SERVER['HTTP_REFERER']);
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }
 
         if (empty($this->post)) {
             $this->session['flash-error'] = "Aucune données reçues !";
-            $this->redirect($_SERVER['HTTP_REFERER']);
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }
 
         $form = new FormValidator();
@@ -81,9 +81,9 @@ class PostController extends Controller
         ];
 
         if (!empty($form->validate($rules, $this->post))) {
-            //@TODO Display error
-            echo 'Formulaire non valide, vérifiez les informations';
-            return;
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }
 
         $userDAO = new UserDAO();
@@ -91,7 +91,7 @@ class PostController extends Controller
 
         if (empty($user)) {
             $this->session['flash-error'] = "Utilisateur non reconnu";
-            $this->redirect($_SERVER['HTTP_REFERER']);
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }
 
         $commentDTO = new CommentDTO();
@@ -109,10 +109,10 @@ class PostController extends Controller
         $comment = $commentDAO->submitComment($commentDTO);
         if (empty($comment)) {
             $this->session['flash-error'] = "Erreur interne, le commentaire n'a pas pu être envoyé.";
-            $this->redirect($_SERVER['HTTP_REFERER']);
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }
 
         $this->session['flash-success'] = "Commentaire correctement soumis.";
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
     }
 }

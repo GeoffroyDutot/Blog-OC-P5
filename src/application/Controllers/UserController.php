@@ -98,7 +98,7 @@ class UserController extends Controller
     {
         if (isset($this->session['email']) && isset($this->session['role']) && isset($this->session['pseudo'])) {
             $this->session['flash-error'] = "Vous êtes déjà connecté !";
-            $this->redirect($_SERVER['HTTP_REFERER']);
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }
 
         $aboutMe = new AboutMeDAO();
