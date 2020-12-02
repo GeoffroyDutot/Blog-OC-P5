@@ -59,8 +59,9 @@ class HomeController extends Controller
         ];
 
         if (!empty($form->validate($rules, $this->post))) {
+            $this->session['form-errors'] = $form->getErrors();
+            $this->session['form-inputs'] = $this->post;
             $this->redirect('/');
-            //@TODO Display an error - invalid or missing data required
         }
 
         $emailDTO = new EmailDTO();

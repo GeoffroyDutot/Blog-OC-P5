@@ -1,0 +1,37 @@
+<div class="control-group">
+    <div class="form-group floating-label-form-group controls">
+        <label for="name">Name</label>
+        {% for error in formErrors.name %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input name="name" type="text" class="form-control" placeholder="Nom*" id="name" required minlength="3" maxlength="255" {% if formInputs.name is defined %}value="{{ formInputs.name }}"{% endif %}>
+    </div>
+</div>
+<div class="control-group">
+    <div class="form-group floating-label-form-group controls">
+        <label for="email">Email Address</label>
+        {% for error in formErrors.email %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input name="email" type="email" class="form-control" placeholder="Email*" id="email" required minlength="5" maxlength="255"  {% if formInputs.email is defined %}value="{{ formInputs.email }}"{% endif %}>
+    </div>
+</div>
+<div class="control-group">
+    <div class="form-group col-xs-12 floating-label-form-group controls">
+        <label for="phone">Phone Number</label>
+        {% for error in formErrors.phone %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <input name="phone" type="tel" class="form-control" placeholder="Téléphone" id="phone" {% if formInputs.phone is defined %}value="{{ formInputs.phone }}"{% endif %}>
+    </div>
+</div>
+<div class="control-group">
+    <div class="form-group floating-label-form-group controls">
+        <label for="message">Message</label>
+        {% for error in formErrors.message %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+        <textarea name="message" rows="5" class="form-control" placeholder="Message*" id="message" required minlength="5" maxlength="255">{% if formInputs.message is defined %}{{ formInputs.message }}{% endif %}</textarea>
+    </div>
+</div>
+<br>

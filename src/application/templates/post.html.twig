@@ -29,15 +29,7 @@
                     {% if session is not empty %}
                         <h5>Quel est ton avis ?</h5>
                         <form name="sentMessage" id="contactForm" novalidate method="POST" action="/article/{{ post.id }}/commentaire">
-                            <div class="control-group">
-                                <div class="form-group floating-label-form-group controls">
-                                    <label for="comment">Message</label>
-                                    <textarea name="comment" rows="5" class="form-control" placeholder="Commentaire" id="comment" required minlength="5" maxlength="255" data-validation-required-message="Ecris ton commentaire !"></textarea>
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                            </div>
-                            <br>
-                            <div id="success"></div>
+                            {% include 'form/comment_form.html.twig' %}
                             <button type="submit" class="btn btn-primary" id="sendMessageButton">Envoyer</button>
                         </form>
                     {% endif %}
