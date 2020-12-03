@@ -4,9 +4,9 @@
 namespace App\DTO;
 
 
-class AboutMeDTO
+class AboutMeDTO extends DTO
 {
-    protected int $id;
+    protected ?int $id = null;
     protected string $firstname;
     protected string $lastname;
     protected ?string $slogan = null;
@@ -18,12 +18,19 @@ class AboutMeDTO
     protected ?string $linkedin_link = null;
     protected ?string $github_link = null;
 
-    public function getId(): int 
+    public function __construct($data = null)
+    {
+        if ($data) {
+            $this->hydrate($data);
+        }
+    }
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): AboutMeDTO 
+    public function setId(?int $id): AboutMeDTO
     {
         $this->id = $id;
         

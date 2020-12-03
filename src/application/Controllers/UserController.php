@@ -65,9 +65,6 @@ class UserController extends Controller
         $userDTO->setPassword(password_hash($this->post['password'], PASSWORD_BCRYPT));
         $userDTO->setRole('ROLE_USER');
         $userDTO->setDateRegistered(date('Y-m-d H:i:s'));
-        $userDTO->setIsDeactivated(false);
-        $userDTO->setReasonDeactivation(null);
-        $userDTO->setDeactivatedAt(null);
         $user = new UserDAO();
 
         if (!empty($user->getUserByEmail($userDTO->getEmail()))) {
@@ -83,15 +80,16 @@ class UserController extends Controller
         }
 
         $user = $user->save($userDTO);
-        if ($user) {
-            $this->session['email'] = $userDTO->getEmail();
-            $this->session['pseudo'] = $userDTO->getPseudo();
-            $this->session['flash-success'] = "Vous êtes désormais inscrit. Bienvenue !";
-            $this->redirect('/');
-        }  else {
+        if (!$user) {
             $this->session['flash-error'] = "Erreur interne, votre compte n'a pu être créée";
             $this->redirect('/inscription');
         }
+
+        $this->session['email'] = $userDTO->getEmail();
+        $this->session['pseudo'] = $userDTO->getPseudo();
+        $this->session['role'] = $userDTO->getRole();
+        $this->session['flash-success'] = "Vous êtes désormais inscrit. Bienvenue !";
+        $this->redirect('/');
     }
 
     public function login()

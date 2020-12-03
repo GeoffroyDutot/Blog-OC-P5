@@ -95,7 +95,7 @@ class ApiController extends Controller
         $postDTO->setArchivedAt(date('Y-m-d H:i:s'));
         $postDTO = $postDAO->save($postDTO);
 
-        if ($postDTO !== true) {
+        if (!$postDTO) {
             http_response_code(500);
             $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être archivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
@@ -133,7 +133,7 @@ class ApiController extends Controller
         $postDTO->setArchivedAt(null);
         $postDTO = $postDAO->save($postDTO);
 
-        if ($postDTO !== true) {
+        if (!$postDTO) {
             http_response_code(500);
             $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être désarchivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
@@ -195,7 +195,7 @@ class ApiController extends Controller
         $userDTO->setDeactivatedAt(date('Y-m-d H:i:s'));
         $userDTO = $userDAO->save($userDTO);
 
-        if ($userDTO !== true) {
+        if (!$userDTO) {
             http_response_code(500);
             $this->session['flash-error'] = "Erreur Interne ! L'utilisateur n'a pas pu être désactivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
@@ -227,7 +227,7 @@ class ApiController extends Controller
         $userDTO->setDeactivatedAt(null);
         $userDTO = $userDAO->save($userDTO);
 
-        if ($userDTO !== true) {
+        if (!$userDTO) {
             http_response_code(500);
             $this->session['flash-error'] = "Erreur Interne ! L'utilisateur n'a pas pu être réactivé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));

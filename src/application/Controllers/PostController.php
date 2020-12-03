@@ -22,7 +22,9 @@ class PostController extends Controller
         $data['aboutMe'] = $aboutMe;
 
        $posts = new PostDAO();
-       $posts = $posts->getAll();
+
+       $filtersPosts = ['is_archived' => 0];
+       $posts = $posts->getAll($filtersPosts);
 
        if (!empty($posts)) {
            $data['posts'] = $posts;
@@ -106,8 +108,8 @@ class PostController extends Controller
         }
 
         $commentDAO = new CommentDAO();
-        $comment = $commentDAO->submitComment($commentDTO);
-        if (empty($comment)) {
+        $comment = $commentDAO->save($commentDTO);
+        if (!($comment)) {
             $this->session['flash-error'] = "Erreur interne, le commentaire n'a pas pu être envoyé.";
             $this->redirect($_SERVER['HTTP_REFERER'] ?? '/');
         }

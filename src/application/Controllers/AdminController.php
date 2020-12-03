@@ -22,7 +22,8 @@ class AdminController extends Controller
         }
 
         $postDAO = new PostDAO();
-        $posts = $postDAO->getAll(5);
+        $filtersPost = ['is_archived' => 0];
+        $posts = $postDAO->getAll($filtersPost,5);
 
         $userDAO = new UserDAO();
         $filtersUser = ['is_deactivated' => 0];
@@ -47,13 +48,15 @@ class AdminController extends Controller
         $data = [];
 
         $postDAO = new PostDAO();
-        $posts = $postDAO->getAll();
+        $filtersPosts = ['is_archived' => 0];
+        $posts = $postDAO->getAll($filtersPosts);
 
         if ($posts) {
             $data['posts'] = $posts;
         }
 
-        $postsArchived = $postDAO->getAllArchived();
+        $filtersPostsArchived = ['is_archived' => 1];
+        $postsArchived = $postDAO->getAll($filtersPostsArchived);
 
         if ($postsArchived) {
             $data['postsArchived'] = $postsArchived;
@@ -177,6 +180,12 @@ class AdminController extends Controller
 
         $postDAO = new PostDAO();
         $postDTO = $postDAO->getPostById($postId);
+
+        if (empty($postDTO)) {
+            $this->session['flash-error'] = 'Erreur interne, article non trouvé.';
+            $this->redirect('/admin/articles');
+        }
+
         $data = ['post' => $postDTO];
 
         $this->render('admin/edit_post.html.twig', $data);
@@ -248,6 +257,11 @@ class AdminController extends Controller
         $postDAO = new PostDAO();
         $postDTO = $postDAO->getPostById($postId);
 
+        if (empty($postDTO)) {
+            $this->session['flash-error'] = 'Erreur interne, article non trouvé.';
+            $this->redirect('/admin/articles');
+        }
+
         $this->post['slug'] = $this->slugify($this->post['title']);
         if (!empty($this->post['picture']['tmp_name'])) {
             move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($this->post['picture']['name']));
@@ -318,6 +332,12 @@ class AdminController extends Controller
 
         $userDAO = new UserDAO();
         $userDTO = $userDAO->getUserById($userId);
+
+        if (empty($userDTO)) {
+            $this->session['flash-error'] = 'Erreur interne, utilisateur non trouvé.';
+            $this->redirect('/admin/utilisateurs');
+        }
+
         $data = ['user' => $userDTO];
 
         $this->render('admin/edit_user.html.twig', $data);
@@ -382,6 +402,11 @@ class AdminController extends Controller
         $userDAO = new UserDAO();
         $userDTO = $userDAO->getUserById($userId);
 
+        if (empty($userDTO)) {
+            $this->session['flash-error'] = 'Erreur interne, utilisateur non trouvé.';
+            $this->redirect('/admin/utilisateurs');
+        }
+
         if (!empty($this->post['profil_picture']['tmp_name'])) {
             move_uploaded_file($this->post['profil_picture']['tmp_name'], __DIR__.'/../../assets/img/user/profil_picture/' . basename($this->post['profil_picture']['name']));
             if (!empty($userDTO->getProfilPicture())) {
@@ -437,7 +462,7 @@ class AdminController extends Controller
         $data = [];
 
         $comments = new CommentDAO();
-        $filters = ['status' => 'NULL', ''];
+        $filters = ['status' => 'NULL'];
         $comments = $comments->getAll($filters);
 
         if ($comments) {

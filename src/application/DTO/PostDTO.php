@@ -21,7 +21,7 @@ class PostDTO extends DTO
     protected int $is_archived = 0;
     private array $comments = [];
 
-    public function __construct($data)
+    public function __construct($data = null)
     {
         if ($data) {
             $this->hydrate($data);
