@@ -15,7 +15,7 @@ class ApiController extends Controller
         header('Content-Type: application/json');
     }
 
-    public function validateComment()
+    public function validateComment(int $idComment)
     {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
@@ -23,18 +23,13 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
-        if (empty($_POST) || empty($_POST['id'])) {
-            http_response_code(500);
-            $this->session['flash-error'] = "Des données requises sont manquantes.";
-            die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-        }
-
         $commentDAO = new CommentDAO();
-        $commentDTO = $commentDAO->getCommentById($this->post['id']);
+        $commentDTO = $commentDAO->getCommentById($idComment);
 
         if (empty($commentDTO)) {
-            $this->session['flash-error'] = 'Erreur interne, commentaire non trouvé.';
-            $this->redirect('/admin/commentaires');
+            http_response_code(404);
+            $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas été trouvé.";
+            die(json_encode(['success' => false, 'msg' => 'Comment didn\'t find']));
         }
 
         $commentDTO->setStatus('validated');
@@ -51,7 +46,7 @@ class ApiController extends Controller
         die(json_encode(['success' => true, 'msg' => 'Comment validated successfuly']));
     }
 
-    public function unvalidateComment()
+    public function unvalidateComment(int $idComment)
     {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
@@ -59,18 +54,13 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
-        if (empty($_POST) || empty($_POST['id'])) {
-            http_response_code(500);
-            $this->session['flash-error'] = "Des données requises sont manquantes.";
-            die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-        }
-
         $commentDAO = new CommentDAO();
-        $commentDTO = $commentDAO->getCommentById($this->post['id']);
+        $commentDTO = $commentDAO->getCommentById($idComment);
 
         if (empty($commentDTO)) {
-            $this->session['flash-error'] = 'Erreur interne, commentaire non trouvé.';
-            $this->redirect('/admin/commentaires');
+            http_response_code(404);
+            $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas été trouvé.";
+            die(json_encode(['success' => false, 'msg' => 'Comment didn\'t find']));
         }
 
         $commentDTO->setStatus('unvalidated');
@@ -88,7 +78,7 @@ class ApiController extends Controller
         die(json_encode(['success' => true, 'msg' => 'Comment unvalidated successfuly']));
     }
 
-    public function archivePost()
+    public function archivePost(int $idPost)
     {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
@@ -96,14 +86,8 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
-        if (empty($this->post['id'])) {
-            http_response_code(500);
-            $this->session['flash-error'] = "Des données requises sont manquantes.";
-            die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-        }
-
         $postDAO = new PostDAO();
-        $postDTO = $postDAO->getPostById($this->post['id']);
+        $postDTO = $postDAO->getPostById($idPost);
 
         if (empty($postDTO)) {
             http_response_code(404);
@@ -126,7 +110,7 @@ class ApiController extends Controller
         die(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
     }
 
-    public function unarchivePost()
+    public function unarchivePost(int $idPost)
     {
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
             http_response_code(500);
@@ -134,14 +118,8 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
-        if (empty($this->post['id'])) {
-            http_response_code(500);
-            $this->session['flash-error'] = "Des données requises sont manquantes.";
-            die(json_encode(['success' => false, 'msg' => 'Missing required data']));
-        }
-
         $postDAO = new PostDAO();
-        $postDTO = $postDAO->getPostById($this->post['id']);
+        $postDTO = $postDAO->getPostById($idPost);
 
         if (empty($postDTO)) {
             http_response_code(404);

@@ -55,13 +55,13 @@ $router->post('/admin/modifier-a-propos', 'Admin#editAboutMe');
 /////
 
 // POST
-$router->post('/admin/articles/archiver', 'Api#archivePost');
-$router->post('/admin/articles/desarchiver', 'Api#unarchivePost');
+$router->put('/admin/articles/:id/archiver', 'Api#archivePost')->with('id', '([0-9]+)');
+$router->put('/admin/articles/:id/desarchiver', 'Api#unarchivePost')->with('id', '([0-9]+)');
 $router->delete('/admin/articles/supprimer/:id', "Api#deletePost")->with('id', '([0-9]+)');
 
 // COMMENT
-$router->post('/admin/commentaires/valider', 'Api#validateComment');
-$router->post('/admin/commentaires/refuser', 'Api#unvalidateComment');
+$router->put('/admin/commentaires/:id/valider', 'Api#validateComment')->with('id', '([0-9]+)');
+$router->put('/admin/commentaires/:id/refuser', 'Api#unvalidateComment')->with('id', '([0-9]+)');
 
 // USER
 $router->put('/admin/utilisateurs/:id/desactiver', 'Api#deactivateUser')->with('id', '([0-9]+)');
