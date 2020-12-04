@@ -1,3 +1,4 @@
+//@TODO changes update calls from POST to PUT
 $('.validate-comment').click(function (e) {
     e.preventDefault();
     var id = $(this).attr('data-id-comment');

@@ -30,15 +30,25 @@ class ApiController extends Controller
         }
 
         $commentDAO = new CommentDAO();
-        if ($commentDAO->editCommentStatus($_POST['id'], 'validated')) {
-            http_response_code(200);
-            $this->session['flash-success'] = "Commentaire validé !";
-            die(json_encode(['success' => true, 'msg' => 'Comment validated successfuly']));
-        } else {
+        $commentDTO = $commentDAO->getCommentById($this->post['id']);
+
+        if (empty($commentDTO)) {
+            $this->session['flash-error'] = 'Erreur interne, commentaire non trouvé.';
+            $this->redirect('/admin/commentaires');
+        }
+
+        $commentDTO->setStatus('validated');
+        $comment = $commentDAO->save($commentDTO);
+
+        if (!$comment) {
             http_response_code(500);
             $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas pu être validé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
+
+        http_response_code(200);
+        $this->session['flash-success'] = "Commentaire validé !";
+        die(json_encode(['success' => true, 'msg' => 'Comment validated successfuly']));
     }
 
     public function unvalidateComment()
@@ -56,16 +66,26 @@ class ApiController extends Controller
         }
 
         $commentDAO = new CommentDAO();
-        if ($commentDAO->editCommentStatus($_POST['id'], 'unvalidated')) {
-            http_response_code(200);
-            $this->session['flash-success'] = "Commentaire invalidé.";
-            //@TODO Send an email to the user
-            die(json_encode(['success' => true, 'msg' => 'Comment unvalidated successfuly']));
-        } else {
+        $commentDTO = $commentDAO->getCommentById($this->post['id']);
+
+        if (empty($commentDTO)) {
+            $this->session['flash-error'] = 'Erreur interne, commentaire non trouvé.';
+            $this->redirect('/admin/commentaires');
+        }
+
+        $commentDTO->setStatus('unvalidated');
+        $comment = $commentDAO->save($commentDTO);
+
+        if (!$comment) {
             http_response_code(500);
             $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas pu être invalidé.";
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
+
+        //@TODO Send an email to the user
+        http_response_code(200);
+        $this->session['flash-success'] = "Commentaire invalidé !";
+        die(json_encode(['success' => true, 'msg' => 'Comment unvalidated successfuly']));
     }
 
     public function archivePost()
@@ -201,6 +221,7 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
+        //@TODO Send email
         http_response_code(200);
         $this->session['flash-success'] = "Utilisateur désactivé.";
         die(json_encode(['success' => true, 'msg' => 'User Deactivated successfuly']));
@@ -233,6 +254,7 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
+        //@TODO Send email
         http_response_code(200);
         $this->session['flash-success'] = "Utilisateur réactivé.";
         die(json_encode(['success' => true, 'msg' => 'User Reactivated successfuly']));

@@ -47,28 +47,6 @@ class UserDAO extends DAO
         return $users;
     }
 
-    // Creates or updates an user
-    public function save(UserDTO $userDTO): bool
-    {
-        $db = $this->connectDb();
-
-        if (!empty($userDTO->getId())) {
-            // Set deactivated_at date to null if not a datetime
-            $deactivatedAt = $userDTO->getDeactivatedAt() ? $userDTO->getDeactivatedAt()->format('Y-m-d H:i:s') : null;
-            // Prepare the request
-            $req = $db->prepare('UPDATE user SET email=:email, password=:password, pseudo=:pseudo, role=:role, profil_picture=:profilPicture, is_deactivated=:isDeactivated, reason_deactivation=:reasonDeactivation, deactivated_at=:deactivatedAt WHERE id = \''.$userDTO->getId().'\'');
-            // Update the user
-            $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => $userDTO->getRole(), 'profilPicture' => $userDTO->getProfilPicture(), 'isDeactivated' => $userDTO->getIsDeactivated(), 'reasonDeactivation' => $userDTO->getReasonDeactivation(), 'deactivatedAt' => $deactivatedAt]);
-        } else {
-            // Prepare the request
-            $req = $db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`, `profil_picture`, `date_registered`, `is_deactivated`, `reason_deactivation`, `deactivated_at`) VALUES(:email, :password, :pseudo, :role, :profilPicture, :dateRegistered, :isDeactivated, :reasonDeactivation, :deactivatedAt)');
-            // Create the user
-            $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => $userDTO->getRole(), 'profilPicture' => $userDTO->getProfilPicture(), 'dateRegistered' => $userDTO->getDateRegistered()->format('Y-m-d H:i:s'), 'isDeactivated' => 0, 'reasonDeactivation' => null, 'deactivatedAt' => null]);
-        }
-
-        return $result;
-    }
-
     // Get user  by it's email
     public function getUserByEmail(string $email): ?UserDTO
     {
@@ -121,5 +99,27 @@ class UserDAO extends DAO
 
         // Creates and return User's Object
         return new UserDTO($user);
+    }
+
+    // Creates or updates an user
+    public function save(UserDTO $userDTO): bool
+    {
+        $db = $this->connectDb();
+
+        if (!empty($userDTO->getId())) {
+            // Set deactivated_at date to null if not a datetime
+            $deactivatedAt = $userDTO->getDeactivatedAt() ? $userDTO->getDeactivatedAt()->format('Y-m-d H:i:s') : null;
+            // Prepare the request
+            $req = $db->prepare('UPDATE user SET email=:email, password=:password, pseudo=:pseudo, role=:role, profil_picture=:profilPicture, is_deactivated=:isDeactivated, reason_deactivation=:reasonDeactivation, deactivated_at=:deactivatedAt WHERE id = \''.$userDTO->getId().'\'');
+            // Update the user
+            $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => $userDTO->getRole(), 'profilPicture' => $userDTO->getProfilPicture(), 'isDeactivated' => $userDTO->getIsDeactivated(), 'reasonDeactivation' => $userDTO->getReasonDeactivation(), 'deactivatedAt' => $deactivatedAt]);
+        } else {
+            // Prepare the request
+            $req = $db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`, `profil_picture`, `date_registered`, `is_deactivated`, `reason_deactivation`, `deactivated_at`) VALUES(:email, :password, :pseudo, :role, :profilPicture, :dateRegistered, :isDeactivated, :reasonDeactivation, :deactivatedAt)');
+            // Create the user
+            $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => $userDTO->getRole(), 'profilPicture' => $userDTO->getProfilPicture(), 'dateRegistered' => $userDTO->getDateRegistered()->format('Y-m-d H:i:s'), 'isDeactivated' => 0, 'reasonDeactivation' => null, 'deactivatedAt' => null]);
+        }
+
+        return $result;
     }
 }

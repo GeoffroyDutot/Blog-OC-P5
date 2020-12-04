@@ -118,14 +118,14 @@ class PostDAO extends DAO
             // Set archived_at date to null if not a datetime
             $archivedAt = $postDTO->getArchivedAt() ? $postDTO->getArchivedAt()->format('Y-m-d H:i:s') : null;
             // Prepare the request
-            $req = $db->prepare('UPDATE post SET title=:title, slug=:slug, subtitle=:subtitle, updated_at=:updated_at, content=:content, resume=:resume, picture=:picture, archived_at=:archived_at, is_archived=:is_archived WHERE id = \''.$postDTO->getId().'\'');
+            $req = $db->prepare('UPDATE post SET title=:title, slug=:slug, subtitle=:subtitle, updated_at=:updated_at, content=:content, resume=:resume, picture=:picture, archived_at=:archived_at, is_archived=:is_archived WHERE id = '.$postDTO->getId());
             // Update the post
             $result = $req->execute(['title' => $postDTO->getTitle(), 'slug' => $postDTO->getSlug(), 'subtitle' => $postDTO->getSubtitle(), 'updated_at' => date('Y-m-d H:i:s'), 'content' => $postDTO->getContent(), 'resume' => $postDTO->getResume(), 'picture' => $postDTO->getPicture(), 'archived_at' => $archivedAt, 'is_archived' => $postDTO->getIsArchived()]);
         } else {
             // Prepare the request
             $req = $db->prepare('INSERT INTO `post`(`title`, `slug`, `subtitle`, `created_at`, `content`, `resume`, `picture`, `is_archived`) VALUES(:title, :slug, :subtitle, :created_at, :content, :resume, :picture, :is_archived)');
             // Update the post
-            $result = $req->execute(['title' => $postDTO->getTitle(), 'slug' => $postDTO->getSlug(), 'subtitle' => $postDTO->getSubtitle(), 'created_at' => $postDTO->getCreatedAt()->format('Y-m-d H:i:s'), 'content' => $postDTO->getContent(), 'resume' => $postDTO->getResume(), 'picture' => $postDTO->getPicture(), 'is_archived' => $postDTO->getIsArchived()]);
+            $result = $req->execute(['title' => $postDTO->getTitle(), 'slug' => $postDTO->getSlug(), 'subtitle' => $postDTO->getSubtitle(), 'created_at' => date('Y-m-d H:i:s'), 'content' => $postDTO->getContent(), 'resume' => $postDTO->getResume(), 'picture' => $postDTO->getPicture(), 'is_archived' => 0]);
         }
 
         return $result;

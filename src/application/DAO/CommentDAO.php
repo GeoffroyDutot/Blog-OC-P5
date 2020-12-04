@@ -95,26 +95,43 @@ class CommentDAO extends DAO
         return $comments;
     }
 
+    // Get comment by it's id
+    public function getCommentById(int $id): ?CommentDTO
+    {
+        $db = $this->connectDb();
+
+        // Retrieves comment on id
+        $req = $db->query('SELECT * FROM comment WHERE id = \''.$id.'\'');
+        $comment = $req->fetch(\PDO::FETCH_ASSOC);
+
+        // If comment doesn't find return null
+        if (empty($comment)) {
+            return null;
+        }
+
+        // Creates and return Comment's Object
+        return new CommentDTO($comment);
+    }
+
     // Creates a Comment
     public function save(CommentDTO $commentDTO): bool
     {
         $db = $this->connectDb();
 
-        // Prepares the request
-        $req = $db->prepare('INSERT INTO `comment`(`content`, `id_post`, `id_user`, `status`, `created_at`) VALUES(:content, :id_post, :id_user, :status, :createdAt)');
+        // Checks if the comment already exists
+        if (!empty($commentDTO->getId())) {
+            // Prepares the request
+            $req = $db->prepare('UPDATE comment SET content=:content, status=:status WHERE id = '.$commentDTO->getId());
+            // Updates data
+            $result = $req->execute(['content' => $commentDTO->getContent(), 'status' => $commentDTO->getStatus()]);
+        } else {
+            // Prepares the request
+            $req = $db->prepare('INSERT INTO `comment`(`content`, `id_post`, `id_user`, `status`, `created_at`) VALUES(:content, :id_post, :id_user, :status, :createdAt)');
+            // Inserts data
+            $result = $req->execute(['content' => $commentDTO->getContent(), 'id_post' => $commentDTO->getIdPost(), 'id_user' => $commentDTO->getIdUser(), 'status' => $commentDTO->getStatus(), 'createdAt' => date('Y-m-d H:i:s')]);
+        }
 
-        // Inserts data
-        return $req->execute(['content' => $commentDTO->getContent(), 'id_post' => $commentDTO->getIdPost(), 'id_user' => $commentDTO->getIdUser(), 'status' => $commentDTO->getStatus(), 'createdAt' => date('Y-m-d H:i:s')]);
-    }
-
-    public function editCommentStatus(int $id, string $status)
-    {
-        //@TODO Refacto in save - change api methods - js call ajax to PUT
-        $db = $this->connectDb();
-
-        $req = $db->prepare('UPDATE comment SET status=:status WHERE id = \''.$id.'\'');
-
-        return $req->execute(['status' => $status]);
+        return $result;
     }
 
     // Deletes a comment

@@ -145,7 +145,6 @@ class AdminController extends Controller
         $this->post['picture'] = $this->post['picture']['name'];
 
         $postDTO = new PostDTO($this->post);
-        $postDTO->setCreatedAt(date('Y-m-d H:i:s'));
         $postDTO->setSlug($this->slugify($postDTO->getTitle()));
         $subtitle = $postDTO->getSubtitle() ? $postDTO->getSubtitle() : null;
         $postDTO->setSubtitle($subtitle);
