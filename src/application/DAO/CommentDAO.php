@@ -11,7 +11,6 @@ class CommentDAO extends DAO
     // Get All the comments
     public function getAll(array $filters, $limit = null): array
     {
-        $db = $this->connectDb();
         $comments = [];
 
         // Retrieves comments where post's not archived and user's not deactivated
@@ -31,7 +30,7 @@ class CommentDAO extends DAO
         }
 
         // Get's data on db
-        $req = $db->query($query);
+        $req = $this->db->query($query);
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
@@ -56,7 +55,6 @@ class CommentDAO extends DAO
     // Gets All Comments for a Post
     public function getByPostId(int $postId, array $filters = null): ?array
     {
-        $db = $this->connectDb();
         $comments = [];
 
         // Retrieves posts on post id
@@ -73,7 +71,7 @@ class CommentDAO extends DAO
         }
 
         // Get's data on db
-        $req = $db->query($query);
+        $req = $this->db->query($query);
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
@@ -98,10 +96,8 @@ class CommentDAO extends DAO
     // Get comment by it's id
     public function getCommentById(int $id): ?CommentDTO
     {
-        $db = $this->connectDb();
-
         // Retrieves comment on id
-        $req = $db->query('SELECT * FROM comment WHERE id = \''.$id.'\'');
+        $req = $this->db->query('SELECT * FROM comment WHERE id = \''.$id.'\'');
         $comment = $req->fetch(\PDO::FETCH_ASSOC);
 
         // If comment doesn't find return null
@@ -116,17 +112,15 @@ class CommentDAO extends DAO
     // Creates a Comment
     public function save(CommentDTO $commentDTO): bool
     {
-        $db = $this->connectDb();
-
         // Checks if the comment already exists
         if (!empty($commentDTO->getId())) {
             // Prepares the request
-            $req = $db->prepare('UPDATE comment SET content=:content, status=:status WHERE id = '.$commentDTO->getId());
+            $req = $this->db->prepare('UPDATE comment SET content=:content, status=:status WHERE id = '.$commentDTO->getId());
             // Updates data
             $result = $req->execute(['content' => $commentDTO->getContent(), 'status' => $commentDTO->getStatus()]);
         } else {
             // Prepares the request
-            $req = $db->prepare('INSERT INTO `comment`(`content`, `id_post`, `id_user`, `status`, `created_at`) VALUES(:content, :id_post, :id_user, :status, :createdAt)');
+            $req = $this->db->prepare('INSERT INTO `comment`(`content`, `id_post`, `id_user`, `status`, `created_at`) VALUES(:content, :id_post, :id_user, :status, :createdAt)');
             // Inserts data
             $result = $req->execute(['content' => $commentDTO->getContent(), 'id_post' => $commentDTO->getIdPost(), 'id_user' => $commentDTO->getIdUser(), 'status' => $commentDTO->getStatus(), 'createdAt' => date('Y-m-d H:i:s')]);
         }
@@ -137,14 +131,12 @@ class CommentDAO extends DAO
     // Deletes a comment
     public function delete(CommentDTO $commentDTO): int
     {
-        $db = $this->connectDb();
-
         // Checks if it's a valid comment
         if (empty($commentDTO->getId())) {
             return null;
         }
 
         // Deletes data
-        return $db->exec('DELETE FROM comment WHERE id = '.$commentDTO->getId());
+        return $this->db->exec('DELETE FROM comment WHERE id = '.$commentDTO->getId());
     }
 }

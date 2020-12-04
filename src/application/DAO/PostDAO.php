@@ -11,7 +11,6 @@ class PostDAO extends DAO
     // Get All the comments
     public function getAll(array $filters = null, $limit = null): array
     {
-        $db = $this->connectDb();
         $posts = [];
 
         // Retrieves posts
@@ -31,7 +30,7 @@ class PostDAO extends DAO
         }
 
         // Get's data on db
-        $req = $db->query($query . $limit);
+        $req = $this->db->query($query . $limit);
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
@@ -47,10 +46,8 @@ class PostDAO extends DAO
     // Get Post By it's id
     public function getPostById(int $postId, bool $details = false): ?PostDTO
     {
-        $db = $this->connectDb();
-
         // Retrieves post on id
-        $req = $db->query('SELECT * FROM post WHERE id = \''.$postId.'\' LIMIT 1');
+        $req = $this->db->query('SELECT * FROM post WHERE id = \''.$postId.'\' LIMIT 1');
         $post = $req->fetch(\PDO::FETCH_ASSOC);
 
         // If post doesn't find return null
@@ -78,10 +75,8 @@ class PostDAO extends DAO
     // Get Post by it's slug
     public function getPostBySlug(string $slug): ?PostDTO
     {
-        $db = $this->connectDb();
-
         // Retrieves post on id
-        $req = $db->query("SELECT * FROM `post` WHERE slug = '$slug' LIMIT 1");
+        $req = $this->db->query("SELECT * FROM `post` WHERE slug = '$slug' LIMIT 1");
         $post = $req->fetch(\PDO::FETCH_ASSOC);
 
         // If post doesn't find return null
@@ -111,19 +106,17 @@ class PostDAO extends DAO
     // Creates or updates a post
     public function save(PostDTO $postDTO): bool
     {
-        $db = $this->connectDb();
-
         // Checks if the post already exists
         if (!empty($postDTO->getId())) {
             // Set archived_at date to null if not a datetime
             $archivedAt = $postDTO->getArchivedAt() ? $postDTO->getArchivedAt()->format('Y-m-d H:i:s') : null;
             // Prepare the request
-            $req = $db->prepare('UPDATE post SET title=:title, slug=:slug, subtitle=:subtitle, updated_at=:updated_at, content=:content, resume=:resume, picture=:picture, archived_at=:archived_at, is_archived=:is_archived WHERE id = '.$postDTO->getId());
+            $req = $this->db->prepare('UPDATE post SET title=:title, slug=:slug, subtitle=:subtitle, updated_at=:updated_at, content=:content, resume=:resume, picture=:picture, archived_at=:archived_at, is_archived=:is_archived WHERE id = '.$postDTO->getId());
             // Update the post
             $result = $req->execute(['title' => $postDTO->getTitle(), 'slug' => $postDTO->getSlug(), 'subtitle' => $postDTO->getSubtitle(), 'updated_at' => date('Y-m-d H:i:s'), 'content' => $postDTO->getContent(), 'resume' => $postDTO->getResume(), 'picture' => $postDTO->getPicture(), 'archived_at' => $archivedAt, 'is_archived' => $postDTO->getIsArchived()]);
         } else {
             // Prepare the request
-            $req = $db->prepare('INSERT INTO `post`(`title`, `slug`, `subtitle`, `created_at`, `content`, `resume`, `picture`, `is_archived`) VALUES(:title, :slug, :subtitle, :created_at, :content, :resume, :picture, :is_archived)');
+            $req = $this->db->prepare('INSERT INTO `post`(`title`, `slug`, `subtitle`, `created_at`, `content`, `resume`, `picture`, `is_archived`) VALUES(:title, :slug, :subtitle, :created_at, :content, :resume, :picture, :is_archived)');
             // Update the post
             $result = $req->execute(['title' => $postDTO->getTitle(), 'slug' => $postDTO->getSlug(), 'subtitle' => $postDTO->getSubtitle(), 'created_at' => date('Y-m-d H:i:s'), 'content' => $postDTO->getContent(), 'resume' => $postDTO->getResume(), 'picture' => $postDTO->getPicture(), 'is_archived' => 0]);
         }
@@ -134,8 +127,6 @@ class PostDAO extends DAO
     // Deletes a post and it's comments
     public function delete(PostDTO $postDTO): int
     {
-        $db = $this->connectDb();
-
         // If the post doesn't exists return null
         if (empty($postDTO->getId())) {
             return null;
@@ -151,6 +142,6 @@ class PostDAO extends DAO
         }
 
         // Deletes post
-        return $db->exec('DELETE FROM post WHERE id = '.$postDTO->getId());
+        return $this->db->exec('DELETE FROM post WHERE id = '.$postDTO->getId());
     }
 }

@@ -11,9 +11,7 @@ class AboutMeDAO extends DAO
     // Get AboutMe Object
     public function getAboutMe(): AboutMeDTO
     {
-    $db = $this->connectDB();
-
-    $req = $db->query('SELECT * FROM `about_me` LIMIT 1');
+    $req = $this->db->query('SELECT * FROM `about_me` LIMIT 1');
 
     return $req->fetchObject('App\DTO\AboutMeDTO');
     }
@@ -21,18 +19,16 @@ class AboutMeDAO extends DAO
     // Creates or Updates AboutMe
     public function save(AboutMeDTO $aboutMe): bool
     {
-        $db = $this->connectDb();
-
         // If AboutMe doesn't exists Insert else Updates
         if (!$aboutMe->getId()) {
             // Prepare the request
-            $req = $db->prepare('INSERT INTO `about_me`(`firstname`, `lastname`, `slogan`, `bio`, `profil_picture`, `cv_pdf`, `picture`, `twitter_link`, `linkedin_link`, `github_link`) VALUES(:firstname, :lastname, :slogan, :bio, :profil_picture, :cv_pdf, :picture, :twitter_link, :linkedin_link, :github_link)');
+            $req = $this->db->prepare('INSERT INTO `about_me`(`firstname`, `lastname`, `slogan`, `bio`, `profil_picture`, `cv_pdf`, `picture`, `twitter_link`, `linkedin_link`, `github_link`) VALUES(:firstname, :lastname, :slogan, :bio, :profil_picture, :cv_pdf, :picture, :twitter_link, :linkedin_link, :github_link)');
 
             // Inserts new data
             $aboutMe = $req->execute(['firstname' => $aboutMe->getFirstname(), 'lastname' => $aboutMe->getLastname(), 'slogan' => $aboutMe->getSlogan(), 'bio' => $aboutMe->getBio(), 'profil_picture' => $aboutMe->getProfilPicture(), 'cv_pdf' => $aboutMe->getCvPdf(), 'picture' => $aboutMe->getPicture(), 'twitter_link' => $aboutMe->getTwitterLink(), 'linkedin_link' => $aboutMe->getLinkedinLink(), 'github_link' => $aboutMe->getGithubLink()]);
         } else {
             // Prepares the request
-            $req = $db->prepare('UPDATE about_me SET firstname=:firstname, lastname=:lastname, slogan=:slogan, bio=:bio, profil_picture=:profil_picture, cv_pdf=:cv_pdf, picture=:picture, twitter_link=:twitter_link, linkedin_link=:linkedin_link, github_link=:github_link WHERE id = \''.$aboutMe->getId().'\'');
+            $req = $this->db->prepare('UPDATE about_me SET firstname=:firstname, lastname=:lastname, slogan=:slogan, bio=:bio, profil_picture=:profil_picture, cv_pdf=:cv_pdf, picture=:picture, twitter_link=:twitter_link, linkedin_link=:linkedin_link, github_link=:github_link WHERE id = \''.$aboutMe->getId().'\'');
 
             // Inserts Updated Data
             $aboutMe = $req->execute(['firstname' => $aboutMe->getFirstname(), 'lastname' => $aboutMe->getLastname(), 'slogan' => $aboutMe->getSlogan(), 'bio' => $aboutMe->getBio(), 'profil_picture' => $aboutMe->getProfilPicture(), 'cv_pdf' => $aboutMe->getCvPdf(), 'picture' => $aboutMe->getPicture(), 'twitter_link' => $aboutMe->getTwitterLink(), 'linkedin_link' => $aboutMe->getLinkedinLink(), 'github_link' => $aboutMe->getGithubLink()]);
