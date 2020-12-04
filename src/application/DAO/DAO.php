@@ -14,6 +14,7 @@ class DAO
         $this->config = Config::getInstance();
     }
 
+    // Creates connection with database
     public function connectDb()
     {
         if (null !== $this->db) {
