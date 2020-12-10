@@ -108,7 +108,7 @@ class UserDAO extends DAO
             // Prepare the request
             $req = $this->db->prepare('INSERT INTO `user`(`email`, `password`, `pseudo`, `role`, `profil_picture`, `date_registered`, `is_deactivated`, `reason_deactivation`, `deactivated_at`) VALUES(:email, :password, :pseudo, :role, :profilPicture, :dateRegistered, :isDeactivated, :reasonDeactivation, :deactivatedAt)');
             // Create the user
-            $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => $userDTO->getRole(), 'profilPicture' => $userDTO->getProfilPicture(), 'dateRegistered' => $userDTO->getDateRegistered()->format('Y-m-d H:i:s'), 'isDeactivated' => 0, 'reasonDeactivation' => null, 'deactivatedAt' => null]);
+            $result = $req->execute(['email' => $userDTO->getEmail(), 'password' => $userDTO->getPassword(), 'pseudo' => $userDTO->getPseudo(), 'role' => 'ROLE_USER', 'profilPicture' => null, 'dateRegistered' => date('Y-m-d H:i:s'), 'isDeactivated' => 0, 'reasonDeactivation' => null, 'deactivatedAt' => null]);
         }
 
         return $result;

@@ -60,6 +60,13 @@
 {% endblock %}
 
 {% block script %}
+    <!-- bs-custom-file-input -->
+    <script src="../../../assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="../../../assets/dist/js/demo.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
 {% endblock %}

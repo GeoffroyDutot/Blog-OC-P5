@@ -6,6 +6,7 @@ namespace App\Helper;
 
 trait url_helper
 {
+    // redirect function by a string
     public function redirect(string $url, $permanent = false)
     {
         if ($permanent) {

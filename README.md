@@ -55,4 +55,4 @@ The database contains already some data so you can test the blog.
 > Email : dev.blog@gmail.com
 > Password : Y271ft2pPTEj  
 
-There is those users so you can see different views of the blog. If you want to create a new admin register you and modify in the database the role property [ROLE_USER] to [ROLE_ADMIN] of your new user and deletes demo users to secure.
+There is those users so you can see different views of the blog. If you want to create a new admin register you and modify in the database the role property ROLE_USER to ROLE_ADMIN of your new user and deletes demo users to secure.

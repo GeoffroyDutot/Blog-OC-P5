@@ -14,79 +14,81 @@ use App\Form\FormValidator;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function __construct()
     {
+        parent::__construct();
+        // Check if user logged and user is an admin
         if (empty($_SESSION) || $_SESSION['role'] !== 'ROLE_ADMIN') {
+            // Set error message - user doesnt have rights
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
+            // Return error
             $this->redirect('/');
         }
+    }
 
+    // Show admin Dashboard
+    public function index()
+    {
+        // Get 5 lasts posts not archived
         $postDAO = new PostDAO();
         $filtersPost = ['is_archived' => 0];
         $posts = $postDAO->getAll($filtersPost,5);
 
+        // Get 5 lasts users not deactivated
         $userDAO = new UserDAO();
         $filtersUser = ['is_deactivated' => 0];
         $users = $userDAO->getAll($filtersUser, 5);
 
+        // Get 5 lasts comments submitted
         $commentDAO = new CommentDAO();
         $filtersComment = ['status' => 'NULL'];
         $comments = $commentDAO->getAll($filtersComment, 5);
 
+        // Set data with posts, users and comments
         $data = ['posts' => $posts, 'users' => $users, 'comments' => $comments];
 
+        // Show admin dashboard view
         $this->render('admin/dashboard.html.twig', $data);
     }
 
+    // Show admin List manage posts
     public function listPosts()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
-        $data = [];
-
+        // Get all Posts not archived
         $postDAO = new PostDAO();
         $filtersPosts = ['is_archived' => 0];
         $posts = $postDAO->getAll($filtersPosts);
 
-        if ($posts) {
-            $data['posts'] = $posts;
-        }
-
+        // Get all Posts archived
         $filtersPostsArchived = ['is_archived' => 1];
         $postsArchived = $postDAO->getAll($filtersPostsArchived);
 
-        if ($postsArchived) {
-            $data['postsArchived'] = $postsArchived;
-        }
+        // Set data with posts and posts archived
+        $data = ['posts' => $posts, 'postsArchived' => $postsArchived];
 
+        // Show admin posts list view
         $this->render('admin/posts.html.twig', $data);
     }
 
+    // Show add a new post view
     public function addPost()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
+        // Show add new post form view
         $this->render('admin/add_post.html.twig');
     }
 
+    // Create a new post
     public function newPost()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
+        // Check if there is data required
         if (empty($this->post)) {
+            // Set error - missing required data
             $this->session['flash-error'] = "Aucune donnée reçu !";
+            // Redirect
             $this->redirect('/admin/articles/nouveau');
         }
 
+        // If there is file uploaded add filenames in post data
         if(!empty($_FILES)) {
             unset($_FILES['files']);
             foreach ($_FILES as $inputName => $file) {
@@ -94,6 +96,7 @@ class AdminController extends Controller
             }
         }
 
+        // Set validation form rules
         $form = new FormValidator();
         $rules = [
             [
@@ -133,81 +136,103 @@ class AdminController extends Controller
             ]
         ];
 
+        // Checks if valid form
         if (!empty($form->validate($rules, $this->post))) {
+            // Set form errors
             $this->session['form-errors'] = $form->getErrors();
+            // Set data form inputs
             $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/admin/articles/nouveau');
         }
 
+        // Set picture name
+        $this->post['picture'] = !empty($this->post['picture']['name']) ? $this->post['picture']['name'] : null;
+
+        // Remove empty post's values
+        foreach ($this->post as $key => $value) {
+            if (empty($value)) {
+                $this->post[$key] = null;
+            }
+        }
+
+        // Create PostDTO
+        $postDTO = new PostDTO($this->post);
+        // Set post's slug from the title
+        $postDTO->setSlug($this->slugify($postDTO->getTitle()));
+
+        // Checks if a post with this slug already exists
+        $postDAO = new PostDAO();
+        if (!empty($postDAO->getPostBySlug($postDTO->getSlug()))) {
+            // Set error - post with this title already exists
+            $this->session['form-errors'] = ['title' => ['Un article existe déjà avec ce titre.']];
+            // Set data inputs post
+            $this->session['form-inputs'] = $this->post;
+            // Redirect
+            $this->redirect('/admin/articles/nouveau');
+        }
+
+        // Create post
+        $result = $postDAO->save($postDTO);
+
+        // Checks if post has been created
+        if (!$result) {
+            // Set error - Internal error
+            $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            // Redirect
+            $this->redirect('admin/articles/nouveau');
+        }
+
+        // Upload file
         if (!empty($this->post['picture']['tmp_name'])) {
             move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($this->post['picture']['name']));
         }
-        $this->post['picture'] = $this->post['picture']['name'];
 
-        $postDTO = new PostDTO($this->post);
-        $postDTO->setSlug($this->slugify($postDTO->getTitle()));
-        $subtitle = $postDTO->getSubtitle() ? $postDTO->getSubtitle() : null;
-        $postDTO->setSubtitle($subtitle);
-        $resume = $postDTO->getResume() ? $postDTO->getResume() : null;
-        $postDTO->setResume($resume);
-        $picture = $postDTO->getPicture() ? $postDTO->getPicture() : null;
-        $postDTO->setPicture($picture);
-
-        $postDAO = new PostDAO();
-        if (!empty($postDAO->getPostBySlug($postDTO->getSlug()))) {
-            $this->session['form-errors'] = ['title' => ['Un article existe déjà avec ce titre.']];
-            $this->session['form-inputs'] = $this->post;
-            $this->redirect('/admin/articles/nouveau');
-        }
-
-        $result = $postDAO->save($postDTO);
-        if (!$result) {
-            $this->session['error'] = "Erreur ! Veuillez vérifier les champs du formulaire.";
-            $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
-            $this->redirect('admin/articles/nouveau');
-        }
+        // Set success message - post created
         $this->session['flash-success'] = "Modifications enregistrées.";
+        // Redirect
         $this->redirect('/admin/articles');
     }
 
+    // Show edit post view
     public function editPost(int $postId)
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
+        // Get post by its id
         $postDAO = new PostDAO();
         $postDTO = $postDAO->getPostById($postId);
 
+        // Checks if post founded
         if (empty($postDTO)) {
+            // Set error - post didnt found
             $this->session['flash-error'] = 'Erreur interne, article non trouvé.';
+            // Redirect
             $this->redirect('/admin/articles');
         }
 
-        $data = ['post' => $postDTO];
-
-        $this->render('admin/edit_post.html.twig', $data);
+        // Show edit post view
+        $this->render('admin/edit_post.html.twig', ['post' => $postDTO]);
     }
 
+    // Update post
     public function updatePost(int $postId)
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
+        // Checks if not missing required data
         if (empty($this->post)) {
+            // Set missing required data
             $this->session['flash-error'] = "Aucune donnée reçu !";
+            // Redirect
             $this->redirect('/admin/article/'.$postId);
         }
 
+        // If there is file uploaded add filenames in post data
         if(!empty($_FILES)) {
+            unset($_FILES['files']);
             foreach ($_FILES as $inputName => $file) {
                 $this->post[$inputName] = $file;
             }
         }
 
+        // Set validation form rules
         $form = new FormValidator();
         $rules = [
             [
@@ -247,31 +272,42 @@ class AdminController extends Controller
             ]
         ];
 
+        // Checks if valid form
         if (!empty($form->validate($rules, $this->post))) {
+            // Set form errors
             $this->session['form-errors'] = $form->getErrors();
+            // Set data inputs from post
             $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/admin/article/'.$postId);
         }
 
+        // Get post by it's id
         $postDAO = new PostDAO();
         $postDTO = $postDAO->getPostById($postId);
 
+        // Checks if post has been founded
         if (empty($postDTO)) {
+            // Set error - post didn't find
             $this->session['flash-error'] = 'Erreur interne, article non trouvé.';
+            // Redirect
             $this->redirect('/admin/articles');
         }
 
-        $this->post['slug'] = $this->slugify($this->post['title']);
+        // If picture uploaded
         if (!empty($this->post['picture']['tmp_name'])) {
-            move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($this->post['picture']['name']));
-            if (!empty($postDTO->getPicture())) {
-                unlink(__DIR__.'/../../assets/img/post/' . $postDTO->getPicture());
-            }
+            // Set picture data
+            $newPicture = $this->post['picture'];
+            // Get old Picture name
+            $oldPicture = $postDTO->getPicture();
+            // Set post picture name
             $this->post['picture'] = $this->post['picture']['name'];
         } else {
-            unset($this->post['picture']);
+            // Set post picture name with the old one
+            $this->post['picture'] = $postDTO->getPicture();
         }
 
+        // Remove empty post's values
         foreach ($this->post as $key => $value) {
             if (empty($value)) {
                 $this->post[$key] = null;
@@ -279,87 +315,100 @@ class AdminController extends Controller
         }
 
         $postDTO->hydrate($this->post);
+        $postDTO->setSlug($this->slugify($postDTO->getTitle()));
 
+        // Checks if a post already exists with this slug
         if (!empty($postDAO->getPostBySlug($postDTO->getSlug())) && $postDAO->getPostBySlug($postDTO->getSlug())->getId() !== $postDTO->getId()) {
+            // Set error - post with this title already exists
             $this->session['form-errors'] = ['title' => ['Un article existe déjà avec ce titre.']];
+            // Set data inputs from post
             $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/admin/article/'.$postId);
         }
 
+        // Update post
         $post = $postDAO->save($postDTO);
+
+        // Checks if post has been updated
         if (!$post) {
+            // Set error - error internal
             $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            // Redirect
             $this->redirect('/admin/article/'.$postId);
         }
+
+        // If there is a new picture
+        if (!empty($newPicture['tmp_name'])) {
+            // Upload the picture
+            move_uploaded_file($newPicture['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($postDTO->getPicture()));
+            // If there is an old picture
+            if (!empty($oldPicture)) {
+                // Remove old picture
+                unlink(__DIR__.'/../../assets/img/post/' . $oldPicture);
+            }
+        }
+
+        // Set success message - Post updated
         $this->session['flash-success'] = "Modifications enregistrées.";
+        // Redirect
         $this->redirect('/admin/articles');
     }
 
+    // Show admin lists users
     public function listUsers()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
-        $data = [];
-
+        // Get all users not deactivated
         $userDAO = new UserDAO();
         $filters = ['is_deactivated' => 0];
         $users = $userDAO->getAll($filters);
 
-        if (!empty($users)) {
-            $data['users'] = $users;
-        }
-
+        // Get all users deactivated
         $filters = ['is_deactivated' => 1];
         $usersDeactivated = $userDAO->getAll($filters);
 
-        if (!empty($usersDeactivated)) {
-            $data['usersDeactivated'] = $usersDeactivated;
-        }
-
-        $this->render('admin/users.html.twig', $data);
+        // Show users lists
+        $this->render('admin/users.html.twig', ['users' => $users, 'usersDeactivated' => $usersDeactivated]);
     }
 
+    // Show admin edit user
     public function editUser(int $userId)
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
+        // Get User by it's id
         $userDAO = new UserDAO();
         $userDTO = $userDAO->getUserById($userId);
 
+        // Checks if user found
         if (empty($userDTO)) {
+            // Set error - user doesnt't find
             $this->session['flash-error'] = 'Erreur interne, utilisateur non trouvé.';
+            // Redirect
             $this->redirect('/admin/utilisateurs');
         }
 
-        $data = ['user' => $userDTO];
-
-        $this->render('admin/edit_user.html.twig', $data);
+        // Show admin users lists view
+        $this->render('admin/edit_user.html.twig', ['user' => $userDTO]);
     }
 
+    // Update user
     public function updateUser(int $userId)
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
+        // Check if not missing required data
         if (empty($this->post)) {
+            // Set error - missing required data
             $this->session['flash-error'] = "Aucune donnée reçu !";
+            // Redirect
             $this->redirect('/admin/utilisateur/'.$userId);
         }
 
+        // If there is file uploaded add filenames in post data
         if(!empty($_FILES)) {
             foreach ($_FILES as $inputName => $file) {
                 $this->post[$inputName] = $file;
             }
         }
 
+        // Add form validator rules
         $form = new FormValidator();
         $rules = [
             [
@@ -392,119 +441,149 @@ class AdminController extends Controller
             ]
         ];
 
+        // Check if form data is valid
         if (!empty($form->validate($rules, $this->post))) {
             $this->session['form-errors'] = $form->getErrors();
             $this->session['form-inputs'] = $this->post;
             $this->redirect('/admin/utilisateur/'.$userId);
         }
 
+        // Get user by it's id
         $userDAO = new UserDAO();
         $userDTO = $userDAO->getUserById($userId);
 
+        // Check if user found
         if (empty($userDTO)) {
+            // Set error - user not found
             $this->session['flash-error'] = 'Erreur interne, utilisateur non trouvé.';
+            // Redirect
             $this->redirect('/admin/utilisateurs');
         }
 
+        // If picture uploaded
         if (!empty($this->post['profil_picture']['tmp_name'])) {
-            move_uploaded_file($this->post['profil_picture']['tmp_name'], __DIR__.'/../../assets/img/user/profil_picture/' . basename($this->post['profil_picture']['name']));
-            if (!empty($userDTO->getProfilPicture())) {
-                unlink(__DIR__.'/../../assets/img/user/profil_picture/' . $userDTO->getProfilPicture());
-            }
+            // Set picture data
+            $newPicture = $this->post['profil_picture'];
+            // Get old Picture name
+            $oldPicture = $userDTO->getProfilPicture();
+            // Set post picture name
             $this->post['profil_picture'] = $this->post['profil_picture']['name'];
         } else {
-            unset($this->post['profil_picture']);
+            // Set post picture name with the old one
+            $this->post['profil_picture'] = $userDTO->getProfilPicture();
         }
 
+        // Remove empty post's values
         foreach ($this->post as $key => $value) {
             if (empty($value)) {
                 $this->post[$key] = null;
             }
         }
 
+        // Checks if a new password is given
         if (!empty($this->post['password'])) {
+            // Hash new password
             $this->post['password'] = password_hash($this->post['password'], PASSWORD_BCRYPT);
         } else {
+            // Unset user password
             unset($this->post['password']);
         }
 
+        // Update user object
         $userDTO->hydrate($this->post);
 
+        // Check if an user doesnt already exists with this email
         if (!empty($userDAO->getUserByEmail($userDTO->getEmail())) && $userDAO->getUserByEmail($userDTO->getEmail())->getId() !== $userDTO->getId()) {
+            // Set error - user email already exists
             $this->session['form-errors'] = ['email' => ['Un utilisateur avec cette adresse email existe déjà !']];
+            // Set data inputs from post data
             $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/admin/utilisateur/'.$userId);
         }
 
+        // Check if an user doesnt already exists with this pseudo
         if (!empty($userDAO->getUserByPseudo($userDTO->getPseudo())) && $userDAO->getUserByPseudo($userDTO->getPseudo())->getId() !== $userDTO->getId()) {
+            // Set error - user with this pseudo exists
             $this->session['form-errors'] = ['pseudo' => ['Un utilisateur avec ce pseudo existe déjà !']];
+            // Set form inputs data from post data
             $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/admin/utilisateur/'.$userId);
         }
 
+        // Update user
         $user = $userDAO->save($userDTO);
+
+        // Check if user has been updated
         if (!$user) {
+            // Set error internal - user not updated
             $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            // Set form inputs data from post data
+            $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/admin/utilisateur/'.$userId);
         }
+
+        // If there is a new picture
+        if (!empty($newPicture['tmp_name'])) {
+            // Upload the picture
+            move_uploaded_file($newPicture['tmp_name'], __DIR__.'/../../assets/img/user/profil_picture/' . basename($userDTO->getProfilPicture()));
+            // If there is an old picture
+            if (!empty($oldPicture)) {
+                // Remove old picture
+                unlink(__DIR__.'/../../assets/img/user/profil_picture/' . $oldPicture);
+            }
+        }
+
+        // Set success message - User updated
         $this->session['flash-success'] = "Modifications enregistrées.";
+        // Redirect
         $this->redirect('/admin/utilisateurs');
     }
 
+    // Show admin lists comments
     public function listComments()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
-        $data = [];
-
+        // Get all comments submitted
         $comments = new CommentDAO();
         $filters = ['status' => 'NULL'];
         $comments = $comments->getAll($filters);
 
-        if ($comments) {
-            $data['comments'] = $comments;
-        }
-
-        $this->render('admin/comments.html.twig', $data);
+        // Show admin comments lists view
+        $this->render('admin/comments.html.twig', ['comments' => $comments]);
     }
 
+    // Show admin edit aboutMe
     public function aboutMe()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
-        $data = [];
-
+        // get AboutMe
         $aboutMe = new AboutMeDAO();
         $aboutMe = $aboutMe->getAboutMe();
-        $data['aboutMe'] = $aboutMe;
 
-        $this->render('admin/edit_aboutme.html.twig', $data);
+        // Show admin edit aboutMe view
+        $this->render('admin/edit_aboutme.html.twig', ['aboutMe' => $aboutMe]);
     }
 
+    // Update AboutMe
     public function editAboutMe()
     {
-        if (empty($_SESSION)|| $_SESSION['role'] !== 'ROLE_ADMIN') {
-            $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
-            $this->redirect('/');
-        }
-
+        // Check if missing required data
         if (empty($this->post)) {
+            // Set error - missing required data
             $this->session['flash-error'] = "Aucune donnée reçu !";
+            // Redirect
             $this->redirect('/admin/a-propos');
         }
 
+        // If there is file uploaded add filenames in post data
         if(!empty($_FILES)) {
             foreach ($_FILES as $inputName => $file) {
                 $this->post[$inputName] = $file;
             }
         }
 
+        // Add form validator rules
         $form = new FormValidator();
         $rules = [
             [
@@ -579,90 +658,121 @@ class AdminController extends Controller
             ]
         ];
 
+        // Check if is valid form
         if (!empty($form->validate($rules, $this->post))) {
             $this->session['form-errors'] = $form->getErrors();
             $this->session['form-inputs'] = $this->post;
             $this->redirect('/admin/a-propos');
         }
 
+        // Get aboutMe
         $aboutMeDAO = new AboutMeDAO();
         $aboutMeDTO = $aboutMeDAO->getAboutMe();
 
-        $aboutMe = new AboutMeDTO();
-        $aboutMe = $aboutMe->setId($aboutMeDTO->getId());
-
-        if ($this->post['firstname'] !== $aboutMeDTO->getFirstname()) {
-            $aboutMe->setFirstname($this->post['firstname']);
-        } else {
-            $aboutMe->setFirstname($aboutMeDTO->getFirstname());
+        // Check if found aboutMe
+        if(empty($aboutMeDTO)) {
+            // Set error - aboutMe not found
+            $this->session['flash-error'] = 'Erreur Interne, aboutMe doesnt find';
+            // Redirect
+            $this->redirect('/admin/tableau-de-bord');
         }
 
-        if ($this->post['lastname'] !== $aboutMeDTO->getLastname()) {
-            $aboutMe->setLastname($this->post['lastname']);
+        // If picture uploaded
+        if (!empty($this->post['profil_picture']['tmp_name'])) {
+            // Set picture data
+            $newProfilPicture = $this->post['profil_picture'];
+            // Get old Picture name
+            $oldProfilPicture = $aboutMeDTO->getProfilPicture();
+            // Set post picture name
+            $this->post['profil_picture'] = $this->post['profil_picture']['name'];
         } else {
-            $aboutMe->setLastname($aboutMeDTO->getLastname());
+            // Set post picture name with the old one
+            $this->post['profil_picture'] = $aboutMeDTO->getProfilPicture();
         }
 
-        if ($this->post['slogan'] !== $aboutMeDTO->getSlogan()) {
-            $aboutMe->setSlogan($this->post['slogan']);
+        // If picture uploaded
+        if (!empty($this->post['cv_pdf']['tmp_name'])) {
+            // Set cv_pdf data
+            $newCvPdf = $this->post['cv_pdf'];
+            // Get old cv_pdf name
+            $oldCvPdf = $aboutMeDTO->getCvPdf();
+            // Set post cv_pdf name
+            $this->post['cv_pdf'] = $this->post['cv_pdf']['name'];
         } else {
-            $aboutMe->setSlogan($aboutMeDTO->getSlogan());
+            // Set post cv_pdf name with the old one
+            $this->post['cv_pdf'] = $aboutMeDTO->getCvPdf();
         }
 
-        if ($this->post['bio'] !== $aboutMeDTO->getBio()) {
-            $aboutMe->setBio($this->post['bio']);
+        // If picture uploaded
+        if (!empty($this->post['picture']['tmp_name'])) {
+            // Set picture data
+            $newPicture = $this->post['picture'];
+            // Get old picture name
+            $oldPicture = $aboutMeDTO->getPicture();
+            // Set post picture name
+            $this->post['picture'] = $this->post['picture']['name'];
         } else {
-            $aboutMe->setBio($aboutMeDTO->getBio());
+            // Set post picture name with the old one
+            $this->post['picture'] = $aboutMeDTO->getPicture();
         }
 
-        if (!empty($this->post['profil_picture']['name'])) {
-            move_uploaded_file($this->post['profil_picture']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($this->post['profil_picture']['name']));
-            $aboutMe->setProfilPicture($this->post['profil_picture']['name']);
-            unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getProfilPicture());
-        } else {
-            $aboutMe->setProfilPicture($aboutMeDTO->getProfilPicture());
+        // Remove empty post's values
+        foreach ($this->post as $key => $value) {
+            if (empty($value)) {
+                $this->post[$key] = null;
+            }
         }
 
-        if (!empty($this->post['cv_pdf']['name'])) {
-            move_uploaded_file($this->post['cv_pdf']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($this->post['cv_pdf']['name']));
-            $aboutMe->setCvPdf($this->post['cv_pdf']['name']);
-            unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getCvPdf());
-        } else {
-            $aboutMe->setCvPdf($aboutMeDTO->getCvPdf());
-        }
+        // Update AboutMe object
+        $aboutMeDTO->hydrate($this->post);
 
-        if (!empty($this->post['picture']['name'])) {
-            move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($this->post['picture']['name']));
-            $aboutMe->setPicture($this->post['picture']['name']);
-            unlink(__DIR__.'/../../assets/aboutme/' .$aboutMeDTO->getPicture());
-        } else {
-            $aboutMe->setPicture($aboutMeDTO->getPicture());
-        }
+        // Update AboutMe
+        $aboutMe = $aboutMeDAO->save($aboutMeDTO);
 
-        if ($this->post['twitter_link'] !== $aboutMeDTO->getTwitterLink()) {
-            $aboutMe->setTwitterLink($this->post['twitter_link']);
-        } else {
-            $aboutMe->setTwitterLink($aboutMeDTO->getTwitterLink());
-        }
-
-        if ($this->post['linkedin_link'] !== $aboutMeDTO->getLinkedinLink()) {
-            $aboutMe->setLinkedinLink($this->post['linkedin_link']);
-        } else {
-            $aboutMe->setLinkedinLink($aboutMeDTO->getLinkedinLink());
-        }
-
-        if ($this->post['github_link'] !== $aboutMeDTO->getGithubLink()) {
-            $aboutMe->setGithubLink($this->post['github_link']);
-        } else {
-            $aboutMe->setGithubLink($aboutMeDTO->getGithubLink());
-        }
-
-        $aboutMe = $aboutMeDAO->save($aboutMe);
+        // Check if aboutMe has been updated
         if (!$aboutMe) {
+            // Set error - Internal error - AboutMe not updated
             $this->session['flash-error'] = "Erreur interne ! Aucune modification n'a pu être enregistrée.";
+            // Redirect
             $this->redirect('/admin/a-propos');
         }
+
+        // If there is a new profil_picture
+        if (!empty($newProfilPicture['tmp_name'])) {
+            // Upload the picture
+            move_uploaded_file($newProfilPicture['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getProfilPicture()));
+            // If there is an old profil_picture
+            if (!empty($oldProfilPicture)) {
+                // Remove old profil_picture
+                unlink(__DIR__.'/../../assets/aboutme/' . $oldProfilPicture);
+            }
+        }
+
+        // If there is a new cv_pdf
+        if (!empty($newCvPdf['tmp_name'])) {
+            // Upload the picture
+            move_uploaded_file($newCvPdf['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getCvPdf()));
+            // If there is an old cv_pdf
+            if (!empty($oldCvPdf)) {
+                // Remove old cv_pdf
+                unlink(__DIR__.'/../../assets/aboutme/' . $oldCvPdf);
+            }
+        }
+
+        // If there is a new picture
+        if (!empty($newPicture['tmp_name'])) {
+            // Upload the picture
+            move_uploaded_file($newPicture['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getPicture()));
+            // If there is an old picture
+            if (!empty($oldPicture)) {
+                // Remove old picture
+                unlink(__DIR__.'/../../assets/aboutme/' . $oldPicture);
+            }
+        }
+
+        // Set success message - AboutMe updated
         $this->session['flash-success'] = "Modifications enregistrées.";
+        // Redirect
         $this->redirect('/admin/a-propos');
     }
 }

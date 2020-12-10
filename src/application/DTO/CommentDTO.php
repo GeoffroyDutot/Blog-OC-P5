@@ -8,7 +8,7 @@ use DateTime;
 
 class CommentDTO extends DTO
 {
-    protected int $id;
+    protected ?int $id = null;
     protected string $content;
     protected int $id_post;
     protected int $id_user;
@@ -23,12 +23,12 @@ class CommentDTO extends DTO
         }
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): CommentDTO
+    public function setId(?int $id): CommentDTO
     {
         $this->id = $id;
 

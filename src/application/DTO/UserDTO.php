@@ -12,7 +12,7 @@ class UserDTO extends DTO
     protected string $email;
     protected string $password;
     protected string $pseudo;
-    protected string $role;
+    protected string $role = 'ROLE_USER';
     protected ?string $profil_picture = null;
     protected DateTime $date_registered;
     protected int $is_deactivated = 0;

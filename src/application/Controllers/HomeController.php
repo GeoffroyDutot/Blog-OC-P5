@@ -9,23 +9,32 @@ use App\Form\FormValidator;
 
 class HomeController extends Controller
 {
+    // Show homepage
     public function index()
     {
-        $data = [];
+        // Get AboutMe infos
         $aboutMe = new AboutMeDAO();
         $aboutMe = $aboutMe->getAboutMe();
-        $data['aboutMe'] = $aboutMe;
 
+        // Set data from AboutMe infos
+        $data = ['aboutMe' => $aboutMe];
+
+        // Show homepage view
         $this->render('home.html.twig', $data);
     }
 
+    // Send Email from contact form
     public function contact()
     {
+        // Set error if empty data
         if (empty($this->post)) {
+            // Set error empty data
             $this->session['flash-error'] = "Erreur, aucune donnée reçue !";
+            // Redirect homepage
             $this->redirect('/');
         }
 
+        // Set form validation rules
         $form = new FormValidator();
         $rules = [
             [
@@ -58,12 +67,17 @@ class HomeController extends Controller
             ]
         ];
 
+        // Checks if is valid form data
         if (!empty($form->validate($rules, $this->post))) {
+            // Set errors
             $this->session['form-errors'] = $form->getErrors();
+            // Set inputs data
             $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/');
         }
 
+        //@TODO changes email send with email lib
         $emailDTO = new EmailDTO();
         $emailDTO->setName(htmlspecialchars($_POST['name']));
         $emailDTO->setMessage(htmlspecialchars($_POST['message']));
@@ -80,7 +94,9 @@ class HomeController extends Controller
             $this->redirect('/');
         }
 
+        // Set success message
         $this->session['flash-success'] = "Votre message à bien été envoyé !";
+        // Redirect home
         $this->redirect('/');
     }
 }
