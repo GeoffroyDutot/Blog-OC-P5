@@ -30,8 +30,10 @@ class Controller
          $this->setFormInputs();
      }
 
+     // Render view with data
      protected function render(string $path, array $data = [])
      {
+         // Set data with flash-messages
          $data['error'] = $this->flashMessage['error'] ?? null;
          $data['success'] = $this->flashMessage['success'] ?? null;
          $data['warning'] = $this->flashMessage['warning'] ?? null;
@@ -39,9 +41,11 @@ class Controller
          $data['formErrors'] = $this->formErrors['form-errors'] ?? null;
          $data['formInputs'] = $this->formInputs['form-inputs'] ?? null;
 
+         // Render view
          print_r($this->twig->render($path, $data));
     }
 
+    // Set messages from session
     protected function setFlashMessage()
     {
         if (!empty($this->session['flash-error'])) {
@@ -62,6 +66,7 @@ class Controller
         }
     }
 
+    // Set form errors data from session
     protected function setFormErrors()
     {
         if (!empty($this->session['form-errors'])) {
@@ -70,6 +75,7 @@ class Controller
         }
     }
 
+    // Set form data inputs from session
     protected function setFormInputs()
     {
         if (!empty($this->session['form-inputs'])) {
