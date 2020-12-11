@@ -13,7 +13,7 @@ $router->post('/contact', "Home#contact");
 $router->get('/page-introuvable', 'Error#show404');
 
 // POST
-$router->get('/articles', "Post#index");
+$router->get('/articles/page/:page', "Post#index")->with('page', '([0-9]+)');
 $router->get('/article/:slug', "Post#show")->with('slug', '([a-z\-0-9]+)');
 $router->post('/article/:id/commentaire', "Post#submitComment")->with('id', '([0-9]+)');
 

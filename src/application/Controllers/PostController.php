@@ -14,7 +14,7 @@ use App\Form\FormValidator;
 class PostController extends Controller
 {
     // Posts list view
-    public function index()
+    public function index(int $page)
     {
         $data = [];
 
@@ -24,15 +24,32 @@ class PostController extends Controller
         $data['aboutMe'] = $aboutMe;
 
         // Get all posts
-        $posts = new PostDAO();
-        $filtersPosts = ['is_archived' => 0];
-        $posts = $posts->getAll($filtersPosts);
+        $postDAO = new PostDAO();
 
-        // Set data posts
-        $data['posts'] = $posts;
+        // Count total of posts
+        $totalPosts = $postDAO->count()['nb'];
+
+        // Set limit to 5 post per page
+        $limitPerPage = 5;
+
+        // Calculate total pages
+        $totalPages = ceil($totalPosts / $limitPerPage);
+
+        $page = !empty($page) ? $page : 1;
+
+        // Offset
+        $offset = ($page - 1) * $limitPerPage;
+
+        // Add filter on post's status
+        $filtersPosts = ['is_archived' => 0];
+        $posts = $postDAO->getAll($filtersPosts, $limitPerPage, $offset);
+
+        // Prev + Next
+        $prev = $page - 1;
+        $next = $page + 1;
 
         // Show posts list view
-        $this->render('posts.html.twig', $data);
+        $this->render('posts.html.twig', ['aboutMe' => $aboutMe, 'posts' => $posts, 'page' => $page, 'prev' => $prev, 'next' => $next, 'totalPages' => $totalPages]);
     }
 
     // Show post detail
