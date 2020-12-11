@@ -24,7 +24,7 @@
             <div class="col-lg-8 col-md-10 mx-auto">
                 {% include 'include/flashmessages.html.twig' %}
                 {% for post in posts %}
-                    <div class="post-preview">
+                    <div class="post-preview text-center">
                         <a href="/article/{{ post.slug }}">
                             <h2 class="post-title">
                                 {{ post.title }}
@@ -36,10 +36,25 @@
                         <p class="post-meta">Posté le {{ post.createdAt|date("d/m/Y") }}</p>
                     </div>
                 {% endfor %}
-                <!-- Pager -->
-                <div class="clearfix">
-                    <a class="btn btn-primary float-right" href="#">Plus d'articles &rarr;</a>
-                </div>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation example mt-5">
+                    <ul class="pagination justify-content-center">
+
+                        <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{% if page <= 1 %}#{% else %}/articles/page/{{ prev }}{% endif %}">Précédent</a>
+                        </li>
+                        {% for i in 1.. totalPages %}
+                            <li class="page-item {% if page == i %}active{% endif %}">
+                                <a class="page-link" href="{% if page == i %}#{% else %}/articles/page/{{ i }}{% endif %}"> {{ i }} </a>
+                            </li>
+                        {% endfor %}
+                        <li class="page-item {% if page >= totalPages %}disabled{% endif %}">
+                            <a class="page-link"
+                               href="{% if page >= totalPages %}#{% else %}/articles/page/{{ next }}{% endif %}">Suivant</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

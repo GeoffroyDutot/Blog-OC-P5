@@ -9,7 +9,7 @@ use App\DTO\PostDTO;
 class PostDAO extends DAO
 {
     // Get All the comments
-    public function getAll(array $filters = null, $limit = null): array
+    public function getAll(array $filters = null, $limit = null, $offset = null): array
     {
         $posts = [];
 
@@ -29,8 +29,13 @@ class PostDAO extends DAO
             $query .= ' LIMIT ' . $limit;
         }
 
+        // Add an offset of post's to return
+        if ($offset !== null) {
+            $query .= ' OFFSET ' . $offset;
+        }
+
         // Get's data on db
-        $req = $this->db->query($query . $limit);
+        $req = $this->db->query($query);
         $data = $req->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!empty($data)) {
@@ -41,6 +46,23 @@ class PostDAO extends DAO
         }
 
         return  $posts;
+    }
+
+    public function count(array $filters = null): array
+    {
+        // Create base query - count
+        $query = 'SELECT count(id) as nb FROM post';
+
+        // Add status
+        if (!empty($filters['is_archived'])) {
+            $query .= ' WHERE is_archived = ' . $filters['is_archived'] ;
+        }
+
+        // Execute request
+        $req =  $this->db->query($query);
+
+        // Return data
+        return $req->fetch();
     }
 
     // Get Post By it's id
