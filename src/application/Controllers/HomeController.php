@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 
+use App\core\Mail;
 use App\DAO\AboutMeDAO;
 use App\DTO\EmailDTO;
 use App\Form\FormValidator;
@@ -77,20 +78,16 @@ class HomeController extends Controller
             $this->redirect('/');
         }
 
-        //@TODO changes email send with email lib
-        $emailDTO = new EmailDTO();
-        $emailDTO->setName(htmlspecialchars($_POST['name']));
-        $emailDTO->setMessage(htmlspecialchars($_POST['message']));
-        $emailDTO->setSender(htmlspecialchars($_POST['email']));
-        $emailDTO->setReceiver('contact@geoffroydutot.fr');
-        $formcontent="From: ".$emailDTO->getName()." \n Message: ".$emailDTO->getMessage()."";
-        $subject = "Contact Form";
-        $mailheader = "From: ".$emailDTO->getSender()." \r\n";
-        $headers = "MIME-Version: 1.0" . "\n";
-        $headers .= "Content-type:text/html;charset=iso-8859-1" . "\n";
-        $headers .= "From: ".$emailDTO->getSender();
-        if (!mail($emailDTO->getReceiver(), $subject, $formcontent, $headers)) {
+        // Call Mail Class
+        $mail = new Mail();
+
+        // Checks if mail sended
+        if (!$mail->sendMail($this->post['email'], $this->post['name'], $this->post['message'])) {
+            // Set error - email error
             $this->session['flash-error'] = "Erreur interne, votre message n'a pas pu être envoyé !";
+            // Set inputs data
+            $this->session['form-inputs'] = $this->post;
+            // Redirect
             $this->redirect('/');
         }
 

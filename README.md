@@ -28,6 +28,7 @@ In addition to the blog, the project will have UML diagrams and an analysis by a
 - Twig
 - Jquery
 - Bootstrap
+- PHPMailer
 ## Requirements 
 
 - PHP 7.4
@@ -41,7 +42,7 @@ In addition to the blog, the project will have UML diagrams and an analysis by a
 - Config your webserver to point on the project directory
 - Composer install in src directory
 - Unzip and Import Database with blog-oc-p5.sql.zip file
-- Rename config/config.php.sample in config/config.php and add your database infos
+- Rename config/config.php.sample in config/config.php and add your database and email smtp server infos
 
 ## Demo Datas 
 The database contains already some data so you can test the blog.
