@@ -4,5 +4,8 @@ return [
     'hostname' => '',
     'username' => '',
     'password' => '',
-    'database' => ''
+    'database' => '',
+    'emailHost' => '',
+    'email' => '',
+    'emailPassword' => ''
 ];

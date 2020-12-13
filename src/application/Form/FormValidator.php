@@ -97,7 +97,7 @@ class FormValidator
     public function validatePhone(array $rule, array $payload)
     {
         if ($rule['type'] === "phone" && !preg_match('^((\+)33|0)[1-9](\d{2}){4}$^', $payload[$rule['fieldName']])) {
-            $this->errors[$rule['fieldName']][] = 'Ceci n\'est pas un numéro de téléphone valide. Ex: 07 56 72 27 28';
+            $this->errors[$rule['fieldName']][] = 'Ceci n\'est pas un numéro de téléphone valide. Ex: 0756722728';
         }
     }
 
