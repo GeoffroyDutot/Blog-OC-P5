@@ -146,8 +146,9 @@ class AdminController extends Controller
             $this->redirect('/admin/articles/nouveau');
         }
 
-        // Set picture name
-        $this->post['picture'] = !empty($this->post['picture']['name']) ? $this->post['picture']['name'] : null;
+        $newPictureTmpName = $this->post['picture']['tmp_name'];
+            // Set picture name
+        $this->post['picture'] = !empty($newPictureTmpName) ? uniqid().'.png' : null;
 
         // Remove empty post's values
         foreach ($this->post as $key => $value) {
@@ -184,8 +185,8 @@ class AdminController extends Controller
         }
 
         // Upload file
-        if (!empty($this->post['picture']['tmp_name'])) {
-            move_uploaded_file($this->post['picture']['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($this->post['picture']['name']));
+        if (!empty($newPictureTmpName)) {
+            move_uploaded_file($newPictureTmpName, __DIR__.'/../../assets/img/post/' . basename($postDTO->getPicture()));
         }
 
         // Set success message - post created
@@ -297,11 +298,11 @@ class AdminController extends Controller
         // If picture uploaded
         if (!empty($this->post['picture']['tmp_name'])) {
             // Set picture data
-            $newPicture = $this->post['picture'];
+            $newPictureTmpName = $this->post['picture']['tmp_name'];
             // Get old Picture name
             $oldPicture = $postDTO->getPicture();
             // Set post picture name
-            $this->post['picture'] = $this->post['picture']['name'];
+            $this->post['picture'] = uniqid().'.png';
         } else {
             // Set post picture name with the old one
             $this->post['picture'] = $postDTO->getPicture();
@@ -339,9 +340,9 @@ class AdminController extends Controller
         }
 
         // If there is a new picture
-        if (!empty($newPicture['tmp_name'])) {
+        if (!empty($newPictureTmpName)) {
             // Upload the picture
-            move_uploaded_file($newPicture['tmp_name'], __DIR__.'/../../assets/img/post/' . basename($postDTO->getPicture()));
+            move_uploaded_file($newPictureTmpName, __DIR__.'/../../assets/img/post/' . basename($postDTO->getPicture()));
             // If there is an old picture
             if (!empty($oldPicture)) {
                 // Remove old picture
@@ -463,11 +464,11 @@ class AdminController extends Controller
         // If picture uploaded
         if (!empty($this->post['profil_picture']['tmp_name'])) {
             // Set picture data
-            $newPicture = $this->post['profil_picture'];
+            $newPictureTmpName = $this->post['profil_picture']['tmp_name'];
             // Get old Picture name
             $oldPicture = $userDTO->getProfilPicture();
             // Set post picture name
-            $this->post['profil_picture'] = $this->post['profil_picture']['name'];
+            $this->post['profil_picture'] = uniqid().'.png';
         } else {
             // Set post picture name with the old one
             $this->post['profil_picture'] = $userDTO->getProfilPicture();
@@ -526,9 +527,9 @@ class AdminController extends Controller
         }
 
         // If there is a new picture
-        if (!empty($newPicture['tmp_name'])) {
+        if (!empty($newPictureTmpName)) {
             // Upload the picture
-            move_uploaded_file($newPicture['tmp_name'], __DIR__.'/../../assets/img/user/profil_picture/' . basename($userDTO->getProfilPicture()));
+            move_uploaded_file($newPictureTmpName, __DIR__.'/../../assets/img/user/profil_picture/' . basename($userDTO->getProfilPicture()));
             // If there is an old picture
             if (!empty($oldPicture)) {
                 // Remove old picture
@@ -680,11 +681,11 @@ class AdminController extends Controller
         // If picture uploaded
         if (!empty($this->post['profil_picture']['tmp_name'])) {
             // Set picture data
-            $newProfilPicture = $this->post['profil_picture'];
+            $newProfilPictureTmpName = $this->post['profil_picture']['tmp_name'];
             // Get old Picture name
             $oldProfilPicture = $aboutMeDTO->getProfilPicture();
             // Set post picture name
-            $this->post['profil_picture'] = $this->post['profil_picture']['name'];
+            $this->post['profil_picture'] = uniqid().'.png';
         } else {
             // Set post picture name with the old one
             $this->post['profil_picture'] = $aboutMeDTO->getProfilPicture();
@@ -693,11 +694,11 @@ class AdminController extends Controller
         // If picture uploaded
         if (!empty($this->post['cv_pdf']['tmp_name'])) {
             // Set cv_pdf data
-            $newCvPdf = $this->post['cv_pdf'];
+            $newCvPdfTmpName = $this->post['cv_pdf']['tmp_name'];
             // Get old cv_pdf name
             $oldCvPdf = $aboutMeDTO->getCvPdf();
             // Set post cv_pdf name
-            $this->post['cv_pdf'] = $this->post['cv_pdf']['name'];
+            $this->post['cv_pdf'] = uniqid().'.pdf';
         } else {
             // Set post cv_pdf name with the old one
             $this->post['cv_pdf'] = $aboutMeDTO->getCvPdf();
@@ -706,11 +707,11 @@ class AdminController extends Controller
         // If picture uploaded
         if (!empty($this->post['picture']['tmp_name'])) {
             // Set picture data
-            $newPicture = $this->post['picture'];
+            $newPictureTmpName = $this->post['picture']['tmp_name'];
             // Get old picture name
             $oldPicture = $aboutMeDTO->getPicture();
             // Set post picture name
-            $this->post['picture'] = $this->post['picture']['name'];
+            $this->post['picture'] = uniqid().'.png';
         } else {
             // Set post picture name with the old one
             $this->post['picture'] = $aboutMeDTO->getPicture();
@@ -738,9 +739,9 @@ class AdminController extends Controller
         }
 
         // If there is a new profil_picture
-        if (!empty($newProfilPicture['tmp_name'])) {
+        if (!empty($newProfilPictureTmpName)) {
             // Upload the picture
-            move_uploaded_file($newProfilPicture['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getProfilPicture()));
+            move_uploaded_file($newProfilPictureTmpName, __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getProfilPicture()));
             // If there is an old profil_picture
             if (!empty($oldProfilPicture)) {
                 // Remove old profil_picture
@@ -749,9 +750,9 @@ class AdminController extends Controller
         }
 
         // If there is a new cv_pdf
-        if (!empty($newCvPdf['tmp_name'])) {
+        if (!empty($newCvPdfTmpName)) {
             // Upload the picture
-            move_uploaded_file($newCvPdf['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getCvPdf()));
+            move_uploaded_file($newCvPdfTmpName, __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getCvPdf()));
             // If there is an old cv_pdf
             if (!empty($oldCvPdf)) {
                 // Remove old cv_pdf
@@ -760,9 +761,9 @@ class AdminController extends Controller
         }
 
         // If there is a new picture
-        if (!empty($newPicture['tmp_name'])) {
+        if (!empty($newPictureTmpName)) {
             // Upload the picture
-            move_uploaded_file($newPicture['tmp_name'], __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getPicture()));
+            move_uploaded_file($newPictureTmpName, __DIR__.'/../../assets/aboutme/' . basename($aboutMeDTO->getPicture()));
             // If there is an old picture
             if (!empty($oldPicture)) {
                 // Remove old picture

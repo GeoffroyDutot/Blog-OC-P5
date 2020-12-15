@@ -226,6 +226,8 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
+        //@TODO Delete picture
+
         // Set HTTP status 200
         http_response_code(200);
         // Set success message - post deleted
