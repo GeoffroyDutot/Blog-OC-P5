@@ -26,17 +26,26 @@
                 <div class="col-lg-8 col-md-10 mx-auto">
                     {% include 'include/flashmessages.html.twig' %}
                     <p>{{ post.content|raw|nl2br }}</p>
-                    {% if session is not empty %}
-                        <h5>Quel est ton avis ?</h5>
+                    <hr>
+                    <h4>Commentaires</h4>
+                    <br>
+                    {% if session.email is not defined %}
+                        <div class="card">
+                            <div class="card-body bg-light">
+                                <p>Vous souhaitez laisser un commentaire ? <a href="/connexion" class="badge badge-pill badge-primary">Connectez-vous</a></p>
+                                <p>Pas de compte ? Alors inscris toi <a class="badge badge-pill badge-primary" href="/inscription">ici</a></p>
+                            </div>
+                        </div>
+                    {% endif  %}
+                    {% if session.email is not empty %}
+                        <h5>Laisser un commentaire :</h5>
                         <form name="sentMessage" id="contactForm" novalidate method="POST" action="/article/{{ post.id }}/commentaire">
                             {% include 'form/comment_form.html.twig' %}
                             <button type="submit" class="btn btn-primary" id="sendMessageButton">Envoyer</button>
                         </form>
+                        <hr>
+                        <br>
                     {% endif %}
-                    <br>
-                    <hr>
-                    <h4>Commentaires</h4>
-                    <br>
                     <ul class="list-unstyled">
                         {% for comment in post.comments %}
                         <li class="media comment-container">
