@@ -46,14 +46,5 @@ In addition to the blog, the project will have UML diagrams and an analysis by a
 
 ## Demo Datas 
 The database contains already some data so you can test the blog.
-> User registered : 
->
-> Email : jeanne.dupont@gmail.com
-> Password : QahRj2VZk8sE  
 
-> User Administrator : 
->
-> Email : dev.blog@gmail.com
-> Password : Y271ft2pPTEj  
-
-There is those users so you can see different views of the blog. If you want to create a new admin register you and modify in the database the role property ROLE_USER to ROLE_ADMIN of your new user and deletes demo users to secure.
+There is already some users so you can see different views of the blog. If you want to create a new admin register you and modify in the database the role property ROLE_USER to ROLE_ADMIN of your new user and deletes demo users to secure.
