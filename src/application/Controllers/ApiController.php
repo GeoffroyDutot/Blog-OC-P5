@@ -226,7 +226,10 @@ class ApiController extends Controller
             die(json_encode(['success' => false, 'msg' => 'Internal Error']));
         }
 
-        //@TODO Delete picture
+        if (!empty($postDTO->getPicture())) {
+            // Remove post picture
+            unlink(__DIR__.'/../../assets/img/post/' . $postDTO->getPicture());
+        }
 
         // Set HTTP status 200
         http_response_code(200);
