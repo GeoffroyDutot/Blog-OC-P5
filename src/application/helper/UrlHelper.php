@@ -4,7 +4,7 @@
 namespace App\Helper;
 
 
-trait url_helper
+trait UrlHelper
 {
     // redirect function by a string
     public function redirect(string $url, $permanent = false)
