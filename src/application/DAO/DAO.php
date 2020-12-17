@@ -3,7 +3,7 @@
 namespace App\DAO;
 
 use PDO;
-use App\core\ConnectDb;
+use App\Core\ConnectDb;
 
 Abstract class DAO
 {
