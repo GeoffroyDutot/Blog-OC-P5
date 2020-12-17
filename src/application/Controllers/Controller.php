@@ -4,13 +4,13 @@ namespace App\Controllers;
 
 
 use App\Core\Twig;
-use App\Helper\slugify_helper;
-use App\Helper\url_helper;
+use App\Helper\SlugifyHelper;
+use App\Helper\UrlHelper;
 
 class Controller
 {
-    use url_helper;
-    use slugify_helper;
+    use UrlHelper;
+    use SlugifyHelper;
 
     private Twig $twig;
     protected $post;

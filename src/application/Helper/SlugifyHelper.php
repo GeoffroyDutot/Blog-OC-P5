@@ -4,7 +4,7 @@
 namespace App\Helper;
 
 
-trait slugify_helper
+trait SlugifyHelper
 {
     public function slugify(string $text)
     {

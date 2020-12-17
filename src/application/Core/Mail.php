@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\core;
+namespace App\Core;
 
 
 use App\Core\Config;
