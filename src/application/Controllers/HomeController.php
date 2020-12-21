@@ -5,7 +5,6 @@ namespace App\Controllers;
 
 use App\Core\Mail;
 use App\DAO\AboutMeDAO;
-use App\DTO\EmailDTO;
 use App\Form\FormValidator;
 
 class HomeController extends Controller
