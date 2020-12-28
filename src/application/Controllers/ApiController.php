@@ -23,7 +23,7 @@ class ApiController extends Controller
             // Set error message - user doesnt have rights
             $this->session['flash-error'] = "Vous ne pouvez pas accéder à cette partie du site.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
     }
@@ -42,7 +42,7 @@ class ApiController extends Controller
             // Set error message - comment doesn't find
             $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas été trouvé.";
             // Return error
-            echo json_encode(['success' => true, 'msg' => 'Comment didn\'t find']);
+            print_r(json_encode(['success' => true, 'msg' => 'Comment didn\'t find']));
             return;
         }
 
@@ -59,7 +59,7 @@ class ApiController extends Controller
             // Set error message - comment doesn't updated
             $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas pu être validé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
 
@@ -68,7 +68,7 @@ class ApiController extends Controller
         // Set success message - validated comment
         $this->session['flash-success'] = "Commentaire validé !";
         // Return success
-        echo json_encode(['success' => true, 'msg' => 'Comment validated successfuly']);
+        print_r(json_encode(['success' => true, 'msg' => 'Comment validated successfuly']));
         return;
     }
 
@@ -86,7 +86,7 @@ class ApiController extends Controller
             // Set error message - comment doesn't find
             $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas été trouvé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Comment didn\'t find']);
+            print_r(json_encode(['success' => false, 'msg' => 'Comment didn\'t find']));
             return;
         }
 
@@ -103,7 +103,7 @@ class ApiController extends Controller
             // Set error message - comment doesn't updated
             $this->session['flash-error'] = "Erreur Interne ! Le commentaire n'a pas pu être invalidé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
 
@@ -113,7 +113,7 @@ class ApiController extends Controller
         // Set success message - validated comment
         $this->session['flash-success'] = "Commentaire invalidé !";
         // Return success
-        echo json_encode(['success' => true, 'msg' => 'Comment unvalidated successfuly']);
+        print_r(json_encode(['success' => true, 'msg' => 'Comment unvalidated successfuly']));
         return;
     }
 
@@ -131,7 +131,7 @@ class ApiController extends Controller
             // Set error message - post doesn't find
             $this->session['flash-error'] = "Erreur interne. Article non trouvé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Post didn\'t find']);
+            print_r(json_encode(['success' => false, 'msg' => 'Post didn\'t find']));
             return;
         }
 
@@ -150,7 +150,7 @@ class ApiController extends Controller
             // Set error message - post doesn't updated
             $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être archivé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
 
@@ -159,7 +159,7 @@ class ApiController extends Controller
         // Set success message - archived post
         $this->session['flash-success'] = "Article archivé.";
         // Return success
-        echo json_encode(['success' => true, 'msg' => 'Post Archived successfuly']);
+        print_r(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
         return;
     }
 
@@ -177,7 +177,7 @@ class ApiController extends Controller
             // Set error message - post doesn't find
             $this->session['flash-error'] = "Erreur interne. Article non trouvé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Post didn\'t find']);
+            print_r(json_encode(['success' => false, 'msg' => 'Post didn\'t find']));
             return;
         }
 
@@ -196,7 +196,7 @@ class ApiController extends Controller
             // Set error message - post doesn't updated
             $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être désarchivé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
 
@@ -205,7 +205,7 @@ class ApiController extends Controller
         // Set success message - unarchived post
         $this->session['flash-success'] = "Article désarchivé.";
         // Return success
-        echo json_encode(['success' => true, 'msg' => 'Post Archived successfuly']);
+        print_r(json_encode(['success' => true, 'msg' => 'Post Archived successfuly']));
         return;
     }
 
@@ -223,7 +223,7 @@ class ApiController extends Controller
             // Set error post doesn't find
             $this->session['flash-error'] = "Erreur interne. Article non trouvé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Post not find']);
+            print_r(json_encode(['success' => false, 'msg' => 'Post not find']));
             return;
         }
 
@@ -237,7 +237,7 @@ class ApiController extends Controller
             // Set error message - post doesnt deleted
             $this->session['flash-error'] = "Erreur Interne ! L'article n'a pas pu être supprimé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
 
@@ -251,7 +251,7 @@ class ApiController extends Controller
         // Set success message - post deleted
         $this->session['flash-success'] = "Article supprimé.";
         // Return success
-        echo json_encode(['success' => true, 'msg' => 'Post Deleted successfuly']);
+        print_r(json_encode(['success' => true, 'msg' => 'Post Deleted successfuly']));
         return;
     }
 
@@ -269,7 +269,7 @@ class ApiController extends Controller
             // Set error user doesn't find
             $this->session['flash-error'] = "Erreur interne. Utilisateur non trouvé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'User not find']);
+            print_r(json_encode(['success' => false, 'msg' => 'User not find']));
             return;
         }
 
@@ -288,7 +288,7 @@ class ApiController extends Controller
             // Set error user doesn't deactivated
             $this->session['flash-error'] = "Erreur Interne ! L'utilisateur n'a pas pu être désactivé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
 
@@ -298,7 +298,7 @@ class ApiController extends Controller
         // Set success message - user deactivated
         $this->session['flash-success'] = "Utilisateur désactivé.";
         // Return success
-        echo json_encode(['success' => true, 'msg' => 'User Deactivated successfuly']);
+        print_r(json_encode(['success' => true, 'msg' => 'User Deactivated successfuly']));
         return;
     }
 
@@ -316,7 +316,7 @@ class ApiController extends Controller
             // Set error user doesn't find
             $this->session['flash-error'] = "Erreur interne. Utilisateur non trouvé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'User not find']);
+            print_r(json_encode(['success' => false, 'msg' => 'User not find']));
             return;
         }
 
@@ -335,7 +335,7 @@ class ApiController extends Controller
             // Set error user doesn't reactivated
             $this->session['flash-error'] = "Erreur Interne ! L'utilisateur n'a pas pu être réactivé.";
             // Return error
-            echo json_encode(['success' => false, 'msg' => 'Internal Error']);
+            print_r(json_encode(['success' => false, 'msg' => 'Internal Error']));
             return;
         }
 
@@ -345,7 +345,7 @@ class ApiController extends Controller
         // Set success message - user reactivated
         $this->session['flash-success'] = "Utilisateur réactivé.";
         // Return success
-        echo json_encode(['success' => true, 'msg' => 'User Reactivated successfuly']);
+        print_r(json_encode(['success' => true, 'msg' => 'User Reactivated successfuly']));
         return;
     }
 }
